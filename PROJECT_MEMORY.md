@@ -18,7 +18,7 @@ Updated: 2026-10-25 (Asia/Manila).
 ## Current state
 - Phase: initialization and requirements discovery.
 - The initially empty workspace now contains a clone of the existing empty GitHub repository, on main with origin configured.
-- Documentation and a stack-neutral secret/local-file ignore policy are prepared for the initial published commit. Verify the latest Git state before assuming publication succeeded.
+- Documentation and a stack-neutral secret/local-file ignore policy were published to private GitHub main in initial commit c1fb8af. Verify the latest Git state before assuming it is still current.
 - No source code, package manifest, framework, dependencies, database, service configuration, deployment, or CI exists.
 - Real functionality: none. Mocked functionality: none. Product features: not yet defined. Application verification: not applicable yet.
 
@@ -33,7 +33,7 @@ Updated: 2026-10-25 (Asia/Manila).
 | APIs and technology weight | Free-tier APIs only; lightweight technologies preferred; no stack selected |
 | Deployment and external services | Unselected; no setup authorized |
 | License | Unselected; do not add automatically |
-| Initial documentation commit and push | Authorized by user; verify resulting commit and remote branch |
+| Initial documentation commit and push | Authorized and completed; origin/main matched local c1fb8af at verification |
 
 ## Required context / blockers
 1. Await day-of theme; obtain judging rubric, AI/pre-event rules, exact times, submission deadline and deliverables.
