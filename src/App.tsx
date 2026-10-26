@@ -1,15 +1,21 @@
 import { useEffect, useRef, useState } from 'react'
-import { Catalogue } from './components/Catalogue'
-import { Header } from './components/Header'
+import { toast } from 'sonner'
 import { Moderation } from './components/Moderation'
 import { Profile } from './components/Profile'
 import { ResourceDetail } from './components/ResourceDetail'
 import { Saved } from './components/Saved'
 import { ShareForm } from './components/ShareForm'
-import { Empty } from './components/ui'
+import { Container, EmptyState } from './components/site/layout'
+import { SiteFooter } from './components/site/SiteFooter'
+import { SiteHeader } from './components/site/SiteHeader'
+import { Button } from './components/ui/button'
+import { Toaster } from './components/ui/sonner'
+import { TooltipProvider } from './components/ui/tooltip'
 import { loadCatalogue } from './data/loadCatalogue'
 import type { Catalogue as CatalogueData } from './domain/types'
-import { navigate, useRoute } from './router'
+import { Browse } from './pages/Browse'
+import { Home } from './pages/Home'
+import { useRoute } from './router'
 import { StoreProvider, useStore } from './store'
 
 export default function App() {
@@ -17,10 +23,17 @@ export default function App() {
   useEffect(() => {
     loadCatalogue().then(setLoaded)
   }, [])
-  if (!loaded) return <p className="loading">Loading lesson packs…</p>
+  if (!loaded)
+    return (
+      <p role="status" className="grid min-h-dvh place-items-center text-muted-foreground">
+        Loading lesson packs…
+      </p>
+    )
   return (
     <StoreProvider catalogue={loaded.catalogue}>
-      <Shell teacherPackCount={loaded.teacherPackCount} />
+      <TooltipProvider delayDuration={400}>
+        <Shell teacherPackCount={loaded.teacherPackCount} />
+      </TooltipProvider>
     </StoreProvider>
   )
 }
@@ -42,8 +55,13 @@ function Shell({ teacherPackCount }: { teacherPackCount: number }) {
     document.getElementById('main')?.focus({ preventScroll: true })
   }, [routeKey])
 
+  useEffect(() => {
+    if (notice) toast(notice)
+  }, [notice])
+
   let content
-  if (!page) content = <Catalogue />
+  if (!page) content = <Home />
+  else if (page === 'browse') content = <Browse />
   else if (page === 'resource' && id) content = <ResourceDetail key={id} id={id} />
   else if (page === 'profile' && id) content = <Profile id={id} />
   else if (page === 'saved') content = <Saved />
@@ -51,35 +69,44 @@ function Shell({ teacherPackCount }: { teacherPackCount: number }) {
   else if (page === 'moderation') content = <Moderation />
   else
     content = (
-      <Empty title="This page doesn’t exist">
-        <button className="button" onClick={() => navigate('/')}>
-          Browse lesson packs
-        </button>
-      </Empty>
+      <Container className="pt-16">
+        <EmptyState
+          title="This page doesn’t exist"
+          actions={
+            <Button asChild>
+              <a href="#/browse">Browse lesson packs</a>
+            </Button>
+          }
+        />
+      </Container>
     )
 
   return (
-    <>
-      <a className="skip-link" href="#main">
+    <div className="flex min-h-dvh flex-col">
+      <a
+        href="#main"
+        className="sr-only z-50 rounded-lg bg-primary px-4 py-2 text-primary-foreground focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
+        onClick={(e) => {
+          e.preventDefault()
+          document.getElementById('main')?.focus()
+        }}
+      >
         Skip to content
       </a>
-      <Header />
-      <p className="disclosure">
-        Demonstration prototype: sample accounts, reviews and activity counts; payments simulated.
-        {teacherPackCount > 0 &&
-          ` ${teacherPackCount} teacher pack${teacherPackCount === 1 ? '' : 's'} shown for this demonstration only, from this computer.`}
+      <p className="border-b bg-secondary px-4 py-1.5 text-center text-xs text-muted-foreground">
+        Demo prototype: sample accounts, reviews and activity counts; payments simulated.
       </p>
+      <SiteHeader />
       {saveFailed && (
-        <p className="warning" role="alert">
+        <p role="alert" className="border-b border-destructive/30 bg-destructive/10 px-4 py-2 text-center text-sm text-destructive">
           This browser isn’t saving demo changes. They will be lost on reload. Private browsing or full storage can cause this.
         </p>
       )}
-      <main id="main" tabIndex={-1}>
+      <main id="main" tabIndex={-1} className="flex-1 outline-none">
         {content}
       </main>
-      <div className="toast" role="status" aria-live="polite">
-        {notice && <p>{notice}</p>}
-      </div>
-    </>
+      <SiteFooter teacherPackCount={teacherPackCount} />
+      <Toaster position="bottom-center" />
+    </div>
   )
 }

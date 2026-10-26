@@ -1,8 +1,17 @@
+import { ChevronDown, MessageSquareText, PencilLine } from 'lucide-react'
 import { useEffect, useId, useState, type FormEvent } from 'react'
-import { currentReviews, DemoRuleError, olderReviews, personaReview, resourceRating, reviewEligibility } from '../domain/logic'
-import type { Resource, Review } from '../domain/types'
-import { useStore } from '../store'
-import { ErrorText, RatingLine, Stars } from './ui'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { RatingLine, Stars } from '@/components/site/Rating'
+import { currentReviews, DemoRuleError, olderReviews, personaReview, resourceRating, reviewEligibility } from '@/domain/logic'
+import type { Resource, Review } from '@/domain/types'
+import { initials } from '@/lib/pack'
+import { useStore } from '@/store'
+import { StarRatingInput } from './detail/StarRatingInput'
 
 export function ReviewsPanel({ resource }: { resource: Resource }) {
   const { state, reviews, persona } = useStore()
@@ -11,25 +20,35 @@ export function ReviewsPanel({ resource }: { resource: Resource }) {
   const summary = resourceRating(resource, reviews)
   const eligibility = reviewEligibility(state, resource, persona.role)
 
-  return (
-    <section className="panel" aria-labelledby="reviews-title">
-      <h2 id="reviews-title">Ratings and feedback</h2>
-      <p className="rating-summary">
-        <RatingLine summary={summary} />
-        <span className="muted small">For version {resource.version.label}. Earlier versions are listed separately.</span>
-      </p>
+  const hint =
+    eligibility === 'not-acquired'
+      ? 'Download a file from this pack to rate it. Ratings come from teachers who got the pack.'
+      : eligibility === 'own-resource'
+        ? 'You shared this pack, so you can’t rate it.'
+        : eligibility === 'moderator'
+          ? 'The demo moderator doesn’t rate packs. Switch to a teacher persona.'
+          : null
 
-      {eligibility === 'ok' && <ReviewForm resource={resource} />}
-      {eligibility === 'not-acquired' && (
-        <p className="hint">Download a file from this pack to rate it. Ratings come from teachers who got the pack.</p>
-      )}
-      {eligibility === 'own-resource' && <p className="hint">You shared this pack, so you can’t rate it.</p>}
-      {eligibility === 'moderator' && <p className="hint">The demo moderator doesn’t rate packs. Switch to a teacher persona.</p>}
+  return (
+    <section aria-labelledby="reviews-title" className="scroll-mt-24">
+      <h2 id="reviews-title" className="text-2xl font-bold tracking-tight">
+        Ratings and feedback
+      </h2>
+
+      <div className="mt-4 flex flex-col gap-4 rounded-2xl border bg-card p-5 sm:flex-row sm:items-center sm:justify-between">
+        <div className="space-y-1">
+          <RatingLine summary={summary} className="text-base" />
+          <p className="text-sm text-muted-foreground">For version {resource.version.label}. Earlier versions are listed separately.</p>
+        </div>
+        {eligibility === 'ok' && <ReviewFormDialog resource={resource} />}
+      </div>
+
+      {hint && <p className="mt-3 rounded-xl bg-secondary px-4 py-3 text-sm text-secondary-foreground">{hint}</p>}
 
       {current.length === 0 ? (
-        <p className="muted">No reviews yet for this version.</p>
+        <p className="mt-6 text-muted-foreground">No reviews yet for this version.</p>
       ) : (
-        <ul className="review-list">
+        <ul className="mt-6 space-y-3">
           {current.map((r) => (
             <ReviewItem key={r.id} review={r} mine={r.personaId === persona.id} />
           ))}
@@ -37,11 +56,12 @@ export function ReviewsPanel({ resource }: { resource: Resource }) {
       )}
 
       {older.length > 0 && (
-        <details className="older">
-          <summary>
+        <details className="group mt-6 rounded-2xl border bg-card/50">
+          <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 rounded-2xl px-5 py-3 text-sm font-medium outline-none hover:bg-secondary/50 focus-visible:ring-3 focus-visible:ring-ring/50 [&::-webkit-details-marker]:hidden">
             {older.length} review{older.length === 1 ? '' : 's'} of earlier versions (not counted in the rating)
+            <ChevronDown aria-hidden="true" className="size-4 shrink-0 transition-transform duration-200 group-open:rotate-180 motion-reduce:transition-none" />
           </summary>
-          <ul className="review-list">
+          <ul className="space-y-3 px-3 pb-3">
             {older.map((r) => (
               <ReviewItem key={r.id} review={r} mine={r.personaId === persona.id} />
             ))}
@@ -53,24 +73,58 @@ export function ReviewsPanel({ resource }: { resource: Resource }) {
 }
 
 function ReviewItem({ review, mine }: { review: Review; mine: boolean }) {
+  const { personaById } = useStore()
   return (
-    <li className="review">
-      <div className="review-head">
-        <span aria-label={`${review.rating} out of 5`}>
-          <Stars value={review.rating} />
+    <li className="rounded-2xl border bg-card p-4 sm:p-5">
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+        <span aria-hidden="true" className="grid size-9 place-items-center rounded-full border bg-secondary text-xs font-semibold">
+          {initials(personaById(review.personaId))}
         </span>
-        <strong>{review.authorLabel}</strong>
-        {review.seeded && <span className="pill">Sample review</span>}
-        {mine && <span className="pill pill-mine">Your review</span>}
-        <span className="muted small">Version {review.resourceVersion}</span>
+        <span className="flex min-w-0 flex-col">
+          <strong className="truncate font-semibold">{review.authorLabel}</strong>
+          <span className="flex items-center gap-2 text-sm text-muted-foreground">
+            <span role="img" aria-label={`${review.rating} out of 5`}>
+              <Stars value={review.rating} />
+            </span>
+            <span>Version {review.resourceVersion}</span>
+          </span>
+        </span>
+        <span className="flex flex-wrap gap-1.5 sm:ml-auto">
+          {review.seeded && (
+            <Badge variant="secondary" className="text-muted-foreground">
+              Sample review
+            </Badge>
+          )}
+          {mine && <Badge>Your review</Badge>}
+        </span>
       </div>
-      {review.text && <p>{review.text}</p>}
-      {review.usedInClass && <p className="muted small">Says they used it in class (self-reported).</p>}
+      {review.text && <p className="mt-3 text-pretty">{review.text}</p>}
+      {review.usedInClass && <p className="mt-2 text-sm text-muted-foreground">Says they used it in class (self-reported).</p>}
     </li>
   )
 }
 
-function ReviewForm({ resource }: { resource: Resource }) {
+function ReviewFormDialog({ resource }: { resource: Resource }) {
+  const { state } = useStore()
+  const [open, setOpen] = useState(false)
+  const existing = personaReview(state, resource.id)
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button variant={existing ? 'outline' : 'default'}>
+          {existing ? <PencilLine aria-hidden="true" /> : <MessageSquareText aria-hidden="true" />}
+          {existing ? 'Edit your review' : 'Rate this pack'}
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-md">
+        {/* Content unmounts on close, so reopening starts from the saved review. */}
+        <ReviewForm resource={resource} onDone={() => setOpen(false)} />
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+function ReviewForm({ resource, onDone }: { resource: Resource; onDone: () => void }) {
   const { state, persona, dispatch, notify } = useStore()
   const existing = personaReview(state, resource.id)
   const [rating, setRating] = useState(existing?.rating ?? 0)
@@ -102,6 +156,7 @@ function ReviewForm({ resource }: { resource: Resource }) {
       })
       setError('')
       notify(existing ? 'Review updated. Ratings recalculated.' : 'Review posted. Ratings recalculated.')
+      onDone()
     } catch (e) {
       setError(e instanceof DemoRuleError ? e.message : 'The review couldn’t be saved.')
     }
@@ -110,36 +165,41 @@ function ReviewForm({ resource }: { resource: Resource }) {
   const olderVersion = existing && existing.resourceVersion !== resource.version.label
 
   return (
-    <form className="review-form" onSubmit={submit} noValidate>
-      <h3>{existing ? 'Edit your review' : `Rate this pack as ${persona.alias}`}</h3>
+    <form onSubmit={submit} noValidate className="grid gap-4">
+      <DialogHeader>
+        <DialogTitle className="text-lg font-semibold">{existing ? 'Edit your review' : `Rate this pack as ${persona.alias}`}</DialogTitle>
+        <DialogDescription>Your rating counts toward version {resource.version.label} only.</DialogDescription>
+      </DialogHeader>
       {olderVersion && (
-        <p className="hint">
+        <p className="rounded-lg bg-secondary px-3 py-2 text-sm">
           Your earlier review was for version {existing.resourceVersion}. Saving replaces it with a review of version{' '}
           {resource.version.label}.
         </p>
       )}
-      <fieldset className="star-input" aria-describedby={error ? ids.error : undefined}>
-        <legend>Rating</legend>
-        {[1, 2, 3, 4, 5].map((n) => (
-          <label key={n} className={n <= rating ? 'on' : undefined}>
-            <input type="radio" name="rating" value={n} checked={rating === n} onChange={() => setRating(n)} />
-            <span aria-hidden="true">★</span>
-            <span className="visually-hidden">
-              {n} star{n === 1 ? '' : 's'}
-            </span>
-          </label>
-        ))}
-      </fieldset>
-      <label htmlFor={ids.text}>What worked or what would you change? (optional)</label>
-      <textarea id={ids.text} rows={3} maxLength={600} value={text} onChange={(e) => setText(e.target.value)} />
-      <label className="checkbox" htmlFor={ids.used}>
-        <input id={ids.used} type="checkbox" checked={usedInClass} onChange={(e) => setUsedInClass(e.target.checked)} />
-        I used this in class
-      </label>
-      <ErrorText id={ids.error}>{error}</ErrorText>
-      <button className="button" type="submit">
-        {existing ? 'Update review' : 'Post review'}
-      </button>
+      <StarRatingInput value={rating} onChange={setRating} describedBy={error ? ids.error : undefined} invalid={!!error && rating === 0} />
+      <div className="grid gap-1.5">
+        <Label htmlFor={ids.text}>What worked or what would you change? (optional)</Label>
+        <Textarea id={ids.text} rows={3} maxLength={600} value={text} onChange={(e) => setText(e.target.value)} className="text-base" />
+      </div>
+      <div className="flex min-h-10 items-center gap-3">
+        <Checkbox id={ids.used} checked={usedInClass} onCheckedChange={(v) => setUsedInClass(v === true)} />
+        <Label htmlFor={ids.used} className="font-normal">
+          I used this in class
+        </Label>
+      </div>
+      {error && (
+        <p id={ids.error} role="alert" className="text-sm text-destructive">
+          {error}
+        </p>
+      )}
+      <DialogFooter>
+        <DialogClose asChild>
+          <Button type="button" variant="outline">
+            Cancel
+          </Button>
+        </DialogClose>
+        <Button type="submit">{existing ? 'Update review' : 'Post review'}</Button>
+      </DialogFooter>
     </form>
   )
 }

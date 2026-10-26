@@ -1,22 +1,35 @@
-import { useId, useState, type FormEvent, type ReactNode } from 'react'
-import type { Resource, ResourceFile } from '../domain/types'
-import { ACCEPTED_EXTENSIONS, extension, MAX_FILE_BYTES } from '../files'
-import { formatBytes } from '../domain/logic'
-import { navigate } from '../router'
-import { deleteFiles, putFile } from '../storage/fileStore'
-import { useStore } from '../store'
-import { Empty, ErrorText } from './ui'
+import { ArrowLeft, ArrowRight, GitFork, Loader2, PackageX, Send, ShieldCheck, UserRoundCog } from 'lucide-react'
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
+import { useCallback, useEffect, useId, useRef, useState, type FormEvent, type ReactNode } from 'react'
+import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Input } from '@/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
+import { Container, EmptyState } from '@/components/site/layout'
+import { PackCover } from '@/components/site/PackCover'
+import { formatBytes } from '@/domain/logic'
+import type { Resource, ResourceFile } from '@/domain/types'
+import { extension } from '@/files'
+import { cn } from '@/lib/utils'
+import { navigate } from '@/router'
+import { deleteFiles, putFile } from '@/storage/fileStore'
+import { useStore } from '@/store'
+import { FilePicker, fileProblem, type PickedFile } from './share/FilePicker'
+import { describedBy, FieldError, FormField } from './share/FormField'
+import { Stepper } from './share/Stepper'
 
 const GRADES = ['Kindergarten', 'Grade 1', 'Grade 2', 'Grade 3', 'Grade 4', 'Grade 5', 'Grade 6', 'Grade 7', 'Grade 8', 'Grade 9', 'Grade 10']
 const SUBJECTS = ['English', 'Filipino', 'Mathematics', 'Science', 'Araling Panlipunan', 'MAPEH', 'EPP / TLE', 'Values Education', 'Reading']
+const STEPS = ['Details', 'Files', 'Permission & review'] as const
 
-interface PickedFile {
-  file: File
-  label: string
-  required: boolean
-}
+type ErrorKey = 'title' | 'summary' | 'grade' | 'subject' | 'competency' | 'files' | 'permission' | 'changeNote' | 'submit'
+type Errors = Partial<Record<ErrorKey, string>>
 
-type Errors = Partial<Record<'title' | 'summary' | 'grade' | 'subject' | 'competency' | 'files' | 'permission' | 'changeNote' | 'submit', string>>
+/** Which wizard step owns each validated field, in on-screen order. */
+const STEP_FIELDS: ErrorKey[][] = [['title', 'summary', 'grade', 'subject', 'competency', 'changeNote'], ['files'], ['permission']]
+
+const pageTitle = 'text-3xl font-bold tracking-tight sm:text-4xl'
 
 export function ShareForm({ parentId }: { parentId?: string }) {
   const { resources, persona, dispatch, notify, personaById } = useStore()
@@ -33,45 +46,62 @@ export function ShareForm({ parentId }: { parentId?: string }) {
   const [permission, setPermission] = useState(false)
   const [errors, setErrors] = useState<Errors>({})
   const [saving, setSaving] = useState(false)
+  const [step, setStep] = useState(0)
+  const [direction, setDirection] = useState(1)
+  const [announcement, setAnnouncement] = useState('')
+  const reduceMotion = useReducedMotion()
   const id = useId()
   const f = (name: string) => `${id}-${name}`
 
+  // Focus target for after a step change or a failed "Next". Resolved once the element is mounted.
+  const pendingFocus = useRef<string | null>(null)
+  const flushFocus = useCallback(() => {
+    if (!pendingFocus.current) return
+    const el = document.getElementById(pendingFocus.current)
+    if (el) {
+      el.focus()
+      pendingFocus.current = null
+    }
+  }, [])
+  useEffect(flushFocus, [step, errors, flushFocus])
+
   if (persona.role !== 'teacher') {
     return (
-      <div className="page">
-        <h1>Share a lesson</h1>
-        <Empty title="Switch to a teacher persona to share">
+      <Container className="max-w-3xl pt-10 pb-16">
+        <h1 className={pageTitle}>Share a lesson</h1>
+        <EmptyState
+          className="mt-8"
+          icon={<UserRoundCog />}
+          title="Switch to a teacher persona to share"
+          actions={
+            <Button variant="outline" asChild>
+              <a href="#/browse">Browse lesson packs</a>
+            </Button>
+          }
+        >
           <p>The demo moderator reviews submissions but doesn’t share packs.</p>
-        </Empty>
-      </div>
+          <p className="mt-2 text-sm">Switch demo account from the avatar menu at the top right.</p>
+        </EmptyState>
+      </Container>
     )
   }
 
   if (parentId && !parent) {
     return (
-      <div className="page">
-        <Empty title="The original pack isn’t available">
-          <p>Only published packs can be adapted. It may be on hold or removed by a reset.</p>
-          <a className="button" href="#/share">
-            Share a new lesson instead
-          </a>
-        </Empty>
-      </div>
+      <Container className="max-w-3xl pt-10 pb-16">
+        <EmptyState
+          icon={<PackageX />}
+          title="The original pack isn’t available"
+          actions={
+            <Button asChild>
+              <a href="#/share">Share a new lesson instead</a>
+            </Button>
+          }
+        >
+          Only published packs can be adapted. It may be on hold or removed by a reset.
+        </EmptyState>
+      </Container>
     )
-  }
-
-  function addFiles(list: FileList | null) {
-    if (!list) return
-    const additions = [...list].map((file) => ({ file, label: file.name.replace(/\.[^.]+$/, ''), required: picked.length === 0 }))
-    setPicked((current) => [...current, ...additions])
-    setErrors((e) => ({ ...e, files: undefined }))
-  }
-
-  function fileProblem(file: File): string | null {
-    if (!ACCEPTED_EXTENSIONS.includes(extension(file.name))) return `${file.name}: this file type isn’t accepted.`
-    if (file.size === 0) return `${file.name} is empty.`
-    if (file.size > MAX_FILE_BYTES) return `${file.name} is larger than ${formatBytes(MAX_FILE_BYTES)}.`
-    return null
   }
 
   function validate(): Errors {
@@ -93,14 +123,45 @@ export function ShareForm({ parentId }: { parentId?: string }) {
     return next
   }
 
-  async function submit(event: FormEvent) {
-    event.preventDefault()
+  /** Errors from `found` that belong to the given step, in on-screen order. */
+  const stepErrors = (found: Errors, s: number) => STEP_FIELDS[s].filter((k) => found[k])
+
+  function goTo(next: number, focusId?: string) {
+    setDirection(next > step ? 1 : -1)
+    pendingFocus.current = focusId ?? f(`step-${next}-heading`)
+    setStep(next)
+  }
+
+  function showErrors(found: Errors, s: number) {
+    const keys = stepErrors(found, s)
+    setErrors(Object.fromEntries(keys.map((k) => [k, found[k]])))
+    setAnnouncement(`${keys.length === 1 ? '1 field needs' : `${keys.length} fields need`} attention before you continue.`)
+    if (s === step) {
+      pendingFocus.current = f(keys[0])
+      flushFocus()
+    } else goTo(s, f(keys[0]))
+  }
+
+  function next() {
     const found = validate()
-    setErrors(found)
-    if (Object.keys(found).length > 0) {
-      document.getElementById(f(Object.keys(found)[0]))?.focus()
-      return
-    }
+    if (stepErrors(found, step).length > 0) return showErrors(found, step)
+    setErrors({})
+    setAnnouncement('')
+    goTo(step + 1)
+  }
+
+  /** Go back to an earlier step (Back, the stepper or an "Edit" link) without validating or losing input. */
+  function jumpBack(s: number) {
+    setErrors({})
+    setAnnouncement('')
+    goTo(s)
+  }
+
+  async function submit() {
+    const found = validate()
+    const firstBad = STEP_FIELDS.findIndex((_, s) => stepErrors(found, s).length > 0)
+    if (firstBad !== -1) return showErrors(found, firstBad)
+    setErrors({})
     setSaving(true)
     const resourceId = `c-${Date.now().toString(36)}`
     const stored: string[] = []
@@ -158,150 +219,304 @@ export function ShareForm({ parentId }: { parentId?: string }) {
     }
   }
 
-  const err = (name: keyof Errors) => (errors[name] ? `${f(name)}-error` : undefined)
+  function onSubmit(event: FormEvent) {
+    event.preventDefault()
+    if (saving) return
+    if (step < STEPS.length - 1) next()
+    else void submit()
+  }
+
+  const cancel = () => navigate(parent ? `/resource/${parent.id}` : '/')
+  const gradeOptions = grade && !GRADES.includes(grade) ? [grade, ...GRADES] : GRADES
+  const subjectOptions = subject && !SUBJECTS.includes(subject) ? [subject, ...SUBJECTS] : SUBJECTS
+  const parentAuthor = parent && personaById(parent.contributorId)?.alias
+  const isLast = step === STEPS.length - 1
+
+  const panel = {
+    initial: reduceMotion ? false : { opacity: 0, x: direction * 12 },
+    animate: { opacity: 1, x: 0, transition: { duration: 0.2, ease: [0.23, 1, 0.32, 1] as const } },
+    exit: reduceMotion ? undefined : { opacity: 0, x: direction * -8, transition: { duration: 0.12, ease: 'easeIn' as const } },
+  }
 
   return (
-    <div className="page narrow">
-      <h1>{parent ? 'Share an adaptation' : 'Share a lesson'}</h1>
-      {parent ? (
-        <p className="lede">
-          Your adaptation is shared as a separate pack that credits “{parent.title}” version {parent.version.label} by{' '}
-          {personaById(parent.contributorId)?.alias}. The original stays unchanged.
+    <Container className="max-w-3xl pt-10 pb-8 sm:pb-16">
+      <header>
+        <h1 className={pageTitle}>{parent ? 'Share an adaptation' : 'Share a lesson'}</h1>
+        <p className="mt-2 text-pretty text-muted-foreground">
+          {parent
+            ? 'Your adaptation is shared as a separate pack that credits the original. The original stays unchanged.'
+            : 'Upload the files you teach with. Other teachers download them and edit their own copy.'}
         </p>
-      ) : (
-        <p className="lede">Upload the files you teach with. Other teachers download them and edit their own copy.</p>
+        <p className="mt-3 text-sm text-muted-foreground">
+          Demo only: files stay in this browser and are never sent to a server. Don’t include learners’ names or photos.
+        </p>
+      </header>
+
+      {parent && (
+        <section aria-label="Original pack" className="mt-6 flex items-center gap-4 rounded-2xl border bg-secondary/50 p-3 pr-4">
+          <div aria-hidden="true" className="w-20 shrink-0">
+            <PackCover resource={parent} size="thumb" />
+          </div>
+          <div className="min-w-0">
+            <p className="flex items-center gap-1.5 text-xs font-semibold tracking-wide text-mauve-ink uppercase">
+              <GitFork aria-hidden="true" className="size-3.5" /> Adapting
+            </p>
+            <p className="mt-0.5 truncate font-semibold">
+              <a href={`#/resource/${parent.id}`} className="rounded-sm outline-none hover:underline focus-visible:ring-3 focus-visible:ring-ring/50">
+                “{parent.title}”
+              </a>
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Version {parent.version.label} by {parentAuthor}. Your pack credits them.
+            </p>
+          </div>
+        </section>
       )}
-      <p className="muted small">
-        Demo only: files stay in this browser and are never sent to a server. Don’t include learners’ names or photos.
+
+      <div className="mt-8">
+        <Stepper steps={STEPS} current={step} onSelect={(s) => s < step && jumpBack(s)} />
+      </div>
+
+      <p role="status" aria-live="polite" className="sr-only">
+        {announcement}
       </p>
 
-      <form className="form" onSubmit={submit} noValidate>
-        <Field label="Title" id={f('title')} error={errors.title}>
-          <input id={f('title')} value={title} onChange={(e) => setTitle(e.target.value)} aria-invalid={!!errors.title} aria-describedby={err('title')} />
-        </Field>
-        <Field label="What the lesson covers" id={f('summary')} error={errors.summary}>
-          <textarea id={f('summary')} rows={3} value={summary} onChange={(e) => setSummary(e.target.value)} aria-invalid={!!errors.summary} aria-describedby={err('summary')} />
-        </Field>
-        <div className="form-row">
-          <Field label="Grade" id={f('grade')} error={errors.grade}>
-            <select id={f('grade')} value={grade} onChange={(e) => setGrade(e.target.value)} aria-invalid={!!errors.grade} aria-describedby={err('grade')}>
-              <option value="">Choose…</option>
-              {GRADES.map((g) => (
-                <option key={g}>{g}</option>
-              ))}
-            </select>
-          </Field>
-          <Field label="Subject" id={f('subject')} error={errors.subject}>
-            <select id={f('subject')} value={subject} onChange={(e) => setSubject(e.target.value)} aria-invalid={!!errors.subject} aria-describedby={err('subject')}>
-              <option value="">Choose…</option>
-              {SUBJECTS.map((s) => (
-                <option key={s}>{s}</option>
-              ))}
-            </select>
-          </Field>
-        </div>
-        <Field label="Competency or learning target" id={f('competency')} error={errors.competency}>
-          <input id={f('competency')} value={competency} onChange={(e) => setCompetency(e.target.value)} aria-invalid={!!errors.competency} aria-describedby={err('competency')} />
-        </Field>
-        <Field label="Budget of Work term and week (optional)" id={f('week')}>
-          <input id={f('week')} placeholder="e.g. Term 2, Week 3" value={week} onChange={(e) => setWeek(e.target.value)} />
-        </Field>
-        <Field label="What a classroom needs, one per line (optional)" id={f('requirements')}>
-          <textarea id={f('requirements')} rows={3} placeholder={'No internet needed\nOne worksheet per pair'} value={requirements} onChange={(e) => setRequirements(e.target.value)} />
-        </Field>
-        {parent && (
-          <Field label="What you changed from the original" id={f('changeNote')} error={errors.changeNote}>
-            <textarea id={f('changeNote')} rows={3} placeholder="e.g. Translated the worksheet into Bikol and removed the projector step" value={changeNote} onChange={(e) => setChangeNote(e.target.value)} aria-invalid={!!errors.changeNote} aria-describedby={err('changeNote')} />
-          </Field>
-        )}
+      <form onSubmit={onSubmit} noValidate className="mt-6">
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div key={step} {...panel} className="rounded-2xl border bg-card p-5 shadow-[0_1px_2px_rgb(51_44_39/0.04)] sm:p-8">
+            <OnMount run={flushFocus} />
+            <h2 id={f(`step-${step}-heading`)} tabIndex={-1} className="text-2xl font-bold tracking-tight outline-none">
+              {step === 0 && 'Lesson details'}
+              {step === 1 && 'Files'}
+              {step === 2 && 'Permission and review'}
+            </h2>
 
-        <fieldset className="files-field" aria-describedby={err('files')}>
-          <legend>Files</legend>
-          <p className="muted small">
-            Word, PowerPoint, Excel, OpenDocument, PDF, text or images, up to {formatBytes(MAX_FILE_BYTES)} each.
-          </p>
-          <label className="button button-quiet file-picker" htmlFor={f('files')}>
-            Add files
-          </label>
-          <input
-            id={f('files')}
-            className="visually-hidden"
-            type="file"
-            multiple
-            accept={ACCEPTED_EXTENSIONS.map((e) => `.${e}`).join(',')}
-            onChange={(e) => {
-              addFiles(e.target.files)
-              e.target.value = ''
-            }}
-          />
-          {picked.length > 0 && (
-            <ul className="picked">
-              {picked.map((p, i) => (
-                <li key={`${p.file.name}-${i}`}>
-                  <span className="muted small">
-                    {p.file.name}, {formatBytes(p.file.size)}
-                  </span>
-                  <label className="visually-hidden" htmlFor={`${f('label')}-${i}`}>
-                    Name shown for {p.file.name}
-                  </label>
-                  <input
-                    id={`${f('label')}-${i}`}
-                    value={p.label}
-                    onChange={(e) => setPicked((all) => all.map((x, j) => (j === i ? { ...x, label: e.target.value } : x)))}
+            {step === 0 && (
+              <div className="mt-6 flex flex-col gap-6">
+                <FormField id={f('title')} label="Title" error={errors.title}>
+                  <Input id={f('title')} value={title} onChange={(e) => setTitle(e.target.value)} aria-invalid={!!errors.title} aria-describedby={describedBy(f('title'), { error: errors.title })} />
+                </FormField>
+                <FormField id={f('summary')} label="What the lesson covers" error={errors.summary}>
+                  <Textarea
+                    id={f('summary')}
+                    rows={3}
+                    value={summary}
+                    onChange={(e) => setSummary(e.target.value)}
+                    aria-invalid={!!errors.summary}
+                    aria-describedby={describedBy(f('summary'), { error: errors.summary })}
                   />
-                  <label className="checkbox">
-                    <input
-                      type="checkbox"
-                      checked={p.required}
-                      onChange={(e) => setPicked((all) => all.map((x, j) => (j === i ? { ...x, required: e.target.checked } : x)))}
+                </FormField>
+                <div className="grid gap-6 sm:grid-cols-2">
+                  <FormField id={f('grade')} label="Grade" error={errors.grade}>
+                    <Select value={grade} onValueChange={setGrade}>
+                      <SelectTrigger id={f('grade')} className="w-full" aria-invalid={!!errors.grade} aria-describedby={describedBy(f('grade'), { error: errors.grade })}>
+                        <SelectValue placeholder="Choose…" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {gradeOptions.map((g) => (
+                          <SelectItem key={g} value={g}>
+                            {g}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormField>
+                  <FormField id={f('subject')} label="Subject" error={errors.subject}>
+                    <Select value={subject} onValueChange={setSubject}>
+                      <SelectTrigger id={f('subject')} className="w-full" aria-invalid={!!errors.subject} aria-describedby={describedBy(f('subject'), { error: errors.subject })}>
+                        <SelectValue placeholder="Choose…" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {subjectOptions.map((s) => (
+                          <SelectItem key={s} value={s}>
+                            {s}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormField>
+                </div>
+                <FormField id={f('competency')} label="Competency or learning target" error={errors.competency}>
+                  <Input
+                    id={f('competency')}
+                    value={competency}
+                    onChange={(e) => setCompetency(e.target.value)}
+                    aria-invalid={!!errors.competency}
+                    aria-describedby={describedBy(f('competency'), { error: errors.competency })}
+                  />
+                </FormField>
+                <FormField id={f('week')} label="Budget of Work term and week" optional>
+                  <Input id={f('week')} placeholder="e.g. Term 2, Week 3" value={week} onChange={(e) => setWeek(e.target.value)} />
+                </FormField>
+                <FormField id={f('requirements')} label="What a classroom needs, one per line" optional>
+                  <Textarea id={f('requirements')} rows={3} placeholder={'No internet needed\nOne worksheet per pair'} value={requirements} onChange={(e) => setRequirements(e.target.value)} />
+                </FormField>
+                {parent && (
+                  <FormField id={f('changeNote')} label="What you changed from the original" hint="Teachers see this next to the credit to the original pack." error={errors.changeNote}>
+                    <Textarea
+                      id={f('changeNote')}
+                      rows={3}
+                      placeholder="e.g. Translated the worksheet into Bikol and removed the projector step"
+                      value={changeNote}
+                      onChange={(e) => setChangeNote(e.target.value)}
+                      aria-invalid={!!errors.changeNote}
+                      aria-describedby={describedBy(f('changeNote'), { hint: true, error: errors.changeNote })}
                     />
-                    Needed to teach
-                  </label>
-                  <button type="button" className="text-button" onClick={() => setPicked((all) => all.filter((_, j) => j !== i))}>
-                    Remove <span className="visually-hidden">{p.file.name}</span>
-                  </button>
-                </li>
-              ))}
-            </ul>
+                  </FormField>
+                )}
+              </div>
+            )}
+
+            {step === 1 && (
+              <div className="mt-2">
+                <p className="mb-5 text-muted-foreground">Add the files you teach with. Mark the ones a teacher needs to run the lesson.</p>
+                <FilePicker id={f('files')} picked={picked} setPicked={setPicked} error={errors.files} onAdded={() => setErrors((e) => ({ ...e, files: undefined }))} />
+              </div>
+            )}
+
+            {step === 2 && (
+              <div className="mt-6 flex flex-col gap-6">
+                <ReviewSummary
+                  onEdit={jumpBack}
+                  rows={[
+                    { step: 0, label: 'Title', value: title.trim() },
+                    { step: 0, label: 'What the lesson covers', value: summary.trim() },
+                    { step: 0, label: 'Grade and subject', value: `${grade} · ${subject}` },
+                    { step: 0, label: 'Competency', value: competency.trim() },
+                    { step: 0, label: 'Budget of Work', value: week.trim() || 'Not given' },
+                    {
+                      step: 0,
+                      label: 'Classroom needs',
+                      value: requirements.split('\n').map((s) => s.trim()).filter(Boolean).join(' · ') || 'None listed',
+                    },
+                    ...(parent ? [{ step: 0, label: 'What changed', value: changeNote.trim() }] : []),
+                    {
+                      step: 1,
+                      label: `Files (${picked.length})`,
+                      value: (
+                        <ul className="flex flex-col gap-1">
+                          {picked.map((p, i) => (
+                            <li key={i}>
+                              {p.label.trim()} <span className="text-muted-foreground">({p.file.name}, {formatBytes(p.file.size)}{p.required ? ', needed to teach' : ''})</span>
+                            </li>
+                          ))}
+                        </ul>
+                      ),
+                    },
+                  ]}
+                />
+
+                <div className={cn('rounded-xl border p-4 transition-colors', permission ? 'border-primary/40 bg-secondary/50' : 'bg-background/60', errors.permission && 'border-destructive/60')}>
+                  <div className="flex items-start gap-3">
+                    <Checkbox
+                      id={f('permission')}
+                      checked={permission}
+                      onCheckedChange={(v) => {
+                        setPermission(v === true)
+                        if (v === true) setErrors((e) => ({ ...e, permission: undefined }))
+                      }}
+                      aria-invalid={!!errors.permission}
+                      aria-describedby={describedBy(f('permission'), { error: errors.permission })}
+                      className="mt-0.5 size-5"
+                    />
+                    <label htmlFor={f('permission')} className="cursor-pointer text-[15px] leading-snug font-medium">
+                      I made this pack, or I have permission to share it. It contains no learners’ personal information.
+                    </label>
+                  </div>
+                  <FieldError id={errors.permission ? `${f('permission')}-error` : undefined}>
+                    <span className="mt-2 block pl-8">{errors.permission}</span>
+                  </FieldError>
+                </div>
+
+                <div className="flex gap-3 rounded-xl bg-muted/60 p-4 text-sm text-muted-foreground">
+                  <ShieldCheck aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-mauve-ink" />
+                  <p className="text-pretty">
+                    Submitting puts the pack in the review queue as <strong className="font-semibold text-foreground">pending</strong>. The demo moderator
+                    checks the files, your permission statement and that no learner information is included before it’s published. Curriculum review is a
+                    separate step and is simulated in this demo.
+                  </p>
+                </div>
+
+                {errors.submit && (
+                  <p role="alert" className="rounded-xl border border-destructive/30 bg-destructive/10 p-4 text-sm font-medium text-destructive">
+                    {errors.submit}
+                  </p>
+                )}
+              </div>
+            )}
+          </motion.div>
+        </AnimatePresence>
+
+        <div className="sticky bottom-0 z-20 -mx-4 mt-6 flex items-center gap-3 border-t bg-background/90 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-md sm:static sm:mx-0 sm:border-0 sm:bg-transparent sm:p-0 sm:backdrop-blur-none">
+          {step === 0 ? (
+            <Button type="button" variant="ghost" size="lg" disabled={saving} onClick={cancel}>
+              Cancel
+            </Button>
+          ) : (
+            <Button type="button" variant="outline" size="lg" disabled={saving} onClick={() => jumpBack(step - 1)}>
+              <ArrowLeft aria-hidden="true" /> Back
+            </Button>
           )}
-          <ErrorText id={err('files')}>{errors.files}</ErrorText>
-        </fieldset>
-
-        <div className="field">
-          <label className="checkbox" htmlFor={f('permission')}>
-            <input
-              id={f('permission')}
-              type="checkbox"
-              checked={permission}
-              onChange={(e) => setPermission(e.target.checked)}
-              aria-invalid={!!errors.permission}
-              aria-describedby={err('permission')}
-            />
-            I made this pack, or I have permission to share it. It contains no learners’ personal information.
-          </label>
-          <ErrorText id={err('permission')}>{errors.permission}</ErrorText>
+          <span className="ml-auto hidden text-sm text-muted-foreground tabular-nums sm:inline">
+            Step {step + 1} of {STEPS.length}
+          </span>
+          <Button type="submit" size="lg" disabled={saving} className="max-sm:ml-auto max-sm:flex-1 sm:min-w-44">
+            {isLast ? (
+              saving ? (
+                <>
+                  <Loader2 aria-hidden="true" className="animate-spin" /> Submitting…
+                </>
+              ) : (
+                <>
+                  <Send aria-hidden="true" /> Submit for review
+                </>
+              )
+            ) : (
+              <>
+                Next<span className="max-sm:sr-only">: {STEPS[step + 1]}</span> <ArrowRight aria-hidden="true" />
+              </>
+            )}
+          </Button>
         </div>
-
-        <ErrorText>{errors.submit}</ErrorText>
-        <div className="actions">
-          <button className="button" type="submit" disabled={saving}>
-            {saving ? 'Submitting…' : 'Submit for review'}
-          </button>
-          <button type="button" className="button button-quiet" disabled={saving} onClick={() => navigate(parent ? `/resource/${parent.id}` : '/')}>
-            Cancel
-          </button>
-        </div>
+        {step > 0 && (
+          <div className="mt-3 hidden justify-start sm:flex">
+            <Button type="button" variant="link" disabled={saving} onClick={cancel} className="px-0 text-muted-foreground">
+              Cancel and leave
+            </Button>
+          </div>
+        )}
       </form>
-    </div>
+    </Container>
   )
 }
 
-function Field({ label, id, error, children }: { label: string; id: string; error?: string; children: ReactNode }) {
+/** Runs once when a step panel mounts, so focus lands after the previous panel has left. */
+function OnMount({ run }: { run: () => void }) {
+  useEffect(run, [run])
+  return null
+}
+
+function ReviewSummary({ rows, onEdit }: { rows: { step: number; label: string; value: ReactNode }[]; onEdit: (step: number) => void }) {
   return (
-    <div className="field">
-      <label htmlFor={id}>{label}</label>
-      {children}
-      <ErrorText id={error ? `${id}-error` : undefined}>{error}</ErrorText>
-    </div>
+    <section aria-labelledby="share-summary-title" className="rounded-xl border">
+      <div className="flex items-center justify-between gap-3 border-b px-4 py-3">
+        <h3 id="share-summary-title" className="font-semibold">
+          What you’re submitting
+        </h3>
+      </div>
+      <dl className="divide-y">
+        {rows.map((row) => (
+          <div key={row.label} className="grid gap-1 px-4 py-3 sm:grid-cols-[10rem_minmax(0,1fr)_auto] sm:gap-4">
+            <dt className="text-sm text-muted-foreground">{row.label}</dt>
+            <dd className="min-w-0 text-[15px] break-words">{row.value}</dd>
+            <dd className="sm:text-right">
+              <Button type="button" variant="link" size="sm" className="h-auto min-h-10 px-0 text-mauve-ink" onClick={() => onEdit(row.step)}>
+                Edit <span className="sr-only">{row.label}</span>
+              </Button>
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </section>
   )
 }

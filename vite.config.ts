@@ -3,6 +3,7 @@ import path from 'node:path'
 import type { Connect, Plugin } from 'vite'
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
 
 // Folder-based packs: <root>/<contributor alias>/<Grade - Subject - [BOW] - Title>/<files>.
 // sample-packs/ holds tracked fictional placeholders. demo-assets/packs/ holds the teachers'
@@ -118,7 +119,8 @@ function servePacks(): Plugin {
 }
 
 export default defineConfig({
-  plugins: [react(), servePacks()],
+  plugins: [react(), tailwindcss(), servePacks()],
+  resolve: { alias: { '@': path.resolve(import.meta.dirname, 'src') } },
   server: { host: 'localhost' },
   preview: { host: 'localhost' },
   test: { environment: 'node' },

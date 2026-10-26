@@ -13,15 +13,15 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, { failed: 
   render() {
     if (!this.state.failed) return this.props.children
     return (
-      <main className="crash">
-        <h1>CherIt hit a problem</h1>
-        <p>Reload the page first. If it happens again, reset the demo to restore the sample data.</p>
-        <div className="actions">
-          <button className="button" onClick={() => window.location.reload()}>
+      <main className="mx-auto flex min-h-dvh max-w-lg flex-col justify-center px-6">
+        <h1 className="text-3xl font-bold tracking-tight">CherIt hit a problem</h1>
+        <p className="mt-3 text-muted-foreground">Reload the page first. If it happens again, reset the demo to restore the sample data.</p>
+        <div className="mt-6 flex flex-wrap gap-3">
+          <button className="inline-flex h-10 items-center rounded-lg bg-primary px-4 font-medium text-primary-foreground" onClick={() => window.location.reload()}>
             Reload
           </button>
           <button
-            className="button button-quiet"
+            className="inline-flex h-10 items-center rounded-lg border px-4 font-medium"
             onClick={async () => {
               clearState()
               await clearFiles().catch(() => undefined)

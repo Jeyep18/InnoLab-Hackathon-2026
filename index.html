@@ -4,6 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#FAF7F2" />
+    <script>
+      // Apply the saved or system theme before first paint so the page never flashes the wrong colors.
+      try {
+        const saved = localStorage.getItem('cherit-theme')
+        const dark = saved ? saved === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches
+        document.documentElement.classList.toggle('dark', dark)
+      } catch {}
+    </script>
     <title>CherIt: lesson packs shared by Bicol teachers</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%238C6D79'/><text x='16' y='22' font-size='16' text-anchor='middle' fill='white' font-family='sans-serif'>C</text></svg>" />
   </head>
