@@ -16,5 +16,4 @@ export function useRoute(): { parts: string[]; params: URLSearchParams } {
 
 export function navigate(to: string) {
   window.location.hash = to
-  window.scrollTo(0, 0)
 }

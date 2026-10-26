@@ -1,4 +1,4 @@
-import { bookmarkCount, contributorRating, currentCurriculumReview, downloadCount, plural, resourceRating } from '../domain/logic'
+import { bookmarkCount, bowLabel, contributorRating, currentCurriculumReview, downloadCount, plural, resourceRating } from '../domain/logic'
 import type { Resource } from '../domain/types'
 import { useStore } from '../store'
 import { RatingLine } from './ui'
@@ -86,7 +86,7 @@ export function TrustPanel({ resource }: { resource: Resource }) {
         <div className="trust-cell">
           <p className="trust-label">Targets</p>
           <p className="trust-value">
-            {resource.bow.quarter}, {resource.bow.week}
+            {bowLabel(resource)}
           </p>
           <p className="trust-sub">{resource.competency.text}</p>
         </div>

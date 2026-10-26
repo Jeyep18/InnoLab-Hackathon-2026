@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Catalogue } from './components/Catalogue'
 import { Header } from './components/Header'
 import { Moderation } from './components/Moderation'
@@ -29,6 +29,18 @@ function Shell({ localCount }: { localCount: number }) {
   const { parts, params } = useRoute()
   const { notice, saveFailed } = useStore()
   const [page, id] = parts
+  const routeKey = parts.join('/')
+  const firstRender = useRef(true)
+
+  // Each route is a new page: start at the top and move keyboard focus to the content.
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false
+      return
+    }
+    window.scrollTo(0, 0)
+    document.getElementById('main')?.focus({ preventScroll: true })
+  }, [routeKey])
 
   let content
   if (!page) content = <Catalogue />

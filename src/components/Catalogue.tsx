@@ -1,5 +1,5 @@
 import { useId, useMemo, useState } from 'react'
-import { filterResources, NO_FILTERS, type Filters } from '../domain/logic'
+import { competencyKey, filterResources, NO_FILTERS, type Filters } from '../domain/logic'
 import { useStore } from '../store'
 import { ResourceCard } from './ResourceCard'
 import { Empty } from './ui'
@@ -19,7 +19,7 @@ export function Catalogue() {
     for (const r of published) {
       if (filters.grade && r.grade !== filters.grade) continue
       if (filters.subject && r.subject !== filters.subject) continue
-      seen.set(r.competency.code, r.competency.text)
+      seen.set(competencyKey(r), r.competency.text)
     }
     return [...seen].sort(([a], [b]) => a.localeCompare(b))
   }, [published, filters.grade, filters.subject])

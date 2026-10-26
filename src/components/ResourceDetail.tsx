@@ -1,5 +1,5 @@
 import { useEffect, useId, useState } from 'react'
-import { isBookmarked } from '../domain/logic'
+import { bowLabel, isBookmarked } from '../domain/logic'
 import type { Resource } from '../domain/types'
 import { extension, fetchFileBlob } from '../files'
 import { navigate } from '../router'
@@ -60,7 +60,7 @@ export function ResourceDetail({ id }: { id: string }) {
         <p className="card-kicker">
           {resource.grade} {resource.subject}
           <span className="card-week">
-            {resource.bow.quarter}, {resource.bow.week}
+            {bowLabel(resource)}
           </span>
         </p>
         <h1>{resource.title}</h1>
@@ -121,6 +121,7 @@ export function ResourceDetail({ id }: { id: string }) {
                 <li key={req}>{req}</li>
               ))}
             </ul>
+            {resource.requirements.length === 0 && <p className="muted">The contributor didn’t list any.</p>}
           </section>
 
           <section className="panel">
@@ -129,11 +130,11 @@ export function ResourceDetail({ id }: { id: string }) {
               <dt>Competency</dt>
               <dd>
                 {resource.competency.text}
-                <span className="muted small"> ({resource.competency.code})</span>
+                {resource.competency.code && <span className="muted small"> ({resource.competency.code})</span>}
               </dd>
               <dt>Budget of Work</dt>
               <dd>
-                {resource.bow.version}, {resource.bow.quarter}, {resource.bow.week}
+                {resource.bow.version}, {bowLabel(resource)}
               </dd>
             </dl>
             {resource.permission.kind === 'fictional-sample' && (
@@ -205,7 +206,7 @@ function Preview({ resource }: { resource: Resource }) {
         </h2>
         <article className="sheet">
           <p className="sheet-meta">
-            {resource.grade} {resource.subject}, {resource.bow.quarter} {resource.bow.week}
+            {resource.grade} {resource.subject}, {bowLabel(resource)}
           </p>
           <h3>{resource.title}</h3>
           <p className="sheet-objective">

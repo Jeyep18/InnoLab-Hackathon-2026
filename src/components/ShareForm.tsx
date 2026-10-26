@@ -84,8 +84,8 @@ export function ShareForm({ parentId }: { parentId?: string }) {
     if (picked.length === 0) next.files = 'Add at least one file.'
     else if (!picked.some((p) => p.required)) next.files = 'Mark at least one file as needed to teach the lesson.'
     else {
-      const problem = picked.map((p) => fileProblem(p.file)).find(Boolean)
-      if (problem) next.files = problem
+      const problems = picked.map((p) => fileProblem(p.file)).filter(Boolean)
+      if (problems.length > 0) next.files = `${problems.join(' ')} Remove ${problems.length === 1 ? 'it' : 'them'} to continue.`
       else if (picked.some((p) => !p.label.trim())) next.files = 'Give every file a short name.'
     }
     if (!permission) next.permission = 'Confirm you made this pack or have permission to share it.'
@@ -130,8 +130,8 @@ export function ShareForm({ parentId }: { parentId?: string }) {
         contributorId: persona.id,
         grade,
         subject,
-        competency: { code: 'Not coded', text: competency.trim() },
-        bow: { version: 'Entered by the contributor', quarter: quarter || 'Term not given', week: weekLabel || 'week not given' },
+        competency: { code: '', text: competency.trim() },
+        bow: { version: 'Entered by the contributor', quarter, week: weekLabel },
         requirements: requirements.split('\n').map((s) => s.trim()).filter(Boolean),
         tags: parent ? ['adaptation'] : ['new'],
         files,

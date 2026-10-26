@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { currentCurriculumReview, DemoRuleError } from '../domain/logic'
+import { bowLabel, currentCurriculumReview, DemoRuleError } from '../domain/logic'
 import type { Resource } from '../domain/types'
 import { useStore } from '../store'
 import { Empty } from './ui'
@@ -142,7 +142,7 @@ function ReviewItem({ resource }: { resource: Resource }) {
       </h3>
       <p className="muted small">
         {resource.grade} {resource.subject}, version {resource.version.label}, by {personaById(resource.contributorId)?.alias}.
-        Targets {resource.bow.quarter}, {resource.bow.week}: {resource.competency.text}.
+        Targets {bowLabel(resource)}: {resource.competency.text}.
       </p>
       <div className="queue-actions">
         <button

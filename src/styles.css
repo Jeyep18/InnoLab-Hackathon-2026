@@ -9,6 +9,7 @@
   --paper: #ffffff;
   --mauve-deep: #6f5560; /* hover/pressed state for mauve fills */
   --rule: #ddd6cc;
+  --control-border: #90857b; /* 3.4:1 on the page, meets non-text contrast */
   --error: #9b2c2c;
 
   --sans: 'Avenir Next', Avenir, 'Segoe UI', 'Helvetica Neue', system-ui, sans-serif;
@@ -224,7 +225,7 @@ textarea {
   font: inherit;
   color: var(--text);
   background: var(--paper);
-  border: 1px solid #b9aea4;
+  border: 1px solid var(--control-border);
   border-radius: var(--radius-s);
   padding: 0.5rem 0.625rem;
   min-height: 2.75rem;
@@ -275,7 +276,7 @@ textarea[aria-invalid='true'] {
 .button-quiet {
   background: transparent;
   color: var(--text);
-  border-color: #b9aea4;
+  border-color: #90857b;
 }
 .button-quiet:hover {
   background: var(--surface);
@@ -791,6 +792,9 @@ textarea[aria-invalid='true'] {
   cursor: pointer;
   border-radius: var(--radius-s);
 }
+.star-input label:not(.on) {
+  color: #8c8177;
+}
 .star-input label.on {
   color: var(--mauve);
 }
@@ -1134,4 +1138,9 @@ img.upload-preview {
     border-left: 0;
     border-top: 1px solid var(--surface);
   }
+}
+
+.crash {
+  max-width: 36rem;
+  padding-top: 4rem;
 }

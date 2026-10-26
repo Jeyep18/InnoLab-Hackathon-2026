@@ -114,6 +114,17 @@ export function reviewEligibility(state: DemoState, resource: Resource, role: 't
   return 'ok'
 }
 
+/** "Term 2, Week 3", or a plain note when the contributor gave no BOW week. */
+export function bowLabel(resource: Resource): string {
+  const parts = [resource.bow.quarter, resource.bow.week].filter(Boolean)
+  return parts.length > 0 ? parts.join(', ') : 'BOW week not given'
+}
+
+/** Packs without a competency code are grouped by their competency text. */
+export function competencyKey(resource: Resource): string {
+  return resource.competency.code || resource.competency.text
+}
+
 // ---------- Search ----------
 
 export interface Filters {
@@ -131,7 +142,7 @@ export function filterResources(resources: Resource[], filters: Filters): Resour
     if (r.status !== 'published') return false
     if (filters.grade && r.grade !== filters.grade) return false
     if (filters.subject && r.subject !== filters.subject) return false
-    if (filters.competency && r.competency.code !== filters.competency) return false
+    if (filters.competency && competencyKey(r) !== filters.competency) return false
     if (terms.length === 0) return true
     const haystack = [r.title, r.summary, r.subject, r.grade, r.competency.code, r.competency.text, ...r.tags, ...r.requirements]
       .join(' ')

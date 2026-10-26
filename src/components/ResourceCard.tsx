@@ -1,4 +1,4 @@
-import { bookmarkCount, downloadCount, isBookmarked, plural, resourceRating } from '../domain/logic'
+import { bookmarkCount, bowLabel, downloadCount, isBookmarked, plural, resourceRating } from '../domain/logic'
 import type { Resource } from '../domain/types'
 import { useStore } from '../store'
 import { ReviewStatus } from './TrustPanel'
@@ -13,7 +13,7 @@ export function ResourceCard({ resource }: { resource: Resource }) {
       <p className="card-kicker">
         {resource.grade} {resource.subject}
         <span className="card-week">
-          {resource.bow.quarter}, {resource.bow.week}
+          {bowLabel(resource)}
         </span>
       </p>
       <h3>

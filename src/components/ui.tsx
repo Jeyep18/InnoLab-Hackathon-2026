@@ -1,4 +1,4 @@
-import { useEffect, useRef, type ReactNode } from 'react'
+import { useEffect, useId, useRef, type ReactNode } from 'react'
 import type { RatingSummary } from '../domain/logic'
 
 export function Stars({ value }: { value: number }) {
@@ -35,6 +35,7 @@ export function Dialog({
   children: ReactNode
 }) {
   const ref = useRef<HTMLDialogElement>(null)
+  const titleId = useId()
   useEffect(() => {
     const dialog = ref.current
     if (!dialog) return
@@ -42,8 +43,8 @@ export function Dialog({
     if (!open && dialog.open) dialog.close()
   }, [open])
   return (
-    <dialog ref={ref} className="dialog" aria-labelledby="dialog-title" onClose={onClose} onCancel={onClose}>
-      <h2 id="dialog-title">{title}</h2>
+    <dialog ref={ref} className="dialog" aria-labelledby={titleId} onClose={onClose} onCancel={onClose}>
+      <h2 id={titleId}>{title}</h2>
       {children}
     </dialog>
   )
