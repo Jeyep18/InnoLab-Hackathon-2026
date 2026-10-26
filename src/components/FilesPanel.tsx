@@ -1,137 +1,26 @@
-import { Download, Lock } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { formatBytes } from '@/domain/logic'
-import type { Resource, ResourceFile } from '@/domain/types'
-import { extension } from '@/files'
+import { ArrowRight, Download, Files, Lock } from 'lucide-react'
+import { useState } from 'react'
+import type { Resource } from '@/domain/types'
 import { useStore } from '@/store'
+import { lessonPlanFiles } from '@/files'
 import { usePackDownloads, type PackDownloads } from './detail/usePackDownloads'
+import { BundlePurchase } from './detail/BundlePurchase'
 
-/** Files list. Pass `downloads` to share progress with other Download buttons on the page. */
 export function FilesPanel({ resource, downloads }: { resource: Resource; downloads?: PackDownloads }) {
   const own = usePackDownloads(resource)
   const dl = downloads ?? own
-  const required = resource.files.filter((f) => f.required)
-  const optional = resource.files.filter((f) => !f.required)
-
-  return (
-    <section aria-labelledby="files-title" className="scroll-mt-24">
-      <h2 id="files-title" className="library-section-title text-2xl">
-        Files in this pack
-      </h2>
-      <p className="mt-1 text-muted-foreground">
-        Files open in Word, Google Docs, LibreOffice or WPS. Edit your copy freely; the shared original stays unchanged.
-      </p>
-
-      <FileGroup title="Needed to teach the lesson" files={required} dl={dl} />
-      {optional.length > 0 && <FileGroup title="Optional extras" files={optional} dl={dl} />}
-
-      <CheckoutDialog resource={resource} dl={dl} />
-    </section>
-  )
-}
-
-function FileGroup({ title, files, dl }: { title: string; files: ResourceFile[]; dl: PackDownloads }) {
-  return (
-    <div className="mt-6">
-      <h3 className="mb-2 text-sm font-semibold tracking-wide text-muted-foreground uppercase">{title}</h3>
-      <ul className="divide-y border-y">
-        {files.map((file) => (
-          <FileRow key={file.id} file={file} dl={dl} />
-        ))}
-      </ul>
-    </div>
-  )
-}
-
-function FileRow({ file, dl }: { file: ResourceFile; dl: PackDownloads }) {
-  const locked = dl.isLocked(file)
-  const errorId = `file-error-${file.id}`
-  const error = dl.errors[file.id]
-  const ext = extension(file.name)
-  const busy = dl.busy === file.id
-
-  return (
-    <li className="flex flex-col gap-3 py-4 sm:flex-row sm:items-center">
-      <div className="min-w-0 flex-1">
-        <p className="font-medium">{file.label}</p>
-        <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted-foreground">
-          <span className="break-all">{file.name}</span>
-          {file.sizeBytes !== undefined && <span className="tabular-nums">· {formatBytes(file.sizeBytes)}</span>}
-          {file.editable && (
-            <Badge variant="outline" className="text-muted-foreground">
-              Editable .{ext}
-            </Badge>
-          )}
-        </p>
-        {file.samplePricePhp !== undefined && (
-          <p className="mt-1.5 text-sm text-mauve-ink">
-            Optional supplement, sample price ₱{file.samplePricePhp} (simulated checkout, no payment)
-          </p>
-        )}
-        {error && (
-          <p id={errorId} role="alert" className="mt-1.5 text-sm text-destructive">
-            {error}
-          </p>
-        )}
-      </div>
-      {!dl.canDownload ? null : locked ? (
-        <Button variant="outline" className="sm:w-auto" onClick={() => dl.setCheckout(file)}>
-          <Lock aria-hidden="true" />
-          Get supplement
-          <span className="sr-only"> {file.label}</span>
-        </Button>
-      ) : (
-        <Button variant="outline" onClick={() => dl.download(file)} disabled={busy} aria-describedby={error ? errorId : undefined}>
-          <Download aria-hidden="true" />
-          {busy ? 'Preparing…' : 'Download'}
-          <span className="sr-only"> {file.label}</span>
-        </Button>
-      )}
-    </li>
-  )
-}
-
-function CheckoutDialog({ resource, dl }: { resource: Resource; dl: PackDownloads }) {
-  const { persona, dispatch, notify } = useStore()
-  const file = dl.checkout
-  return (
-    <Dialog open={file !== null} onOpenChange={(open) => !open && dl.setCheckout(null)}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="text-lg font-semibold">Simulated checkout</DialogTitle>
-          <DialogDescription className="text-base text-foreground">
-            This shows how an optional paid supplement could work. <strong>No payment is collected</strong> and no card, wallet or
-            account details are asked for. The ₱{file?.samplePricePhp} price is a sample.
-          </DialogDescription>
-        </DialogHeader>
-        {file && (
-          <div className="flex items-center justify-between gap-3 border-y py-4">
-            <span className="min-w-0">
-              <span className="block truncate font-medium">{file.label}</span>
-              <span className="block text-sm text-muted-foreground">Sample price, simulated checkout</span>
-            </span>
-            <span className="text-lg font-semibold tabular-nums">₱{file.samplePricePhp}</span>
-          </div>
-        )}
-        <p className="text-sm text-muted-foreground">The core lesson stays free. This demo unlock does not secure paid files.</p>
-        <DialogFooter>
-          <DialogClose asChild>
-            <Button variant="outline">Cancel</Button>
-          </DialogClose>
-          <Button
-            onClick={() => {
-              if (!file) return
-              dispatch({ type: 'acquire', resourceId: resource.id, fileId: file.id, simulatedPurchase: true })
-              notify(`${file.label} unlocked for ${persona.alias} (simulated, no payment).`)
-              dl.setCheckout(null)
-            }}
-          >
-            Unlock supplement (simulated)
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  )
+  const { persona } = useStore()
+  const [open, setOpen] = useState(false)
+  const planIds = new Set(lessonPlanFiles(resource).map((file) => file.id))
+  const files = resource.files.filter((file) => !planIds.has(file.id))
+  if (!files.length) return null
+  const price = resource.supplementBundle?.pricePhp ?? files.reduce((sum, file) => sum + (file.samplePricePhp ?? 0), 0)
+  const unlocked = files.every((file) => !dl.isLocked(file))
+  return <section aria-label="Supplementary bundle" className="border-y py-5">
+    <button type="button" onClick={() => setOpen(true)} className="group w-full text-left outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
+      <div className="flex flex-wrap items-center gap-4"><span className="grid size-10 shrink-0 place-items-center bg-secondary text-foreground"><Files className="size-5" /></span><div className="min-w-0 flex-1"><span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Supplementary bundle</span><h2 className="library-section-title mt-1 text-xl">Teaching materials</h2><p className="mt-1 text-sm text-muted-foreground">{files.length} {files.length === 1 ? 'file' : 'files'}</p></div><span className="text-xl font-semibold tabular-nums">{price > 0 ? `₱${price.toFixed(2)}` : 'Free'}</span></div>
+      <div className="mt-4 flex items-center justify-between border-t pt-3"><span className="flex items-center gap-2 text-sm font-medium">{unlocked ? <Download className="size-4" /> : <Lock className="size-4" />}{unlocked ? 'Open bundle' : 'Explore bundle'}</span><ArrowRight className="size-4 transition-transform group-hover:translate-x-1" /></div>
+    </button>
+    <BundlePurchase key={`${resource.id}-${persona.id}`} resource={resource} files={files} price={price} dl={dl} open={open} onClose={() => setOpen(false)} />
+  </section>
 }

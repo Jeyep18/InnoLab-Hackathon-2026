@@ -27,7 +27,7 @@ export function PackPageView({ model }: { model: PackPageModel }) {
             </div>
           </div>
           <div className="min-w-0 space-y-12 lg:col-start-1 lg:row-start-2">
-            <Preview resource={resource} />
+            <Preview resource={resource} downloads={downloads} />
             <FilesPanel resource={resource} downloads={downloads} />
             <PackNotes resource={resource} />
             <Adaptations model={model} />
