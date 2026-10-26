@@ -51,6 +51,10 @@ Backup moments for Q&A: Ma'am Lira cannot rate her own pack; "Reading typhoon si
 
 ## Evidence
 
+2026-10-27 buyer-modal refinement: browser check of the seeded paid pack confirmed an attached lesson-plan Download button, no iframe viewer, reviews-only sidebar, product-card entry, Files / Billing / Verify / Download steps with prefilled synthetic billing data, simulated unlock and an actual downloaded ZIP. The ZIP passed `unzip -t`. No real payment details were sent or collected.
+
+2026-10-27 supplemental-bundle checks, automated browser on macOS: submitted a synthetic free text plan, a four-page sample PDF and a video placeholder; selected page 1 visible and pages 2–4 blurred; persisted the three files and four preview images; published through the moderator UI; switched to a second teacher; loaded all four approved preview images and unlocked both supplements with one simulated purchase. The video placeholder tested locking and acquisition, not playback. Unit checks cover bundle-wide acquisition, repeat purchase idempotence, persona separation and unpublished-pack rejection. Real payments, protected file delivery, storage-full recovery and Windows are not verified by this check.
+
 2026-10-26, branch `feat/cherit-prototype`, macOS, Node 25.9, Chromium-based automated preview browser (not Dia itself). Dev-server hot reload during editing once crashed the page (development only); an error screen with Reload and Reset now prevents a blank page. Rehearse once in Dia itself before presenting.
 
 Do not invent endorsements, partnerships, review results or workload savings.

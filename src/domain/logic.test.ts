@@ -40,6 +40,39 @@ function review(state: DemoState, resourceId: string, rating: number, text = '')
   })
 }
 
+describe('supplement bundle acquisition', () => {
+  const base = byId('r-water-cycle')
+  const bundle: Resource = {
+    ...base,
+    supplementBundle: { pricePhp: 99 },
+    files: [
+      { ...base.files[0], id: 'plan', category: 'lesson-plan', required: true },
+      { ...base.files[0], id: 'slides', category: 'supplement', required: false },
+      { ...base.files[0], id: 'video', category: 'supplement', required: false },
+    ],
+  }
+
+  it('unlocks every supplement in one purchase, without acquiring the free plan', () => {
+    const result = reduce(emptyState('p-joy'), { type: 'acquire-bundle', resource: bundle })
+    expect(result.acquisitions.map((item) => item.fileId)).toEqual(['slides', 'video'])
+    expect(result.acquisitions.every((item) => item.personaId === 'p-joy' && item.simulatedPurchase)).toBe(true)
+    expect(reduce(result, { type: 'acquire-bundle', resource: bundle }).acquisitions).toHaveLength(2)
+  })
+
+  it('keeps purchases specific to each buyer and resource', () => {
+    const first = reduce(emptyState('p-joy'), { type: 'acquire-bundle', resource: bundle })
+    const otherPersona = reduce(first, { type: 'select-persona', personaId: 'p-dado' })
+    const second = reduce(otherPersona, { type: 'acquire-bundle', resource: bundle })
+    expect(second.acquisitions.filter((item) => item.personaId === 'p-dado')).toHaveLength(2)
+    expect(second.acquisitions.every((item) => item.resourceId === bundle.id)).toBe(true)
+  })
+
+  it('rejects unpublished bundles and packs without a paid bundle', () => {
+    expect(() => reduce(emptyState('p-joy'), { type: 'acquire-bundle', resource: { ...bundle, status: 'pending' } })).toThrow(DemoRuleError)
+    expect(() => reduce(emptyState('p-joy'), { type: 'acquire-bundle', resource: { ...bundle, supplementBundle: undefined } })).toThrow(DemoRuleError)
+  })
+})
+
 describe('ratings', () => {
   it('uses only current-version reviews for the resource mean and count', () => {
     const state = emptyState('p-joy')

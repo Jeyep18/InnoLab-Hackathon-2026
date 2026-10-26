@@ -1,6 +1,6 @@
 import { Search, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { PackGrid } from '@/components/site/PackCard'
 import { Container, EmptyState } from '@/components/site/layout'
 import { SORTS, useBrowse, type BrowseModel } from './useBrowse'
@@ -75,11 +75,11 @@ function ResultsBar({ model }: { model: BrowseModel }) {
       )}
       <div className="ml-auto flex items-center gap-2">
         <span id="sort-label" className="text-sm text-muted-foreground">Sort</span>
-        <Select value={sort} onValueChange={setSort}>
+        <Select items={Object.entries(SORTS).map(([value, label]) => ({ value, label }))} value={sort} onValueChange={(value) => { if (value) setSort(value) }}>
           <SelectTrigger aria-labelledby="sort-label" className="min-w-40"><SelectValue /></SelectTrigger>
-          <SelectContent align="end">
+          <SelectContent align="end"><SelectGroup>
             {Object.entries(SORTS).map(([key, label]) => <SelectItem key={key} value={key}>{label}</SelectItem>)}
-          </SelectContent>
+          </SelectGroup></SelectContent>
         </Select>
       </div>
     </div>
@@ -90,14 +90,14 @@ function FilterSelect({ label, value, options, onChange }: {
   label: string; value: string; options: [string, string][]; onChange: (value: string) => void
 }) {
   return (
-    <Select value={value || ANY} onValueChange={(next) => onChange(next === ANY ? '' : next)}>
+    <Select items={[{ value: ANY, label: `Any ${label.toLowerCase()}` }, ...options.map(([value, label]) => ({ value, label }))]} value={value || ANY} onValueChange={(next) => onChange(!next || next === ANY ? '' : next)}>
       <SelectTrigger aria-label={label} className="w-full"><SelectValue /></SelectTrigger>
-      <SelectContent>
+      <SelectContent><SelectGroup>
         <SelectItem value={ANY}>Any {label.toLowerCase()}</SelectItem>
         {options.map(([key, text]) => (
           <SelectItem key={key} value={key} className="max-w-[min(32rem,90vw)]"><span className="truncate">{text}</span></SelectItem>
         ))}
-      </SelectContent>
+      </SelectGroup></SelectContent>
     </Select>
   )
 }

@@ -34,7 +34,7 @@ export function ResourceDetail({ id }: { id: string }) {
 }
 
 function BrowseButton() {
-  return <Button asChild><a href="#/browse">Browse lesson packs</a></Button>
+  return <Button render={<a href="#/browse" />} nativeButton={false}>Browse lesson packs</Button>
 }
 
 function PackPage({ resource }: { resource: Resource }) {

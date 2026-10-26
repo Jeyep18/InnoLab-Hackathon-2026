@@ -20,9 +20,7 @@ export function Saved() {
         <EmptyState
           title="Nothing saved yet"
           actions={
-            <Button asChild>
-              <a href="#/browse">Browse lesson packs</a>
-            </Button>
+            <Button render={<a href="#/browse" />} nativeButton={false}>Browse lesson packs</Button>
           }
         >
           Save a lesson pack with its bookmark button. It will appear here.

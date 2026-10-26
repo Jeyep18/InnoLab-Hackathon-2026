@@ -49,11 +49,9 @@ export function QueueActions({ resource, className }: { resource: Resource; clas
           <BadgeCheck aria-hidden="true" /> Mark curriculum-reviewed (simulated)
         </Button>
       )}
-      <Button variant="ghost" asChild>
-        <a href={`#/resource/${resource.id}`} aria-label={`View “${resource.title}”`}>
+      <Button variant="ghost" render={<a href={`#/resource/${resource.id}`} aria-label={`View “${resource.title}”`} />} nativeButton={false}>
           <Eye aria-hidden="true" /> View
-        </a>
-      </Button>
+        </Button>
       {resource.status === 'pending' && <HoldDialog resource={resource} open={holding} onOpenChange={setHolding} />}
     </div>
   )
@@ -86,11 +84,9 @@ function HoldDialog({ resource, open, onOpenChange }: { resource: Resource; open
             <Input id={id} value={reason} onChange={(e) => setReason(e.target.value)} placeholder="e.g. A worksheet shows a learner’s name" />
           </div>
           <DialogFooter>
-            <DialogClose asChild>
-              <Button type="button" variant="outline">
+            <DialogClose render={<Button type="button" variant="outline" />}>
                 Cancel
-              </Button>
-            </DialogClose>
+              </DialogClose>
             <Button type="submit">Hold pack</Button>
           </DialogFooter>
         </form>

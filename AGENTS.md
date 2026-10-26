@@ -5,11 +5,15 @@ Help JP, CJ, and Francis build the smallest technically credible, polished, repe
 
 Read [PROJECT_MEMORY.md](PROJECT_MEMORY.md) first, then the relevant sections of [PLAN.md](PLAN.md) and [DEMO.md](DEMO.md). PROJECT_MEMORY.md records decisions; PLAN.md records execution; this file governs agent behavior. Respect confirmed competition rules. Surface conflicts between rules, user instructions, and approved plans before consequential work.
 
-## Approval boundaries
-- Inspect and investigate before proposing substantial work. Present concept assessment, target user, primary journey, P0 scope, stack, architecture, risks, and verification plan for approval before implementation.
-- No default stack. Do not install dependencies, scaffold frameworks, configure external services, change schemas, deploy, or substantially alter behavior without approved scope.
-- Routine, low-risk work within an approved plan may proceed autonomously. Stop for consequential deviations and request a revised approval.
-- No commits or pushes without explicit authorization. Preserve user changes and shared history; do not force-push, reset, delete branches, or blindly stage everything.
+## Execution boundaries
+- Inspect relevant code, then carry out requested work. Resolve routine design and implementation choices autonomously within the user's scope.
+- Use the existing stack and installed dependencies. Ask only when missing information blocks the work or an action exceeds the user's authorization.
+- Preserve user changes and shared history. Commit, push and deploy only when explicitly requested.
+
+## UI components
+- Use shadcn/ui's Base UI variants for every UI element they support, including buttons, inputs, menus, popovers, selects, checkboxes, tabs and dialogs. Compose local wrappers under `src/components/ui/`; build custom UI only where shadcn has no suitable component.
+- New and modified controls use Base UI variants. Migrate existing Radix controls when touching them, preserving their behavior and accessibility. Use the official Base UI registry and current documentation, not Radix examples.
+- Keep rendering separate from state orchestration. Keep each frontend component under 150 lines.
 
 ## Build and verify
 - Prioritize correctness, maintainability, readability, security, and demo reliability. Prefer existing utilities, platform capabilities, and installed dependencies over new code or services.

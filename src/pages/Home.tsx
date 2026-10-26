@@ -1,43 +1,52 @@
-import { ArrowRight } from 'lucide-react'
-import { LibraryIntro } from '@/components/home/LibraryIntro'
+import { useMemo, useState } from 'react'
+import { ArrowLeft } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { PackGrid } from '@/components/site/PackCard'
-import { Container } from '@/components/site/layout'
-import { withParams } from '@/router'
-import { useHomeLibrary } from './useHomeLibrary'
+import { Container, EmptyState } from '@/components/site/layout'
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { downloadCount } from '@/domain/logic'
+import { useStore } from '@/store'
+import { HomeIntro } from './HomeIntro'
+import { LevelShelf } from './home/LevelShelf'
+import { SearchDialog } from './home/SearchDialog'
+import { useHomeFilters, HOME_SORTS, type HomeFilterModel } from './useHomeFilters'
+import './home/home.css'
 
 export function Home() {
-  const library = useHomeLibrary()
-  return (
-    <Container>
-      <LibraryIntro library={library} />
-      <div className="flex flex-col gap-14 pt-12 sm:gap-16">
-        {library.topReviewed.length > 0 && (
-          <section aria-labelledby="top-title">
-            <SectionHead id="top-title" title="Top reviewed" href={withParams('/browse', { sort: 'top' })} />
-            <PackGrid packs={library.topReviewed} />
-          </section>
-        )}
-        <section aria-labelledby="recent-title">
-          <SectionHead id="recent-title" title="Recently shared" href={withParams('/browse', { sort: 'new' })} />
-          <PackGrid packs={library.recent} />
-        </section>
-        <section aria-labelledby="cta-title" className="flex flex-col items-start gap-4 border-t py-8 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h2 id="cta-title" className="library-section-title text-2xl">Have a lesson that worked?</h2>
-            <p className="mt-2 max-w-lg text-muted-foreground">Share your pack. Your name stays with the original and its adaptations.</p>
-          </div>
-          <a href="#/share" className="library-link inline-flex min-h-11 shrink-0 items-center gap-2">Share a lesson <ArrowRight aria-hidden="true" className="size-4" /></a>
-        </section>
-      </div>
-    </Container>
-  )
+  const { resources, state } = useStore()
+  const model = useHomeFilters(resources)
+  const [level, setLevel] = useState('')
+  const [expanded, setExpanded] = useState(false)
+  const [resultsMode, setResultsMode] = useState(model.hasSearch)
+  const packs = resources.filter(pack => pack.status === 'published')
+  const popular = useMemo(() => [...packs].sort((a, b) => downloadCount(b, state) - downloadCount(a, state)), [packs, state])
+  const showResults = () => setResultsMode(true)
+  return <Container className="pt-8 pb-12">
+    {resultsMode
+      ? <HomeResults model={model} onSearch={showResults} onExplore={() => { model.clear(); setResultsMode(false) }} />
+      : <>
+          <HomeIntro searchSlot={<SearchDialog model={model} onSubmit={showResults} />} />
+          {packs.length
+            ? <LevelShelf popular={popular} level={level} expanded={expanded} onLevel={value => { setLevel(value); setExpanded(false) }} onAll={() => setExpanded(true)} />
+            : <EmptyState title="The library is empty">Published lesson packs will appear here.</EmptyState>}
+        </>}
+  </Container>
 }
 
-export function SectionHead({ id, title, href }: { id: string; title: string; href?: string }) {
-  return (
-    <div className="mb-5 flex items-baseline justify-between gap-4">
-      <h2 id={id} className="library-section-title text-3xl">{title}</h2>
-      {href && <a href={`#${href}`} className="library-link inline-flex min-h-10 items-center gap-2 text-sm">See all <ArrowRight aria-hidden="true" className="size-4" /></a>}
+function HomeResults({ model, onSearch, onExplore }: { model: HomeFilterModel; onSearch: () => void; onExplore: () => void }) {
+  return <section aria-labelledby="home-results">
+    <Button variant="ghost" className="mb-3" onClick={onExplore}><ArrowLeft />Back to explore</Button>
+    <SearchDialog model={model} onSubmit={onSearch} onClear={model.clear} />
+    <div className="discovery-section-heading mt-8">
+      <div>
+        <h1 id="home-results">{model.query ? `Results for “${model.query}”` : 'Lesson packs'}</h1>
+        <p role="status">{model.total} pack{model.total === 1 ? '' : 's'}</p>
+      </div>
+      <Select value={model.sort} onValueChange={value => { if (value) model.setSort(value) }} items={HOME_SORTS}>
+        <SelectTrigger aria-label="Sort lesson packs"><SelectValue /></SelectTrigger>
+        <SelectContent><SelectGroup>{Object.entries(HOME_SORTS).map(([value, label]) => <SelectItem key={value} value={value}>{label}</SelectItem>)}</SelectGroup></SelectContent>
+      </Select>
     </div>
-  )
+    {model.results.length ? <PackGrid packs={model.results} /> : <EmptyState title="No lesson packs match" actions={<Button onClick={model.clear}>Clear search and filters</Button>}>Try a broader topic or remove a filter.</EmptyState>}
+  </section>
 }

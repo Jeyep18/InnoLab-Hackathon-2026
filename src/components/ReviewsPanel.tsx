@@ -110,12 +110,10 @@ function ReviewFormDialog({ resource }: { resource: Resource }) {
   const existing = personaReview(state, resource.id)
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant={existing ? 'outline' : 'default'}>
+      <DialogTrigger render={<Button variant={existing ? 'outline' : 'default'} />}>
           {existing ? <PencilLine aria-hidden="true" /> : <MessageSquareText aria-hidden="true" />}
           {existing ? 'Edit your review' : 'Rate this pack'}
-        </Button>
-      </DialogTrigger>
+        </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         {/* Content unmounts on close, so reopening starts from the saved review. */}
         <ReviewForm resource={resource} onDone={() => setOpen(false)} />
@@ -193,11 +191,9 @@ function ReviewForm({ resource, onDone }: { resource: Resource; onDone: () => vo
         </p>
       )}
       <DialogFooter>
-        <DialogClose asChild>
-          <Button type="button" variant="outline">
+        <DialogClose render={<Button type="button" variant="outline" />}>
             Cancel
-          </Button>
-        </DialogClose>
+          </DialogClose>
         <Button type="submit">{existing ? 'Update review' : 'Post review'}</Button>
       </DialogFooter>
     </form>

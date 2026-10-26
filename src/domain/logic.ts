@@ -158,6 +158,7 @@ export function filterResources(resources: Resource[], filters: Filters): Resour
 // ---------- State transitions ----------
 
 export type Action =
+  | { type: 'acquire-bundle'; resource: Resource }
   | { type: 'select-persona'; personaId: string }
   | { type: 'toggle-bookmark'; resourceId: string }
   | { type: 'record-download'; resourceId: string; fileId: string; at: string; simulatedPurchase?: boolean }
@@ -187,6 +188,12 @@ export function validateRating(rating: number): void {
 
 export function reduce(state: DemoState, action: Action): DemoState {
   switch (action.type) {
+    case 'acquire-bundle': {
+      if (action.resource.status !== 'published') throw new DemoRuleError('This bundle is not published.')
+      if (!action.resource.supplementBundle || action.resource.supplementBundle.pricePhp <= 0) throw new DemoRuleError('This pack has no paid bundle.')
+      return action.resource.files.filter((file) => file.category === 'supplement').reduce((next, file) =>
+        reduce(next, { type: 'acquire', resourceId: action.resource.id, fileId: file.id, simulatedPurchase: true }), state)
+    }
     case 'select-persona':
       return { ...state, personaId: action.personaId }
 

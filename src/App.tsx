@@ -31,7 +31,7 @@ export default function App() {
     )
   return (
     <StoreProvider catalogue={loaded.catalogue}>
-      <TooltipProvider delayDuration={400}>
+      <TooltipProvider delay={400}>
         <Shell teacherPackCount={loaded.teacherPackCount} />
       </TooltipProvider>
     </StoreProvider>
@@ -73,9 +73,7 @@ function Shell({ teacherPackCount }: { teacherPackCount: number }) {
         <EmptyState
           title="This page doesn’t exist"
           actions={
-            <Button asChild>
-              <a href="#/browse">Browse lesson packs</a>
-            </Button>
+            <Button render={<a href="#/browse" />} nativeButton={false}>Browse lesson packs</Button>
           }
         />
       </Container>

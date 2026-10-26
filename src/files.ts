@@ -1,7 +1,15 @@
-import type { ResourceFile } from './domain/types'
+import type { Resource, ResourceFile } from './domain/types'
 import { getFile } from './storage/fileStore'
 
 export class FileUnavailableError extends Error {}
+
+export function lessonPlanFiles(resource: Resource): ResourceFile[] {
+  const explicit = resource.files.filter((file) => file.category === 'lesson-plan')
+  if (explicit.length) return explicit
+  const free = resource.files.filter((file) => file.required && file.samplePricePhp === undefined && file.category !== 'supplement')
+  const named = free.filter((file) => /lesson[ -]?plan/i.test(`${file.name} ${file.label}`))
+  return named.length ? named : free.slice(0, 1)
+}
 
 export async function fetchFileBlob(file: ResourceFile): Promise<Blob> {
   if (file.source.type === 'local') {
@@ -44,5 +52,5 @@ export function extension(name: string): string {
   return dot === -1 ? '' : name.slice(dot + 1).toLowerCase()
 }
 
-export const ACCEPTED_EXTENSIONS = ['docx', 'doc', 'pptx', 'ppt', 'xlsx', 'odt', 'odp', 'pdf', 'txt', 'png', 'jpg', 'jpeg']
+export const ACCEPTED_EXTENSIONS = ['docx', 'doc', 'pptx', 'ppt', 'xlsx', 'odt', 'odp', 'pdf', 'txt', 'png', 'jpg', 'jpeg', 'mp4', 'webm', 'mov']
 export const MAX_FILE_BYTES = 15 * 1024 * 1024

@@ -30,7 +30,7 @@ export function PackActions({ model }: { model: PackPageModel }) {
             <ShareLink resource={resource} label="Share link" className="w-full" />
           </div>
           <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 pt-1">
-            <Button variant="link" className="px-0 text-sm" asChild><a href={`#/share?adapt=${resource.id}`}>Adapt this pack</a></Button>
+            <Button variant="link" className="px-0 text-sm" render={<a href={`#/share?adapt=${resource.id}`} />} nativeButton={false}>Adapt this pack</Button>
             {canReport && <Button variant="link" className="px-0 text-sm text-muted-foreground" onClick={() => setReporting(true)}>Report a problem</Button>}
           </div>
         </>

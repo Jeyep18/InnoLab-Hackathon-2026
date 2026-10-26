@@ -1,16 +1,17 @@
-import { ArrowLeft, ArrowRight, GitFork, Loader2, PackageX, Send, ShieldCheck, UserRoundCog } from 'lucide-react'
+import { ArrowLeft, ArrowRight, GitFork, Loader2, PackageX, Plus, Send, ShieldCheck, UserRoundCog, X } from 'lucide-react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { useCallback, useEffect, useId, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { Container, EmptyState } from '@/components/site/layout'
 import { PackCover } from '@/components/site/PackCover'
 import { formatBytes } from '@/domain/logic'
 import type { Resource, ResourceFile } from '@/domain/types'
 import { extension } from '@/files'
+import { curriculumBasis, SCHOOL_LEVELS, schoolLevelForGrade, type SchoolLevel } from '@/lib/curriculum'
 import { cn } from '@/lib/utils'
 import { navigate } from '@/router'
 import { deleteFiles, putFile } from '@/storage/fileStore'
@@ -19,15 +20,15 @@ import { FilePicker, fileProblem, type PickedFile } from './share/FilePicker'
 import { describedBy, FieldError, FormField } from './share/FormField'
 import { Stepper } from './share/Stepper'
 
-const GRADES = ['Kindergarten', 'Grade 1', 'Grade 2', 'Grade 3', 'Grade 4', 'Grade 5', 'Grade 6', 'Grade 7', 'Grade 8', 'Grade 9', 'Grade 10']
 const SUBJECTS = ['English', 'Filipino', 'Mathematics', 'Science', 'Araling Panlipunan', 'MAPEH', 'EPP / TLE', 'Values Education', 'Reading']
-const STEPS = ['Details', 'Files', 'Permission & review'] as const
+const COMMON_CLASSROOM_NEEDS = ['Internet', 'Phone or tablet', 'Computer', 'Projector', 'Laboratory', 'Printer', 'Speakers', 'Printed worksheets']
+const STEPS = ['Lesson info', 'Teaching files', 'Review'] as const
 
-type ErrorKey = 'title' | 'summary' | 'grade' | 'subject' | 'competency' | 'files' | 'permission' | 'changeNote' | 'submit'
+type ErrorKey = 'title' | 'summary' | 'schoolLevel' | 'grade' | 'subject' | 'competency' | 'files' | 'permission' | 'changeNote' | 'submit'
 type Errors = Partial<Record<ErrorKey, string>>
 
 /** Which wizard step owns each validated field, in on-screen order. */
-const STEP_FIELDS: ErrorKey[][] = [['title', 'summary', 'grade', 'subject', 'competency', 'changeNote'], ['files'], ['permission']]
+const STEP_FIELDS: ErrorKey[][] = [['title', 'summary', 'schoolLevel', 'grade', 'subject', 'competency', 'changeNote'], ['files'], ['permission']]
 
 const pageTitle = 'text-3xl font-bold tracking-tight sm:text-4xl'
 
@@ -36,13 +37,19 @@ export function ShareForm({ parentId }: { parentId?: string }) {
   const parent = parentId ? resources.find((r) => r.id === parentId && r.status === 'published') : undefined
   const [title, setTitle] = useState(parent ? `${parent.title} (adapted)` : '')
   const [summary, setSummary] = useState('')
+  const [schoolLevel, setSchoolLevel] = useState<SchoolLevel | ''>(schoolLevelForGrade(parent?.grade ?? ''))
   const [grade, setGrade] = useState(parent?.grade ?? '')
   const [subject, setSubject] = useState(parent?.subject ?? '')
   const [competency, setCompetency] = useState(parent?.competency.text ?? '')
-  const [week, setWeek] = useState(parent ? [parent.bow.quarter, parent.bow.week].filter(Boolean).join(', ') : '')
+  const [quarter, setQuarter] = useState(parent?.bow.quarter ?? '')
+  const [week, setWeek] = useState(parent?.bow.week ?? '')
   const [requirements, setRequirements] = useState(parent?.requirements.join('\n') ?? '')
+  const [customNeed, setCustomNeed] = useState('')
   const [changeNote, setChangeNote] = useState('')
   const [picked, setPicked] = useState<PickedFile[]>([])
+  const [supplements, setSupplements] = useState<PickedFile[]>([])
+  const [supplementAccess, setSupplementAccess] = useState('free')
+  const [bundlePrice, setBundlePrice] = useState('')
   const [permission, setPermission] = useState(false)
   const [errors, setErrors] = useState<Errors>({})
   const [saving, setSaving] = useState(false)
@@ -74,13 +81,18 @@ export function ShareForm({ parentId }: { parentId?: string }) {
           icon={<UserRoundCog />}
           title="Switch to a teacher persona to share"
           actions={
-            <Button variant="outline" asChild>
-              <a href="#/browse">Browse lesson packs</a>
+            <Button
+              onClick={() => {
+                dispatch({ type: 'select-persona', personaId: 'p-joy' })
+                notify("Now sharing as Ma'am Joy (demo account).")
+              }}
+            >
+              Continue as Ma&apos;am Joy
             </Button>
           }
         >
           <p>The demo moderator reviews submissions but doesn’t share packs.</p>
-          <p className="mt-2 text-sm">Switch demo account from the avatar menu at the top right.</p>
+          <p className="mt-2 text-sm">You can choose another teacher from the account menu at the top right.</p>
         </EmptyState>
       </Container>
     )
@@ -93,9 +105,7 @@ export function ShareForm({ parentId }: { parentId?: string }) {
           icon={<PackageX />}
           title="The original pack isn’t available"
           actions={
-            <Button asChild>
-              <a href="#/share">Share a new lesson instead</a>
-            </Button>
+            <Button render={<a href="#/share" />} nativeButton={false}>Share a new lesson instead</Button>
           }
         >
           Only published packs can be adapted. It may be on hold or removed by a reset.
@@ -108,15 +118,20 @@ export function ShareForm({ parentId }: { parentId?: string }) {
     const next: Errors = {}
     if (title.trim().length < 3) next.title = 'Give the pack a title.'
     if (!summary.trim()) next.summary = 'Describe what the lesson covers in a sentence or two.'
+    if (!schoolLevel) next.schoolLevel = 'Choose a school level.'
     if (!grade) next.grade = 'Choose a grade.'
-    if (!subject) next.subject = 'Choose a subject.'
+    if (!subject.trim()) next.subject = 'Enter a subject.'
     if (!competency.trim()) next.competency = 'Name the competency or learning target.'
-    if (picked.length === 0) next.files = 'Add at least one file.'
-    else if (!picked.some((p) => p.required)) next.files = 'Mark at least one file as needed to teach the lesson.'
+    if (picked.length === 0) next.files = 'Upload a free lesson plan.'
+    else if (picked.some((p) => /\.(mp4|webm|mov)$/i.test(p.file.name))) next.files = 'Upload a document for the lesson plan. Add videos under supplements.'
     else {
-      const problems = picked.map((p) => fileProblem(p.file)).filter(Boolean)
+      const problems = [...picked, ...supplements].map((p) => fileProblem(p.file)).filter(Boolean)
       if (problems.length > 0) next.files = `${problems.join(' ')} Remove ${problems.length === 1 ? 'it' : 'them'} to continue.`
-      else if (picked.some((p) => !p.label.trim())) next.files = 'Give every file a short name.'
+      else if ([...picked, ...supplements].some((p) => !p.label.trim())) next.files = 'Give every file a short name.'
+      else if (supplementAccess === 'paid' && supplements.length > 0) {
+        if (!Number.isFinite(Number(bundlePrice)) || Number(bundlePrice) <= 0 || !/^\d+(\.\d{1,2})?$/.test(bundlePrice)) next.files = 'Enter a bundle price greater than ₱0 (up to two decimal places).'
+        else if (supplements.some((p) => !/\.(mp4|webm|mov)$/i.test(p.file.name) && !p.previewPages?.length)) next.files = 'Set preview pages for each paid document. Videos stay fully locked.'
+      }
     }
     if (!permission) next.permission = 'Confirm you made this pack or have permission to share it.'
     if (parent && !changeNote.trim()) next.changeNote = 'Explain what you changed from the original.'
@@ -158,6 +173,7 @@ export function ShareForm({ parentId }: { parentId?: string }) {
   }
 
   async function submit() {
+    if (saving) return
     const found = validate()
     const firstBad = STEP_FIELDS.findIndex((_, s) => stepErrors(found, s).length > 0)
     if (firstBad !== -1) return showErrors(found, firstBad)
@@ -167,7 +183,7 @@ export function ShareForm({ parentId }: { parentId?: string }) {
     const stored: string[] = []
     try {
       const files: ResourceFile[] = []
-      for (const [i, p] of picked.entries()) {
+      for (const [i, p] of [...picked, ...supplements].entries()) {
         const key = `${resourceId}-${i}`
         await putFile(key, p.file)
         stored.push(key)
@@ -175,14 +191,24 @@ export function ShareForm({ parentId }: { parentId?: string }) {
           id: `f${i}`,
           name: p.file.name,
           label: p.label.trim(),
-          required: p.required,
+          required: i < picked.length,
+          category: i < picked.length ? 'lesson-plan' : 'supplement',
           editable: ['docx', 'doc', 'pptx', 'ppt', 'xlsx', 'odt', 'odp', 'txt'].includes(extension(p.file.name)),
           sizeBytes: p.file.size,
           mimeType: p.file.type,
           source: { type: 'local', key },
         })
+        if (i >= picked.length && supplementAccess === 'paid' && p.previewPages) {
+          const { exportPreviewPage } = await import('@/lib/document-preview')
+          files[files.length - 1].previewPages = []
+          for (const [pageIndex, page] of p.previewPages.entries()) {
+            const previewKey = `${key}-preview-${pageIndex}`
+            await putFile(previewKey, await exportPreviewPage(page))
+            stored.push(previewKey)
+            files[files.length - 1].previewPages!.push({ source: { type: 'local', key: previewKey }, page: pageIndex + 1, blurred: page.blurred })
+          }
+        }
       }
-      const [quarter = '', weekLabel = ''] = week.split(',').map((s) => s.trim())
       const today = new Date().toISOString().slice(0, 10)
       const resource: Resource = {
         id: resourceId,
@@ -192,10 +218,11 @@ export function ShareForm({ parentId }: { parentId?: string }) {
         grade,
         subject,
         competency: { code: '', text: competency.trim() },
-        bow: { version: 'Entered by the contributor', quarter, week: weekLabel },
+        bow: { version: 'Entered by the contributor', quarter: quarter.trim(), week: week.trim() },
         requirements: requirements.split('\n').map((s) => s.trim()).filter(Boolean),
         tags: parent ? ['adaptation'] : ['new'],
         files,
+        supplementBundle: supplementAccess === 'paid' && supplements.length > 0 ? { pricePhp: Number(bundlePrice) } : undefined,
         references: [{ label: parent ? `Adapted from “${parent.title}” version ${parent.version.label}.` : 'Contributor’s own work, as declared.' }],
         version: { label: '1.0', date: today, note: parent ? 'First version of this adaptation.' : 'First shared version.' },
         history: [],
@@ -227,10 +254,24 @@ export function ShareForm({ parentId }: { parentId?: string }) {
   }
 
   const cancel = () => navigate(parent ? `/resource/${parent.id}` : '/')
-  const gradeOptions = grade && !GRADES.includes(grade) ? [grade, ...GRADES] : GRADES
+  const selectedLevel = SCHOOL_LEVELS.find((level) => level.value === schoolLevel)
+  const gradeOptions: string[] = selectedLevel ? [...selectedLevel.grades] : []
+  if (grade && !gradeOptions.includes(grade)) gradeOptions.unshift(grade)
   const subjectOptions = subject && !SUBJECTS.includes(subject) ? [subject, ...SUBJECTS] : SUBJECTS
+  const requirementItems = requirements.split('\n').map((item) => item.trim()).filter(Boolean)
+  const customRequirements = requirementItems.filter((item) => !COMMON_CLASSROOM_NEEDS.includes(item))
   const parentAuthor = parent && personaById(parent.contributorId)?.alias
   const isLast = step === STEPS.length - 1
+
+  const setRequirementItems = (items: string[]) => setRequirements([...new Set(items.map((item) => item.trim()).filter(Boolean))].join('\n'))
+  const toggleRequirement = (item: string) =>
+    setRequirementItems(requirementItems.includes(item) ? requirementItems.filter((current) => current !== item) : [...requirementItems, item])
+  const addCustomNeed = () => {
+    const item = customNeed.trim()
+    if (!item) return
+    setRequirementItems([...requirementItems, item])
+    setCustomNeed('')
+  }
 
   const panel = {
     initial: reduceMotion ? false : { opacity: 0, x: direction * 12 },
@@ -239,17 +280,10 @@ export function ShareForm({ parentId }: { parentId?: string }) {
   }
 
   return (
-    <Container className="max-w-3xl pt-10 pb-8 sm:pb-16">
+    <Container className="max-w-3xl pt-8 pb-8 sm:pb-16">
       <header>
         <h1 className={pageTitle}>{parent ? 'Share an adaptation' : 'Share a lesson'}</h1>
-        <p className="mt-2 text-pretty text-muted-foreground">
-          {parent
-            ? 'Your adaptation is shared as a separate pack that credits the original. The original stays unchanged.'
-            : 'Upload the files you teach with. Other teachers download them and edit their own copy.'}
-        </p>
-        <p className="mt-3 text-sm text-muted-foreground">
-          Demo only: files stay in this browser and are never sent to a server. Don’t include learners’ names or photos.
-        </p>
+        {parent && <p className="mt-2 text-sm text-muted-foreground">The original stays unchanged.</p>}
       </header>
 
       {parent && (
@@ -273,7 +307,7 @@ export function ShareForm({ parentId }: { parentId?: string }) {
         </section>
       )}
 
-      <div className="mt-8">
+      <div className="mt-6">
         <Stepper steps={STEPS} current={step} onSelect={(s) => s < step && jumpBack(s)} />
       </div>
 
@@ -281,25 +315,25 @@ export function ShareForm({ parentId }: { parentId?: string }) {
         {announcement}
       </p>
 
-      <form onSubmit={onSubmit} noValidate className="mt-6">
+      <form onSubmit={onSubmit} noValidate className="mt-5">
         <AnimatePresence mode="wait" initial={false}>
           <motion.div key={step} {...panel} className="rounded-2xl border bg-card p-5 sm:p-8">
             <OnMount run={flushFocus} />
             <h2 id={f(`step-${step}-heading`)} tabIndex={-1} className="text-2xl font-bold tracking-tight outline-none">
-              {step === 0 && 'Lesson details'}
-              {step === 1 && 'Files'}
-              {step === 2 && 'Permission and review'}
+              {step === 0 && 'Lesson info'}
+              {step === 1 && 'Teaching files'}
+              {step === 2 && 'Review'}
             </h2>
 
             {step === 0 && (
-              <div className="mt-6 flex flex-col gap-6">
+              <div className="mt-5 flex flex-col gap-5">
                 <FormField id={f('title')} label="Title" error={errors.title}>
                   <Input id={f('title')} value={title} onChange={(e) => setTitle(e.target.value)} aria-invalid={!!errors.title} aria-describedby={describedBy(f('title'), { error: errors.title })} />
                 </FormField>
-                <FormField id={f('summary')} label="What the lesson covers" error={errors.summary}>
+                <FormField id={f('summary')} label="Short description" error={errors.summary}>
                   <Textarea
                     id={f('summary')}
-                    rows={3}
+                    rows={2}
                     value={summary}
                     onChange={(e) => setSummary(e.target.value)}
                     aria-invalid={!!errors.summary}
@@ -307,50 +341,187 @@ export function ShareForm({ parentId }: { parentId?: string }) {
                   />
                 </FormField>
                 <div className="grid gap-6 sm:grid-cols-2">
-                  <FormField id={f('grade')} label="Grade" error={errors.grade}>
-                    <Select value={grade} onValueChange={setGrade}>
-                      <SelectTrigger id={f('grade')} className="w-full" aria-invalid={!!errors.grade} aria-describedby={describedBy(f('grade'), { error: errors.grade })}>
-                        <SelectValue placeholder="Choose…" />
+                  <FormField id={f('schoolLevel')} label="School level" error={errors.schoolLevel}>
+                    <Select
+                      items={[{ value: null, label: 'Choose a level' }, ...SCHOOL_LEVELS.map((level) => ({ value: level.value, label: level.label }))]}
+                      value={schoolLevel || null}
+                      onValueChange={(value) => {
+                        setSchoolLevel(value ?? '')
+                        setGrade('')
+                        setErrors((current) => ({ ...current, schoolLevel: undefined, grade: undefined }))
+                      }}
+                    >
+                      <SelectTrigger
+                        id={f('schoolLevel')}
+                        className="w-full"
+                        aria-invalid={!!errors.schoolLevel}
+                        aria-describedby={describedBy(f('schoolLevel'), { error: errors.schoolLevel })}
+                      >
+                        <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        {gradeOptions.map((g) => (
-                          <SelectItem key={g} value={g}>
-                            {g}
-                          </SelectItem>
-                        ))}
+                        <SelectGroup>
+                          {SCHOOL_LEVELS.map((level) => (
+                            <SelectItem key={level.value} value={level.value}>
+                              {level.label}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
                       </SelectContent>
                     </Select>
                   </FormField>
-                  <FormField id={f('subject')} label="Subject" error={errors.subject}>
-                    <Select value={subject} onValueChange={setSubject}>
-                      <SelectTrigger id={f('subject')} className="w-full" aria-invalid={!!errors.subject} aria-describedby={describedBy(f('subject'), { error: errors.subject })}>
-                        <SelectValue placeholder="Choose…" />
+                  <FormField
+                    id={f('grade')}
+                    label="Grade level"
+                    hint={schoolLevel === 'preschool' ? 'ECCD for Pre-K · DepEd for Kindergarten' : undefined}
+                    error={errors.grade}
+                  >
+                    <Select
+                      items={[{ value: null, label: schoolLevel ? 'Choose a grade' : 'Choose a level first' }, ...gradeOptions.map((option) => ({ value: option, label: option }))]}
+                      value={grade || null}
+                      onValueChange={(value) => setGrade(value ?? '')}
+                      disabled={!schoolLevel}
+                    >
+                      <SelectTrigger
+                        id={f('grade')}
+                        className="w-full"
+                        aria-invalid={!!errors.grade}
+                        aria-describedby={describedBy(f('grade'), { hint: schoolLevel === 'preschool', error: errors.grade })}
+                      >
+                        <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        {subjectOptions.map((s) => (
-                          <SelectItem key={s} value={s}>
-                            {s}
-                          </SelectItem>
-                        ))}
+                        <SelectGroup>
+                          {gradeOptions.map((option) => (
+                            <SelectItem key={option} value={option}>
+                              {option}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
                       </SelectContent>
                     </Select>
                   </FormField>
                 </div>
-                <FormField id={f('competency')} label="Competency or learning target" error={errors.competency}>
-                  <Input
-                    id={f('competency')}
-                    value={competency}
-                    onChange={(e) => setCompetency(e.target.value)}
-                    aria-invalid={!!errors.competency}
-                    aria-describedby={describedBy(f('competency'), { error: errors.competency })}
-                  />
-                </FormField>
-                <FormField id={f('week')} label="Budget of Work term and week" optional>
-                  <Input id={f('week')} placeholder="e.g. Term 2, Week 3" value={week} onChange={(e) => setWeek(e.target.value)} />
-                </FormField>
-                <FormField id={f('requirements')} label="What a classroom needs, one per line" optional>
-                  <Textarea id={f('requirements')} rows={3} placeholder={'No internet needed\nOne worksheet per pair'} value={requirements} onChange={(e) => setRequirements(e.target.value)} />
-                </FormField>
+                {grade && (
+                  <p className="-mt-2 w-fit rounded-full border bg-secondary/60 px-3 py-1 text-xs font-semibold text-secondary-foreground">{curriculumBasis(grade)}</p>
+                )}
+                <div className="grid gap-5 sm:grid-cols-2">
+                  <FormField id={f('subject')} label="Learning area or subject" error={errors.subject}>
+                    <Input
+                      id={f('subject')}
+                      list={f('subject-options')}
+                      placeholder="Type or choose"
+                      value={subject}
+                      autoComplete="off"
+                      spellCheck={false}
+                      data-1p-ignore
+                      aria-invalid={!!errors.subject}
+                      aria-describedby={describedBy(f('subject'), { error: errors.subject })}
+                      onChange={(event) => {
+                        setSubject(event.target.value)
+                        if (errors.subject) setErrors((current) => ({ ...current, subject: undefined }))
+                      }}
+                    />
+                    <datalist id={f('subject-options')}>
+                      {subjectOptions.map((option) => (
+                        <option key={option} value={option} />
+                      ))}
+                    </datalist>
+                  </FormField>
+                  <FormField id={f('competency')} label="Expected competency" error={errors.competency}>
+                    <Input
+                      id={f('competency')}
+                      placeholder="Learning outcome"
+                      value={competency}
+                      onChange={(e) => setCompetency(e.target.value)}
+                      aria-invalid={!!errors.competency}
+                      aria-describedby={describedBy(f('competency'), { error: errors.competency })}
+                    />
+                  </FormField>
+                </div>
+                <section aria-labelledby={f('class-setup')} className="border-t pt-4">
+                  <div className="flex items-baseline gap-2">
+                    <h3 id={f('class-setup')} className="text-sm font-semibold">Class setup</h3>
+                    <span className="text-xs text-muted-foreground">Optional</span>
+                  </div>
+                  <div className="mt-3 grid gap-4 sm:grid-cols-2">
+                    <FormField id={f('quarter')} label="Quarter">
+                      <Select
+                        items={[{ value: null, label: 'Choose' }, ...['Quarter 1', 'Quarter 2', 'Quarter 3', 'Quarter 4'].map((option) => ({ value: option, label: option }))]}
+                        value={quarter || null}
+                        onValueChange={(value) => setQuarter(value ?? '')}
+                      >
+                        <SelectTrigger id={f('quarter')} className="w-full">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                            {['Quarter 1', 'Quarter 2', 'Quarter 3', 'Quarter 4'].map((option) => (
+                              <SelectItem key={option} value={option}>
+                                {option}
+                              </SelectItem>
+                            ))}
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                    </FormField>
+                    <FormField id={f('week')} label="Week">
+                      <Input id={f('week')} inputMode="numeric" placeholder="e.g. Week 3" value={week} onChange={(e) => setWeek(e.target.value)} />
+                    </FormField>
+                  </div>
+                  <div className="mt-4">
+                    <p id={f('requirements-label')} className="text-sm font-medium">Classroom needs</p>
+                    <div role="group" aria-labelledby={f('requirements-label')} className="mt-2 flex flex-wrap gap-2">
+                      {COMMON_CLASSROOM_NEEDS.map((item) => {
+                        const selected = requirementItems.includes(item)
+                        return (
+                          <Button
+                            key={item}
+                            type="button"
+                            variant={selected ? 'default' : 'outline'}
+                            size="sm"
+                            aria-pressed={selected}
+                            onClick={() => toggleRequirement(item)}
+                            className="rounded-full"
+                          >
+                            {item}
+                          </Button>
+                        )
+                      })}
+                      {customRequirements.map((item) => (
+                        <Button
+                          key={item}
+                          type="button"
+                          variant="default"
+                          size="sm"
+                          onClick={() => toggleRequirement(item)}
+                          aria-label={`Remove ${item}`}
+                          className="rounded-full"
+                        >
+                          {item} <X aria-hidden="true" className="size-3.5" />
+                        </Button>
+                      ))}
+                    </div>
+                    <div className="mt-2 flex gap-2">
+                      <Input
+                        id={f('requirements')}
+                        value={customNeed}
+                        placeholder="Add another need"
+                        autoComplete="off"
+                        spellCheck={false}
+                        onChange={(event) => setCustomNeed(event.target.value)}
+                        onKeyDown={(event) => {
+                          if (event.key !== 'Enter') return
+                          event.preventDefault()
+                          addCustomNeed()
+                        }}
+                      />
+                      <Button type="button" variant="outline" size="icon" disabled={!customNeed.trim()} onClick={addCustomNeed} aria-label="Add classroom need">
+                        <Plus aria-hidden="true" />
+                      </Button>
+                    </div>
+                  </div>
+                </section>
                 {parent && (
                   <FormField id={f('changeNote')} label="What you changed from the original" hint="Teachers see this next to the credit to the original pack." error={errors.changeNote}>
                     <Textarea
@@ -368,9 +539,25 @@ export function ShareForm({ parentId }: { parentId?: string }) {
             )}
 
             {step === 1 && (
-              <div className="mt-2">
-                <p className="mb-5 text-muted-foreground">Add the files you teach with. Mark the ones a teacher needs to run the lesson.</p>
+              <div className="mt-5 space-y-6">
+                <section aria-label="Free lesson plan">
+                <div className="mb-3 flex items-center gap-2"><h3 className="font-semibold">Lesson plan</h3><span className="rounded-full bg-secondary px-2 py-0.5 text-xs">Always free · Required</span></div>
                 <FilePicker id={f('files')} picked={picked} setPicked={setPicked} error={errors.files} onAdded={() => setErrors((e) => ({ ...e, files: undefined }))} />
+                </section>
+                <section aria-label="Supplementary materials" className="border-t pt-5">
+                  <div className="mb-3 flex flex-wrap items-center gap-2"><h3 className="mr-auto font-semibold">Supplementary materials</h3><span className="text-xs text-muted-foreground">Optional</span></div>
+                  <div role="group" aria-label="Supplement pricing" className="mb-4 flex flex-wrap items-center gap-2">
+                    <Button type="button" variant={supplementAccess === 'free' ? 'default' : 'outline'} aria-pressed={supplementAccess === 'free'} onClick={() => setSupplementAccess('free')}>Free</Button>
+                    <Button type="button" variant={supplementAccess === 'paid' ? 'default' : 'outline'} aria-pressed={supplementAccess === 'paid'} onClick={() => setSupplementAccess('paid')}>Paid bundle</Button>
+                    {supplementAccess === 'paid' && <div className="flex items-center gap-2"><label htmlFor={f('bundle-price')} className="text-sm">₱</label><Input id={f('bundle-price')} aria-label="Supplement bundle price in pesos" className="w-28" inputMode="decimal" placeholder="0.00" value={bundlePrice} onChange={(event) => setBundlePrice(event.target.value)} /><span className="text-xs text-muted-foreground">One price · All supplements</span></div>}
+                  </div>
+                  <FilePicker id={f('supplements')} picked={supplements} setPicked={setSupplements} kind="supplement" paid={supplementAccess === 'paid'} onAdded={() => setErrors((e) => ({ ...e, files: undefined }))} />
+                  {supplementAccess === 'paid' && <p className="mt-3 text-xs text-muted-foreground">Simulated checkout · Videos stay locked · Documents use your page preview</p>}
+                </section>
+                <div className="mt-4 flex items-center gap-2 text-xs text-muted-foreground">
+                  <ShieldCheck aria-hidden="true" className="size-4 shrink-0 text-mauve-ink" />
+                  <p>Stored in this browser · No learner data</p>
+                </div>
               </div>
             )}
 
@@ -380,24 +567,25 @@ export function ShareForm({ parentId }: { parentId?: string }) {
                   onEdit={jumpBack}
                   rows={[
                     { step: 0, label: 'Title', value: title.trim() },
-                    { step: 0, label: 'What the lesson covers', value: summary.trim() },
-                    { step: 0, label: 'Grade and subject', value: `${grade} · ${subject}` },
-                    { step: 0, label: 'Competency', value: competency.trim() },
-                    { step: 0, label: 'Budget of Work', value: week.trim() || 'Not given' },
-                    {
-                      step: 0,
-                      label: 'Classroom needs',
-                      value: requirements.split('\n').map((s) => s.trim()).filter(Boolean).join(' · ') || 'None listed',
-                    },
+                    { step: 0, label: 'Short description', value: summary.trim() },
+                    { step: 0, label: 'Class', value: `${selectedLevel?.label} · ${grade} · ${subject}` },
+                    { step: 0, label: 'Curriculum', value: curriculumBasis(grade) },
+                    { step: 0, label: 'Expected competency', value: competency.trim() },
+                    ...([quarter.trim(), week.trim()].some(Boolean)
+                      ? [{ step: 0, label: 'Schedule', value: [quarter.trim(), week.trim()].filter(Boolean).join(' · ') }]
+                      : []),
+                    ...(requirements.trim()
+                      ? [{ step: 0, label: 'Classroom needs', value: requirements.split('\n').map((s) => s.trim()).filter(Boolean).join(' · ') }]
+                      : []),
                     ...(parent ? [{ step: 0, label: 'What changed', value: changeNote.trim() }] : []),
                     {
                       step: 1,
-                      label: `Files (${picked.length})`,
+                      label: `Files (${picked.length + supplements.length})`,
                       value: (
                         <ul className="flex flex-col gap-1">
-                          {picked.map((p, i) => (
+                          {[...picked, ...supplements].map((p, i) => (
                             <li key={i}>
-                              {p.label.trim()} <span className="text-muted-foreground">({p.file.name}, {formatBytes(p.file.size)}{p.required ? ', needed to teach' : ''})</span>
+                              {p.label.trim()} <span className="text-muted-foreground">· {i < picked.length ? 'Free lesson plan' : supplementAccess === 'paid' ? 'Paid bundle' : 'Free supplement'} · {formatBytes(p.file.size)}</span>
                             </li>
                           ))}
                         </ul>
@@ -405,6 +593,7 @@ export function ShareForm({ parentId }: { parentId?: string }) {
                     },
                   ]}
                 />
+                {supplementAccess === 'paid' && supplements.length > 0 && <p className="text-sm font-medium">Supplement bundle · ₱{Number(bundlePrice).toFixed(2)} · {supplements.length} files · Simulated checkout</p>}
 
                 <div className={cn('rounded-xl border p-4 transition-colors', permission ? 'border-primary/40 bg-secondary/50' : 'bg-background/60', errors.permission && 'border-destructive/60')}>
                   <div className="flex items-start gap-3">
@@ -420,7 +609,7 @@ export function ShareForm({ parentId }: { parentId?: string }) {
                       className="mt-0.5 size-5"
                     />
                     <label htmlFor={f('permission')} className="cursor-pointer text-[15px] leading-snug font-medium">
-                      I made this pack, or I have permission to share it. It contains no learners’ personal information.
+                      I own this pack or have permission to share it. It contains no learner data.
                     </label>
                   </div>
                   <FieldError id={errors.permission ? `${f('permission')}-error` : undefined}>
@@ -428,13 +617,9 @@ export function ShareForm({ parentId }: { parentId?: string }) {
                   </FieldError>
                 </div>
 
-                <div className="flex gap-3 rounded-xl bg-muted/60 p-4 text-sm text-muted-foreground">
-                  <ShieldCheck aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-mauve-ink" />
-                  <p className="text-pretty">
-                    Submitting puts the pack in the review queue as <strong className="font-semibold text-foreground">pending</strong>. The demo moderator
-                    checks the files, your permission statement and that no learner information is included before it’s published. Curriculum review is a
-                    separate step and is simulated in this demo.
-                  </p>
+                <div className="flex items-center gap-2 rounded-xl bg-muted/60 px-4 py-3 text-sm text-muted-foreground">
+                  <ShieldCheck aria-hidden="true" className="size-4 shrink-0 text-mauve-ink" />
+                  <p>Moderator review · Curriculum badge is simulated</p>
                 </div>
 
                 {errors.submit && (
@@ -473,7 +658,7 @@ export function ShareForm({ parentId }: { parentId?: string }) {
               )
             ) : (
               <>
-                Next<span className="max-sm:sr-only">: {STEPS[step + 1]}</span> <ArrowRight aria-hidden="true" />
+                {STEPS[step + 1]} <ArrowRight aria-hidden="true" />
               </>
             )}
           </Button>

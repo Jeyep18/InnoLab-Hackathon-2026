@@ -15,9 +15,7 @@ export function Profile({ id }: { id: string }) {
         <EmptyState
           title="This profile doesn’t exist"
           actions={
-            <Button asChild>
-              <a href="#/browse">Browse lesson packs</a>
-            </Button>
+            <Button render={<a href="#/browse" />} nativeButton={false}>Browse lesson packs</Button>
           }
         />
       </Container>

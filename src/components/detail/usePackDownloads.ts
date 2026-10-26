@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { hasAcquiredFile, plural } from '@/domain/logic'
 import type { Resource, ResourceFile } from '@/domain/types'
-import { fetchFileBlob, FileUnavailableError, saveBlob } from '@/files'
+import { fetchFileBlob, FileUnavailableError, lessonPlanFiles, saveBlob } from '@/files'
 import { useStore } from '@/store'
 
 /**
@@ -14,13 +14,12 @@ export function usePackDownloads(resource: Resource) {
   const [packBusy, setPackBusy] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [packError, setPackError] = useState('')
-  const [checkout, setCheckout] = useState<ResourceFile | null>(null)
 
   const canDownload = resource.status === 'published' || resource.contributorId === persona.id || persona.role === 'moderator'
   const isLocked = (file: ResourceFile) =>
-    file.samplePricePhp !== undefined && !hasAcquiredFile(state, resource.id, file.id) && resource.contributorId !== persona.id
+    (file.samplePricePhp !== undefined || (file.category === 'supplement' && !!resource.supplementBundle)) && !hasAcquiredFile(state, resource.id, file.id) && resource.contributorId !== persona.id
   /** What the main Download button gets: the files needed to teach the lesson, minus locked supplements. */
-  const packFiles = resource.files.filter((f) => f.required && !isLocked(f))
+  const packFiles = lessonPlanFiles(resource).filter((f) => !isLocked(f))
 
   async function fetchAndSave(file: ResourceFile): Promise<boolean> {
     setErrors((e) => ({ ...e, [file.id]: '' }))
@@ -39,6 +38,7 @@ export function usePackDownloads(resource: Resource) {
   }
 
   async function download(file: ResourceFile) {
+    if (!canDownload || isLocked(file)) return
     setBusy(file.id)
     try {
       if (await fetchAndSave(file)) notify(`Downloading ${file.name}.`)
@@ -70,14 +70,14 @@ export function usePackDownloads(resource: Resource) {
     } else {
       const message =
         ok === 0
-          ? 'The files couldn’t download. See “Files in this pack” for details.'
-          : `${plural(failed, 'file')} couldn’t download. See “Files in this pack” for details.`
+          ? 'Download failed. Try again.'
+          : `${plural(failed, 'file')} failed. Try again.`
       setPackError(message)
       notify(message)
     }
   }
 
-  return { canDownload, isLocked, packFiles, busy, packBusy, errors, packError, checkout, setCheckout, download, downloadPack }
+  return { canDownload, isLocked, packFiles, busy, packBusy, errors, packError, download, downloadPack }
 }
 
 export type PackDownloads = ReturnType<typeof usePackDownloads>

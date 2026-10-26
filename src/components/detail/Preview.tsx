@@ -1,117 +1,52 @@
-import { FileX2 } from 'lucide-react'
+import { Download, FileText } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { Skeleton } from '@/components/ui/skeleton'
-import { bowLabel } from '@/domain/logic'
-import type { Resource } from '@/domain/types'
-import { extension, fetchFileBlob } from '@/files'
+import { Button } from '@/components/ui/button'
+import type { Resource, ResourceFile } from '@/domain/types'
+import { extension, fetchFileBlob, lessonPlanFiles } from '@/files'
+import type { PackDownloads } from './usePackDownloads'
 
-/** Lesson-plan "sheet" for packs with structured lesson content, else a browser preview of an uploaded file. */
-export function Preview({ resource }: { resource: Resource }) {
-  if (resource.lesson) {
-    return (
-      <section aria-labelledby="preview-title">
-        <h2 id="preview-title" className="library-section-title text-2xl">
-          Lesson preview
-        </h2>
-        <article className="mt-4 border bg-card px-5 py-7 sm:px-10 sm:py-10">
-          <p className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
-            {resource.grade} {resource.subject}, {bowLabel(resource)}
-          </p>
-          <h3 className="library-title mt-3 text-2xl text-balance sm:text-3xl">{resource.title}</h3>
-          <p className="mt-5 border-l-2 border-primary pl-4 text-pretty">
-            <strong className="font-semibold">Objective.</strong> {resource.lesson.objective}
-          </p>
-          <div className="mt-6 space-y-6">
-            {resource.lesson.sections.map((section) => {
-              const ordered = section.heading === 'Procedure'
-              const List = ordered ? 'ol' : 'ul'
-              return (
-                <div key={section.heading}>
-                  <h4 className="font-semibold">{section.heading}</h4>
-                  <List className={ordered ? 'mt-2 list-decimal space-y-1.5 pl-6' : 'mt-2 list-disc space-y-1.5 pl-6 marker:text-muted-foreground'}>
-                    {section.items.map((item) => (
-                      <li key={item} className="pl-1 text-pretty">
-                        {item}
-                      </li>
-                    ))}
-                  </List>
-                </div>
-              )
-            })}
-          </div>
-        </article>
-        <p className="mt-2 text-sm text-muted-foreground">Preview of the lesson plan file. Download for the full editable version.</p>
-      </section>
-    )
-  }
-  return <UploadedPreview resource={resource} />
+export function Preview({ resource, downloads }: { resource: Resource; downloads: PackDownloads }) {
+  const plans = lessonPlanFiles(resource)
+  const preview = plans.find((file) => ['pdf', 'png', 'jpg', 'jpeg', 'txt'].includes(extension(file.name)))
+  return <section aria-label="Lesson plan" className="overflow-hidden border bg-card">
+    <div className="flex items-center justify-between border-b px-5 py-4"><h2 className="library-section-title text-xl">Lesson plan</h2><span className="border px-2 py-1 text-xs font-semibold">Free</span></div>
+    {preview ? <DocumentPages key={preview.id + resource.id} file={preview} /> : resource.lesson ? <article className="space-y-6 px-6 py-8 sm:px-10">
+      <h3 className="text-2xl font-bold">{resource.title}</h3><p>{resource.lesson.objective}</p>
+      {resource.lesson.sections.map((section) => <div key={section.heading}><h4 className="font-semibold">{section.heading}</h4><ul className="mt-2 list-disc space-y-1 pl-5">{section.items.map((item) => <li key={item}>{item}</li>)}</ul></div>)}
+    </article> : <div className="grid justify-items-center gap-2 py-10"><FileText className="size-10 text-muted-foreground" /><span className="text-sm">{plans[0]?.name ?? 'Lesson plan unavailable'}</span></div>}
+    <div className="flex flex-wrap items-center gap-3 border-t px-5 py-3"><span className="mr-auto text-sm font-medium">{plans.length === 1 ? plans[0].label : `${plans.length} lesson files`}</span><Button onClick={downloads.downloadPack} disabled={!downloads.canDownload || downloads.packBusy || !plans.length}><Download className="size-4" />{downloads.packBusy ? 'Preparing…' : 'Download lesson plan'}</Button>{downloads.packError && <p role="alert" className="w-full text-sm text-destructive">{downloads.packError}</p>}</div>
+  </section>
 }
 
-const PREVIEWABLE = new Set(['pdf', 'png', 'jpg', 'jpeg', 'txt'])
-
-function UploadedPreview({ resource }: { resource: Resource }) {
-  const file = resource.files.find((f) => PREVIEWABLE.has(extension(f.name)))
-  const [url, setUrl] = useState<string | null>(null)
-  const [failed, setFailed] = useState(false)
-
+export function DocumentPages({ file }: { file: ResourceFile }) {
+  const [pages, setPages] = useState<string[]>([])
+  const [text, setText] = useState<string | null>(null)
+  const [error, setError] = useState('')
   useEffect(() => {
-    if (!file) return
-    // Served files load directly, so the PDF viewer shows the real file name.
-    if (file.source.type === 'url') {
-      setUrl(file.source.url)
-      return
+    let active = true
+    const urls: string[] = []
+    async function load() {
+      try {
+        const blob = await fetchFileBlob(file)
+        if (extension(file.name) === 'txt') {
+          const value = await blob.text()
+          if (active) setText(value)
+          return
+        }
+        if (extension(file.name) === 'pdf') {
+          const { renderPreviewPages } = await import('@/lib/document-preview')
+          const result = await renderPreviewPages(new File([blob], file.name, { type: 'application/pdf' }))
+          if (!active) return
+          for (const page of result) urls.push(URL.createObjectURL(page.blob))
+        } else if (active) urls.push(URL.createObjectURL(blob))
+        if (active) setPages([...urls])
+      } catch { if (active) setError('Preview unavailable') }
     }
-    let objectUrl: string | null = null
-    let cancelled = false
-    fetchFileBlob(file)
-      .then((blob) => {
-        if (cancelled) return
-        objectUrl = URL.createObjectURL(blob)
-        setUrl(objectUrl)
-      })
-      .catch(() => !cancelled && setFailed(true))
-    return () => {
-      cancelled = true
-      if (objectUrl) URL.revokeObjectURL(objectUrl)
-    }
+    void load()
+    return () => { active = false; urls.forEach((url) => URL.revokeObjectURL(url)) }
   }, [file])
-
-  if (!file) {
-    return (
-      <section aria-labelledby="preview-title" className="border-y py-6">
-        <h2 id="preview-title" className="library-section-title text-2xl">
-          Preview
-        </h2>
-        <p className="mt-1 text-muted-foreground">
-          These file types can’t be previewed in the browser. Download them to open in Word, Google Docs, LibreOffice or WPS.
-        </p>
-      </section>
-    )
-  }
-  const ext = extension(file.name)
-  return (
-    <section aria-labelledby="preview-title">
-      <h2 id="preview-title" className="library-section-title text-2xl break-words">
-        Preview of {file.name}
-      </h2>
-      <div className="mt-4 overflow-hidden border bg-card">
-        {failed ? (
-          <div className="flex flex-col items-center gap-3 px-6 py-14 text-center">
-            <FileX2 aria-hidden="true" className="size-8 text-muted-foreground" />
-            <p className="max-w-sm text-destructive">The preview couldn’t load. The file may have been cleared from this browser.</p>
-          </div>
-        ) : !url ? (
-          <div role="status">
-            <Skeleton className="h-[60vh] min-h-80 w-full rounded-none" />
-            <span className="sr-only">Loading preview…</span>
-          </div>
-        ) : ['png', 'jpg', 'jpeg'].includes(ext) ? (
-          <img src={url} alt={`Preview of ${file.name}`} className="mx-auto max-h-[75vh] w-auto object-contain" />
-        ) : ['pdf', 'txt'].includes(ext) ? (
-          // White page behind the file: plain-text files render dark text with no background of their own.
-          <iframe src={url} title={`Preview of ${file.name}`} className="h-[70vh] min-h-96 w-full bg-white" />
-        ) : null}
-      </div>
-    </section>
-  )
+  if (error) return <p role="alert" className="p-6 text-sm text-destructive">{error}</p>
+  if (text !== null) return <pre className="whitespace-pre-wrap break-words p-6 font-sans text-sm">{text}</pre>
+  if (!pages.length) return <p role="status" className="p-6 text-sm text-muted-foreground">Loading…</p>
+  return <div className="space-y-3 bg-secondary/40 p-3">{pages.map((url, index) => <img key={url} src={url} alt={`Lesson plan, page ${index + 1}`} className="mx-auto w-full bg-white" loading={index ? 'lazy' : 'eager'} />)}</div>
 }

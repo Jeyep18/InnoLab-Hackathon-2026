@@ -84,9 +84,7 @@ export function ShareLink({ resource, className, label = 'Copy link to share' }:
             A preview only. CherIt isn’t connected to Facebook, and this local link opens only on this computer.
           </p>
           <DialogFooter>
-            <DialogClose asChild>
-              <Button>Done</Button>
-            </DialogClose>
+            <DialogClose render={<Button />}> Done</DialogClose>
           </DialogFooter>
         </DialogContent>
       </Dialog>

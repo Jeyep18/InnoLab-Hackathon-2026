@@ -15,7 +15,7 @@ export function Stepper({ steps, current, onSelect }: { steps: readonly string[]
               className={cn(
                 'grid size-8 shrink-0 place-items-center rounded-full border text-sm font-semibold tabular-nums transition-colors duration-200',
                 done && 'border-primary bg-primary text-primary-foreground',
-                active && 'border-primary bg-card text-mauve-ink ring-3 ring-primary/20',
+                active && 'border-primary bg-primary text-primary-foreground',
                 !done && !active && 'border-border bg-card text-muted-foreground',
               )}
             >
