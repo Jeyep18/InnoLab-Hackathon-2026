@@ -1,28 +1,55 @@
-# Roadmap
+# CherIt prototype plan
 
-Status: initialization authorized; all product phases below are proposals, not approved implementation tasks. Event dates are October 26–27, 2026; exact times and build budgets await the detailed schedule. Use [BRAINSTORM_PROMPT.md](BRAINSTORM_PROMPT.md) for concept selection once the day-of theme is available.
+Updated: 2026-10-26. Product scope follows team decisions in [PROJECT_MEMORY.md](PROJECT_MEMORY.md). Implementation has not started. Technical stack/dependencies await approval; [DEMO.md](DEMO.md) owns demonstration acceptance.
 
-| Phase | Priority / status | Proposed owner | Dependencies | Acceptance and verification |
-| --- | --- | --- | --- | --- |
-| 0. Repository and memory | P0 / initialized locally | Coordinating agent | Existing repository | Origin matches supplied URL; no history overwritten; documentation links and ignore behavior checked |
-| 1. Requirements and concept review | P0 / blocked on context | Francis + team, agent assists | Theme, rubric, rules, concept, constraints | Approved problem, user, differentiator, one demo journey, P0 boundaries; assess alternatives and feasibility |
-| 2. Stack and implementation plan | P0 / pending approval | JP + team | Approved concept | Compare only suitable options; approve architecture, dependencies, costs, real/mock boundary, file ownership and test strategy |
-| 3. First vertical slice | P0 / not started | JP; CJ designs; Francis validates | Approved plan | App runs; input reaches a meaningful output through primary screens; important logic and states checked |
-| 4. Essential capability | P0 / not started | JP + Francis with separate ownership | Working slice | Distinguishing capability operates genuinely where feasible; required integrations, validation and failure recovery checked |
-| 5. Reliability and presentation | P0 / not started | Francis QA/demo; CJ polish; JP fixes | Complete core journey | Repeat journey from reset without repair; responsive/keyboard review; explicit service-failure behavior and fallback |
-| 6. Freeze and submission | P0 / not started | Team | Rubric, stable verified build | Accurate README/demo/memory; final diff review; authorized stable commit; required submission artifacts; optional authorized deployment |
+## Delivery model
 
-Before phase 3, replace generic product phases with approved, small tasks naming actual files/modules, required behavior, owner, dependencies, acceptance checks and risks. Do not invent module names before architecture selection.
+One locally served, presenter-controlled frontend. Build discovery, real permitted downloads, bookmarks, review calculations, profiles and local publishing/adaptation interactions. Simulate accounts and purchases explicitly. Shared data across devices and public backend services are outside scope.
 
-## Collaboration proposal
-Keep main demonstrable once an app exists. Use feat/<feature> and fix/<issue> branches for isolated work, integrating verified changes frequently. JP coordinates integration; CJ can design while Francis validates product assumptions. Parallel code work requires separate file ownership and branches/worktrees. Do not configure branch protection or CI without a justified approved need.
+Teacher files stay in ignored local storage under the restrictions in project memory. Confirm actual file availability and modification permissions. Use synthetic adaptation files when necessary.
 
-## Risks and fallback planning
-- Unknown pre-event/AI rules: confirm eligibility before product work.
-- Unknown concept and deadline: timebox one central journey after requirements arrive; drop P1/P2 first.
-- Unverified external services: validate essential capability early after approval; design a clearly disclosed seeded/local/recorded fallback where appropriate.
-- Merge conflicts: separate ownership and integrate frequently; preserve teammate work.
-- Demo fragility: rehearse reset, repeated runs and expected failures; freeze optional work near the deadline.
+Partner bootstrap: teacher assets do not arrive through Git pull. Missing assets do not prevent technical preflight or, after technical approval, a functional prototype using clearly fictional reusable files. Replace them only with permitted local samples; never claim illustrative mappings are official curriculum validation.
 
-## Definition of done
-Approved MVP matches the original problem and rubric; the core value and user journey are verified; important errors and relevant security/accessibility concerns are addressed; real and mocked behavior is disclosed; repeatable demo and practical fallback are documented; final diff and documentation are reviewed; stable changes are committed when authorized; required submission items are satisfied. No readiness claim before these checks.
+## Priorities
+
+| Priority | Scope |
+| --- | --- |
+| P0 | Responsive catalogue; keyword/grade/subject/competency filters; empty/no-results states |
+| P0 | Detail view: preview, actual downloads, references, requirements, rights/scope notice, version/review information and required/optional attachments |
+| P0 | Bookmark toggles/saved items; review submission/editing; correct resource and contributor aggregates; sample-data disclosure |
+| P0 | Alias contributor profile with resources, community rating and review count |
+| P0 | Local contribution -> pending -> demo review -> published/held; actual local file bytes when upload persistence is claimed |
+| P0 | Separate credited adaptation with parent resource/version and change note; original preserved |
+| P0 | Labelled demo personas and sample paid-acquisition UI; no credential/financial collection |
+| P0 | Reset/repeatability, file failures, local persistence, keyboard access, contrast and mobile layout |
+| P1 | Expanded contextual feedback and extra visual polish after core acceptance |
+| Future | Secure accounts, protected paid files, payments/payouts, public uploads, backend moderation, private revision proposals/merging, institution integrations, ads/subscriptions, offline website/editor, cross-device sync, nationwide expansion |
+
+The lightweight simulated acquisition UI is part of the prototype; showing it in the timed live walkthrough is optional. It must not consume time needed for the real catalogue/download journey.
+
+## Execution checkpoints
+
+Plan around 12 hours from actual implementation start, capped by the real deadline. The earlier 12-16-hour estimate is historical. Keep the final two hours for rehearsal/submission; approve a concrete reduction if that time no longer exists.
+
+| Checkpoint | Proposed owner | Acceptance |
+| --- | --- | --- |
+| Preflight, up to 1 hour | JP + Francis; CJ visual review | Inspect repo; confirm deadline/assets/permissions; propose exact stack/dependencies, compact structure, storage and verification; obtain technical approval before install |
+| Discovery/download slice, by hour 4 | JP; CJ feedback; Francis scenario/data | Local app runs; permitted complete sample is found, previewed and downloaded; missing-file state and mobile/keyboard basics work |
+| Feedback/profile slice, by hour 6 | JP; separate file ownership for helpers | Bookmark, review/edit, no-self-review, unrated state, weighted contributor mean and profile/saved views work |
+| Contribution/adaptation, by hour 8 | JP; Francis checks | Local file submission and its stated persistence work; demo publish/hold and credited adaptation work; simulated roles/payment stay labelled |
+| Freeze/verification, hours 8-10 | Francis QA; JP fixes; CJ polish | Run DEMO.md logic/browser checks; errors/reset; inspect final diff; correct in-scope defects |
+| Final two hours | Team | Human-authored deck follows event rules; repeat primary journey; prepare disclosed fallback; submit within permission/deadline limits |
+
+CJ can design while Francis prepares permission-cleared catalogue metadata/test scenarios. Confirm parallel code ownership before edits. No agent-generated pitch deck.
+
+If a checkpoint slips, stop optional work and request approval for a concrete remaining-P0 reduction. Preserve a runnable catalogue/download slice. Do not silently substitute hard-coded success or animations for claimed behavior.
+
+## Technical preflight
+
+Reuse a suitable app/packages if a teammate has initialized them. Otherwise compare the smallest suitable static React/TypeScript setup with the team's familiar alternative. Routing/UI/storage libraries must justify their cost. The journey requires no server framework.
+
+Present exact proposed packages/commands, directory layout, asset loading, local state/file storage, file ownership and verification for approval. Browser metadata storage alone does not preserve uploaded file bytes; choose appropriate platform storage when promising reload persistence. No external service setup is required.
+
+## Completion
+
+Pass the relevant DEMO.md checks, inspect final diff/Git status, add actual verified run/build/test commands to README, and record tested environment/results/limitations. Distinguish seeded, simulated, implemented-but-unverified and verified behavior. Commit/push/deploy/distribution of teacher files requires separate applicable authorization.

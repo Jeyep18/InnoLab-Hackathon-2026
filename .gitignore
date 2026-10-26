@@ -16,3 +16,6 @@ Thumbs.db
 Desktop.ini
 
 # Add framework-specific generated paths only after stack selection.
+
+# Teacher files and permission records are demonstration-only.
+demo-assets/
