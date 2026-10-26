@@ -125,6 +125,10 @@ export function competencyKey(resource: Resource): string {
   return resource.competency.code || resource.competency.text
 }
 
+export function competencyLabel(resource: Resource): string {
+  return resource.competency.text || 'Competency not given'
+}
+
 // ---------- Search ----------
 
 export interface Filters {

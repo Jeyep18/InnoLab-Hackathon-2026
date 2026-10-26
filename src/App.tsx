@@ -13,19 +13,19 @@ import { navigate, useRoute } from './router'
 import { StoreProvider, useStore } from './store'
 
 export default function App() {
-  const [loaded, setLoaded] = useState<{ catalogue: CatalogueData; localCount: number } | null>(null)
+  const [loaded, setLoaded] = useState<{ catalogue: CatalogueData; teacherPackCount: number } | null>(null)
   useEffect(() => {
     loadCatalogue().then(setLoaded)
   }, [])
   if (!loaded) return <p className="loading">Loading lesson packs…</p>
   return (
     <StoreProvider catalogue={loaded.catalogue}>
-      <Shell localCount={loaded.localCount} />
+      <Shell teacherPackCount={loaded.teacherPackCount} />
     </StoreProvider>
   )
 }
 
-function Shell({ localCount }: { localCount: number }) {
+function Shell({ teacherPackCount }: { teacherPackCount: number }) {
   const { parts, params } = useRoute()
   const { notice, saveFailed } = useStore()
   const [page, id] = parts
@@ -66,7 +66,8 @@ function Shell({ localCount }: { localCount: number }) {
       <Header />
       <p className="disclosure">
         Demonstration prototype: sample accounts, reviews and activity counts; payments simulated.
-        {localCount > 0 && ` ${localCount} demonstration-only teacher file${localCount === 1 ? '' : 's'} loaded from this computer.`}
+        {teacherPackCount > 0 &&
+          ` ${teacherPackCount} teacher pack${teacherPackCount === 1 ? '' : 's'} shown for this demonstration only, from this computer.`}
       </p>
       {saveFailed && (
         <p className="warning" role="alert">

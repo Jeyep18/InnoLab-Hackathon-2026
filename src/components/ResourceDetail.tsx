@@ -1,11 +1,12 @@
 import { useEffect, useId, useState } from 'react'
-import { bowLabel, isBookmarked } from '../domain/logic'
+import { bowLabel, competencyLabel, isBookmarked } from '../domain/logic'
 import type { Resource } from '../domain/types'
 import { extension, fetchFileBlob } from '../files'
 import { navigate } from '../router'
 import { useStore } from '../store'
 import { FilesPanel } from './FilesPanel'
 import { ReviewsPanel } from './ReviewsPanel'
+import { ShareLink } from './ShareLink'
 import { TrustPanel } from './TrustPanel'
 import { Dialog, Empty, ErrorText } from './ui'
 
@@ -87,6 +88,7 @@ export function ResourceDetail({ id }: { id: string }) {
           >
             {saved ? 'Saved' : 'Save for later'}
           </button>
+          <ShareLink resource={resource} />
           {resource.contributorId !== persona.id && (
             <button className="button button-quiet" onClick={() => setReporting(true)}>
               Report a problem
@@ -129,12 +131,12 @@ export function ResourceDetail({ id }: { id: string }) {
             <dl className="facts">
               <dt>Competency</dt>
               <dd>
-                {resource.competency.text}
+                {competencyLabel(resource)}
                 {resource.competency.code && <span className="muted small"> ({resource.competency.code})</span>}
               </dd>
               <dt>Budget of Work</dt>
               <dd>
-                {resource.bow.version}, {bowLabel(resource)}
+                {resource.bow.version ? `${resource.bow.version}, ${bowLabel(resource)}` : bowLabel(resource)}
               </dd>
             </dl>
             {resource.permission.kind === 'fictional-sample' && (
@@ -242,6 +244,11 @@ function UploadedPreview({ resource }: { resource: Resource }) {
 
   useEffect(() => {
     if (!file) return
+    // Served files load directly, so the PDF viewer shows the real file name.
+    if (file.source.type === 'url') {
+      setUrl(file.source.url)
+      return
+    }
     let objectUrl: string | null = null
     let cancelled = false
     fetchFileBlob(file)

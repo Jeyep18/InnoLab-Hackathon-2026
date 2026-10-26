@@ -1,0 +1,46 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [6 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Length 721 >>
+stream
+0.98 0.97 0.95 rg 0 0 595 842 re f
+0.55 0.43 0.47 rg
+BT /F2 20 Tf 56 762 Td (Measuring area with the school court: worksheet) Tj ET
+0.2 0.17 0.15 rg
+BT /F1 12 Tf 56 722 Td (Name: ____________________) Tj ET
+BT /F1 12 Tf 56 702.8 Td (1. Length of the court: ______ m) Tj ET
+BT /F1 12 Tf 56 683.5999999999999 Td (2. Width of the court: ______ m) Tj ET
+BT /F1 12 Tf 56 664.3999999999999 Td (3. Area: ______ square metres) Tj ET
+BT /F1 12 Tf 56 645.1999999999998 Td (4. Area of one tile: ______ square metres) Tj ET
+BT /F1 12 Tf 56 625.9999999999998 Td (5. Tiles needed to cover the court: ______) Tj ET
+BT /F1 12 Tf 56 606.7999999999997 Td (Fictional placeholder made by the CherIt team for a hackathon demonstration.) Tj ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 5 0 R >>
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000212 00000 n 
+0000000314 00000 n 
+0000001086 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+1222
+%%EOF

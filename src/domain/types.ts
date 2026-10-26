@@ -6,6 +6,8 @@ export interface Persona {
   role: PersonaRole
   area: string
   bio: string
+  /** False for folder-pack contributors, who aren't offered in the persona switcher. */
+  listed?: boolean
 }
 
 export interface LessonSection {

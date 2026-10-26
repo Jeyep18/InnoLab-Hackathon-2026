@@ -19,7 +19,7 @@ export function Catalogue() {
     for (const r of published) {
       if (filters.grade && r.grade !== filters.grade) continue
       if (filters.subject && r.subject !== filters.subject) continue
-      seen.set(competencyKey(r), r.competency.text)
+      if (competencyKey(r)) seen.set(competencyKey(r), r.competency.text)
     }
     return [...seen].sort(([a], [b]) => a.localeCompare(b))
   }, [published, filters.grade, filters.subject])

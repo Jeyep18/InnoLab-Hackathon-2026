@@ -45,7 +45,7 @@ export function Header() {
                 notify(`Now browsing as ${next?.alias} (demo persona).`)
               }}
             >
-              {catalogue.personas.map((p) => (
+              {catalogue.personas.filter((p) => p.listed !== false).map((p) => (
                 <option key={p.id} value={p.id}>
                   {p.alias}
                   {p.role === 'moderator' ? '' : `, ${p.area}`}

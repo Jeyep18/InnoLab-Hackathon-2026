@@ -1,0 +1,93 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [6 0 R 8 0 R 10 0 R 12 0 R] /Count 4 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Length 458 >>
+stream
+0.98 0.97 0.95 rg 0 0 842 595 re f
+0.55 0.43 0.47 rg
+BT /F2 30 Tf 56 515 Td (Measuring area with the school court) Tj ET
+0.2 0.17 0.15 rg
+BT /F1 18 Tf 56 455 Td (Learners compute the area of rectangles using the school basketball) Tj ET
+BT /F1 18 Tf 56 426.2 Td (court and classroom floor tiles.) Tj ET
+BT /F1 18 Tf 56 397.4 Td (Fictional placeholder made by the CherIt team for a hackathon) Tj ET
+BT /F1 18 Tf 56 368.59999999999997 Td (demonstration.) Tj ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 842 595] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 5 0 R >>
+endobj
+7 0 obj
+<< /Length 291 >>
+stream
+0.98 0.97 0.95 rg 0 0 842 595 re f
+0.55 0.43 0.47 rg
+BT /F2 30 Tf 56 515 Td (How big is our court?) Tj ET
+0.2 0.17 0.15 rg
+BT /F1 18 Tf 56 455 Td (Guess first: how many classrooms fit on the court?) Tj ET
+BT /F1 18 Tf 56 426.2 Td (Today we measure, then compute area = length x width.) Tj ET
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 842 595] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 7 0 R >>
+endobj
+9 0 obj
+<< /Length 336 >>
+stream
+0.98 0.97 0.95 rg 0 0 842 595 re f
+0.55 0.43 0.47 rg
+BT /F2 30 Tf 56 515 Td (Measure in groups) Tj ET
+0.2 0.17 0.15 rg
+BT /F1 18 Tf 56 455 Td (Group 1: length of the court \(paces, then metres\)) Tj ET
+BT /F1 18 Tf 56 426.2 Td (Group 2: width of the court) Tj ET
+BT /F1 18 Tf 56 397.4 Td (Group 3: one floor tile in the classroom) Tj ET
+endstream
+endobj
+10 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 842 595] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 9 0 R >>
+endobj
+11 0 obj
+<< /Length 312 >>
+stream
+0.98 0.97 0.95 rg 0 0 842 595 re f
+0.55 0.43 0.47 rg
+BT /F2 30 Tf 56 515 Td (Compute and compare) Tj ET
+0.2 0.17 0.15 rg
+BT /F1 18 Tf 56 455 Td (Area of the court = length x width) Tj ET
+BT /F1 18 Tf 56 426.2 Td (How many tiles would cover the court?) Tj ET
+BT /F1 18 Tf 56 397.4 Td (Was your guess close?) Tj ET
+endstream
+endobj
+12 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 842 595] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 11 0 R >>
+endobj
+xref
+0 13
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000135 00000 n 
+0000000232 00000 n 
+0000000334 00000 n 
+0000000843 00000 n 
+0000000979 00000 n 
+0000001321 00000 n 
+0000001457 00000 n 
+0000001844 00000 n 
+0000001981 00000 n 
+0000002345 00000 n 
+trailer
+<< /Size 13 /Root 1 0 R >>
+startxref
+2483
+%%EOF

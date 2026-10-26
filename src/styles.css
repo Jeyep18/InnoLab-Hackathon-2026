@@ -1144,3 +1144,52 @@ img.upload-preview {
   max-width: 36rem;
   padding-top: 4rem;
 }
+
+/* ---------- Share link and simulated post preview ---------- */
+
+.share-link {
+  width: 100%;
+  font-size: 0.875rem;
+}
+.share-caption {
+  margin: 1.25rem 0 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+.post {
+  margin: 0 0 0.75rem;
+  padding: 0.875rem;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-m);
+}
+.post p {
+  margin: 0;
+}
+.post-author {
+  margin-bottom: 0.625rem !important;
+  font-size: 0.9375rem;
+}
+.post-card {
+  border: 1px solid var(--rule);
+  border-left: 4px solid var(--mauve);
+  border-radius: var(--radius-s);
+  padding: 0.75rem 0.875rem;
+  background: var(--page);
+  display: grid;
+  gap: 0.25rem;
+}
+.post-site {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--mauve-deep);
+}
+.post-title {
+  font-weight: 700;
+  font-size: 1.0625rem;
+}
+.post-meta {
+  font-size: 0.875rem;
+  color: var(--muted);
+}

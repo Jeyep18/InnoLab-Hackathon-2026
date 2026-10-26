@@ -9,7 +9,9 @@
     "preview": "vite preview",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "samples": "node scripts/make-samples.mjs"
+    "samples": "node scripts/make-samples.mjs && node scripts/make-sample-packs.mjs",
+    "sanitize": "node scripts/sanitize-docs.mjs",
+    "check-assets": "node scripts/check-assets.mjs"
   },
   "dependencies": {
     "react": "^19.3.1",
