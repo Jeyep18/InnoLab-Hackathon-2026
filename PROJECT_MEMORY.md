@@ -1,6 +1,6 @@
 # Project memory
 
-Updated: 2026-10-26, Asia/Manila. Decisions live here; [PLAN.md](PLAN.md) records execution and [DEMO.md](DEMO.md) defines acceptance.
+Updated: 2026-10-27, Asia/Manila. Decisions live here; [PLAN.md](PLAN.md) records execution and [DEMO.md](DEMO.md) defines acceptance.
 
 ## Confirmed context
 
@@ -82,7 +82,16 @@ Behavior definitions:
 
 ## Visual direction
 
-CJ owns visual review. Team-supplied palette:
+**Superseded 2026-10-27 by the user (grilling session): Apple-style light foundation with a sage accent. Implemented.**
+
+- Light mode only; dark mode and its toggle removed. Inter throughout on an Apple-like scale (17px body, 600-weight headings, tight tracking), replacing the first pass's serif headings.
+- Surfaces: white page, `#f5f5f7` bands and pack cards, `#d6d6d6` hairlines, 28px card radius, pill buttons and inputs, no shadows or gradients. Subject covers are flat dark-sage tones with white text (≥7:1).
+- Sage scale from brand `#9BBBB7` (sage-300): 50 `#EDF3F2`, 100 `#DCE8E6`, 200 `#C2D5D2`, 500 `#6E928D`, 600 `#557873`, 700 `#3C5C58`, 800 `#2C4441`, 900 `#1E2F2D`.
+- Primary buttons use sage-600 with white text (4.86:1), hover sage-700 (7.33:1): `#9BBBB7` as a button read too faint on white (2.06:1). `#9BBBB7` stays as brand tint with ink text (8.16:1). Links and focus use sage-700. Muted text `#707070` (≥4.55:1), input outlines `#86868b` (3.62:1).
+- Wordmark "CherIt" with "It" in sage-700 and an SVG serifed capital I (the bundled Inter lacks `cv08`); the home kicker adds "Pronounced “share it”".
+- Layouts from the earlier first pass are kept; a full relayout is planned separately. Covers and file previews should become one element in that relayout.
+
+Previous palette, kept for history. CJ owns visual review. Team-supplied palette:
 
 | Role | Color | Hex |
 | --- | --- | --- |
@@ -111,6 +120,7 @@ Measured declared-color contrast: espresso/cream 12.84:1; muted/cream 5.33:1; mu
 - Pending: exact deadline; teacher file arrival and formats; starter grade/subject/BOW; modification permission; actual reviewer availability.
 - Frontend redesign, decided by the user 2026-10-26 (grilling session) and implemented on branch `feat/ui-redesign` (uncommitted at time of writing): supersedes "no UI library" in the stack above. Added Tailwind v4, shadcn (radix-nova, npm), Fluid Functionalism typography with the scale raised to 16px body, Inter bundled locally, lucide, sonner and motion. Marketplace layout ("B"): landing home with subject tiles, Top reviewed and Recently shared; `#/browse` with URL-synced filters and chips; product-style pack page with a trust card beside the title; three-step Share wizard; Review queue as tabs and table; profile and saved grids. CJ's palette mapped to shadcn tokens plus a derived dark mode with a header toggle. Generated subject-tinted card covers (no images). Pending: CJ's logo replaces the temporary wordmark; card-cover choice to be confirmed. Checked: typecheck, 26 tests, production build, and a browser pass of home, browse, pack page, share step 1 and review queue at desktop and phone widths. Not yet checked: the full upload-to-publish journey in the new UI, Dia, and the Windows laptop.
 - Public marketplace, real authentication/payments, nationwide scope, full offline editing and automatic institutional maintenance are superseded/deferred.
+- Design restraint pass, authorized and implemented 2026-10-27: user requested `emil-unslop-design` across the app except Share a lesson and Review queue, with subagents. Home, Browse, Saved, profiles and pack details now use a lesson-library treatment with system serif headings, paper labels, ruled sections and fewer decorative containers. CJ's palette and existing behaviors remain. Shared shell styling is route-scoped; original cover defaults, shared UI primitives and excluded page source are preserved. Two subagents audited and implemented separate discovery/profile and detail lanes. Final checks: production build/typecheck, 26 tests, desktop/phone Chromium layouts, filter/save/download/review/profile interactions and excluded-route screenshot comparison. No dependencies added by this pass; no commit or push. Dia, Windows and full upload/moderation rehearsal remain unchecked.
 - Previous repository initialization/publication was separately authorized. This documentation batch is also authorized for commit/push; inspect actual Git state for publication status rather than assuming this text proves a successful push.
 - Earlier setup observed Git, Node/npm and Python availability; recheck the actual environment during technical preflight rather than treating this as framework selection.
 - This revision used better-colors for measured palette checks, writing-for-agents for the handoff, and a scoped read-only reviewer. No skill or dependency was installed.

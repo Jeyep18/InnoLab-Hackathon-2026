@@ -6,6 +6,15 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+    --color-sage-50: var(--sage-50);
+    --color-sage-100: var(--sage-100);
+    --color-sage-200: var(--sage-200);
+    --color-sage-300: var(--sage-300);
+    --color-sage-500: var(--sage-500);
+    --color-sage-600: var(--sage-600);
+    --color-sage-700: var(--sage-700);
+    --color-sage-800: var(--sage-800);
+    --color-sage-900: var(--sage-900);
     --color-olive: var(--olive);
     --color-mauve-ink: var(--mauve-ink);
     --color-star: var(--star);
@@ -88,56 +97,66 @@
 }
 
 :root {
-    /* CherIt palette (CJ). Contrast notes in PROJECT_MEMORY.md: white on mauve passes; olive is decorative only. */
-    --background: #faf7f2; /* Cream Linen */
-    --foreground: #332c27; /* Espresso Brown */
+    /* Apple-style light system with the CherIt sage. Contrast pairs are recorded in PROJECT_MEMORY.md. */
+    --sage-50: #edf3f2;
+    --sage-100: #dce8e6;
+    --sage-200: #c2d5d2;
+    --sage-300: #9bbbb7; /* brand tint; ink text only, white fails */
+    --sage-500: #6e928d;
+    --sage-600: #557873;
+    --sage-700: #3c5c58; /* links, focus, small sage text */
+    --sage-800: #2c4441;
+    --sage-900: #1e2f2d;
+    --background: #ffffff;
+    --foreground: #1d1d1f;
     --card: #ffffff;
-    --card-foreground: #332c27;
+    --card-foreground: #1d1d1f;
     --popover: #ffffff;
-    --popover-foreground: #332c27;
-    --primary: #8c6d79; /* Dusty Mauve */
+    --popover-foreground: #1d1d1f;
+    --primary: var(--sage-600); /* white text 4.9:1; #9bbbb7 reads too faint as a button on white */
     --primary-foreground: #ffffff;
-    --secondary: #efece6; /* Pale Cashmere */
-    --secondary-foreground: #332c27;
-    --muted: #efece6;
-    --muted-foreground: #6e655f; /* Taupe Gray */
-    --accent: #e9e3db;
-    --accent-foreground: #332c27;
-    --destructive: #9b2c2c;
-    --border: #e2dbd1;
-    --input: #90857b; /* 3.4:1 on the page, meets non-text contrast */
-    --ring: #8c6d79;
-    --olive: #7a8b68; /* Olive Moss: decorative fills and large text only */
-    --mauve-ink: #7a5d69; /* mauve for normal-size text on light surfaces */
-    --star: #b07d24;
-    --chart-1: #8c6d79;
-    --chart-2: #7a8b68;
-    --chart-3: #8a7564;
-    --chart-4: #6e655f;
-    --chart-5: #332c27;
+    --secondary: #f5f5f7;
+    --secondary-foreground: #1d1d1f;
+    --muted: #f5f5f7;
+    --muted-foreground: #707070;
+    --accent: var(--sage-50);
+    --accent-foreground: #1d1d1f;
+    --destructive: #b42318;
+    --border: #d6d6d6;
+    --input: #86868b; /* 3.6:1 on white, meets non-text contrast */
+    --ring: var(--sage-700);
+    --olive: var(--sage-300);
+    --mauve-ink: var(--sage-700);
+    --star: #1d1d1f;
+    --chart-1: var(--sage-300);
+    --chart-2: var(--sage-600);
+    --chart-3: var(--sage-800);
+    --chart-4: #86868b;
+    --chart-5: #1d1d1f;
     --radius: 0.75rem;
-    --sidebar: #faf7f2;
-    --sidebar-foreground: #332c27;
-    --sidebar-primary: #8c6d79;
+    --radius-card: 28px;
+    --sidebar: #fafafc;
+    --sidebar-foreground: #1d1d1f;
+    --sidebar-primary: var(--sage-600);
     --sidebar-primary-foreground: #ffffff;
-    --sidebar-accent: #efece6;
-    --sidebar-accent-foreground: #332c27;
-    --sidebar-border: #e2dbd1;
-    --sidebar-ring: #8c6d79;
-    --fs-display: 40px;
-    --lh-display: 46px;
-    --fs-display-compact: 32px;
-    --lh-display-compact: 38px;
-    --fs-title: 22px;
-    --lh-title: 28px;
-    --fs-title-compact: 20px;
-    --lh-title-compact: 26px;
-    --fs-subtitle: 18px;
+    --sidebar-accent: #f5f5f7;
+    --sidebar-accent-foreground: #1d1d1f;
+    --sidebar-border: #e6e6e8;
+    --sidebar-ring: var(--sage-700);
+    --fs-display: 48px;
+    --lh-display: 52px;
+    --fs-display-compact: 36px;
+    --lh-display-compact: 40px;
+    --fs-title: 28px;
+    --lh-title: 32px;
+    --fs-title-compact: 24px;
+    --lh-title-compact: 28px;
+    --fs-subtitle: 21px;
     --lh-subtitle: 26px;
-    --fs-subtitle-compact: 16px;
-    --lh-subtitle-compact: 22px;
-    --fs-body: 16px;
-    --lh-body: 24px;
+    --fs-subtitle-compact: 19px;
+    --lh-subtitle-compact: 24px;
+    --fs-body: 17px;
+    --lh-body: 25px;
     --fs-body-compact: 15px;
     --lh-body-compact: 22px;
     --fs-caption: 14px;
@@ -150,43 +169,6 @@
     --lh-micro-compact: 14px;
 }
 
-.dark {
-    --background: #1c1815;
-    --foreground: #f3eee7;
-    --card: #26211d;
-    --card-foreground: #f3eee7;
-    --popover: #2c2622;
-    --popover-foreground: #f3eee7;
-    --primary: #c9a9b6;
-    --primary-foreground: #1c1815;
-    --secondary: #2c2622;
-    --secondary-foreground: #f3eee7;
-    --muted: #2c2622;
-    --muted-foreground: #b1a69c;
-    --accent: #362f2a;
-    --accent-foreground: #f3eee7;
-    --destructive: #e58a7f;
-    --border: #3b342e;
-    --input: #7a7068;
-    --ring: #c9a9b6;
-    --olive: #a3b48e;
-    --mauve-ink: #d6bac5;
-    --star: #e0b25c;
-    --chart-1: #c9a9b6;
-    --chart-2: #a3b48e;
-    --chart-3: #c2a68f;
-    --chart-4: #b1a69c;
-    --chart-5: #f3eee7;
-    --sidebar: #1c1815;
-    --sidebar-foreground: #f3eee7;
-    --sidebar-primary: #c9a9b6;
-    --sidebar-primary-foreground: #1c1815;
-    --sidebar-accent: #2c2622;
-    --sidebar-accent-foreground: #f3eee7;
-    --sidebar-border: #3b342e;
-    --sidebar-ring: #c9a9b6;
-}
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -196,6 +178,19 @@
     }
   html {
     @apply font-sans;
+    color-scheme: light;
+    }
+  body {
+    font-size: 17px;
+    letter-spacing: -0.022em;
+    -webkit-font-smoothing: antialiased;
+    }
+  :where(h1, h2, h3, h4) {
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    }
+  :where(a:not([data-slot])):not(.no-link-style) {
+    text-underline-offset: 0.2em;
     }
 }
 
@@ -501,4 +496,67 @@
     display: none;
         }
     }
+}
+/* Library pages: Inter display type on the Apple scale, flat surfaces, sage links. */
+.library-title,
+.library-section-title {
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+}
+
+.library-kicker {
+  color: var(--muted-foreground);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.library-link {
+  color: var(--sage-700);
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+
+.library-link:hover {
+  text-decoration-thickness: 2px;
+}
+
+.library-shell a:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 4px;
+}
+
+.library-subject-link:hover {
+  color: var(--sage-700);
+}
+
+.library-pack {
+  border-color: transparent;
+  background: var(--secondary);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+}
+
+.library-pack:hover {
+  background: var(--sage-50);
+}
+
+.library-empty {
+  align-items: flex-start;
+  border-width: 1px 0 0;
+  border-style: solid;
+  border-radius: 0;
+  background: transparent;
+  padding: 2.5rem 0;
+  text-align: left;
+}
+
+.library-empty > div:first-child:has(> svg) {
+  display: none;
+}
+
+.library-empty > h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
 }

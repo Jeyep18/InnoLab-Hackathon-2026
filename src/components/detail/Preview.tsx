@@ -10,15 +10,15 @@ export function Preview({ resource }: { resource: Resource }) {
   if (resource.lesson) {
     return (
       <section aria-labelledby="preview-title">
-        <h2 id="preview-title" className="text-2xl font-bold tracking-tight">
+        <h2 id="preview-title" className="library-section-title text-2xl">
           Lesson preview
         </h2>
-        <article className="mt-4 rounded-2xl border bg-card px-5 py-7 shadow-[0_1px_2px_rgb(51_44_39/0.04)] sm:px-10 sm:py-10">
+        <article className="mt-4 border bg-card px-5 py-7 sm:px-10 sm:py-10">
           <p className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
             {resource.grade} {resource.subject}, {bowLabel(resource)}
           </p>
-          <h3 className="mt-2 text-xl font-bold tracking-tight text-balance sm:text-2xl">{resource.title}</h3>
-          <p className="mt-4 rounded-xl border-l-4 border-primary bg-secondary/60 px-4 py-3 text-pretty">
+          <h3 className="library-title mt-3 text-2xl text-balance sm:text-3xl">{resource.title}</h3>
+          <p className="mt-5 border-l-2 border-primary pl-4 text-pretty">
             <strong className="font-semibold">Objective.</strong> {resource.lesson.objective}
           </p>
           <div className="mt-6 space-y-6">
@@ -78,8 +78,8 @@ function UploadedPreview({ resource }: { resource: Resource }) {
 
   if (!file) {
     return (
-      <section aria-labelledby="preview-title" className="rounded-2xl border border-dashed bg-card/50 p-6">
-        <h2 id="preview-title" className="text-xl font-semibold tracking-tight">
+      <section aria-labelledby="preview-title" className="border-y py-6">
+        <h2 id="preview-title" className="library-section-title text-2xl">
           Preview
         </h2>
         <p className="mt-1 text-muted-foreground">
@@ -91,10 +91,10 @@ function UploadedPreview({ resource }: { resource: Resource }) {
   const ext = extension(file.name)
   return (
     <section aria-labelledby="preview-title">
-      <h2 id="preview-title" className="text-2xl font-bold tracking-tight break-words">
+      <h2 id="preview-title" className="library-section-title text-2xl break-words">
         Preview of {file.name}
       </h2>
-      <div className="mt-4 overflow-hidden rounded-2xl border bg-card">
+      <div className="mt-4 overflow-hidden border bg-card">
         {failed ? (
           <div className="flex flex-col items-center gap-3 px-6 py-14 text-center">
             <FileX2 aria-hidden="true" className="size-8 text-muted-foreground" />

@@ -283,7 +283,7 @@ export function ShareForm({ parentId }: { parentId?: string }) {
 
       <form onSubmit={onSubmit} noValidate className="mt-6">
         <AnimatePresence mode="wait" initial={false}>
-          <motion.div key={step} {...panel} className="rounded-2xl border bg-card p-5 shadow-[0_1px_2px_rgb(51_44_39/0.04)] sm:p-8">
+          <motion.div key={step} {...panel} className="rounded-2xl border bg-card p-5 sm:p-8">
             <OnMount run={flushFocus} />
             <h2 id={f(`step-${step}-heading`)} tabIndex={-1} className="text-2xl font-bold tracking-tight outline-none">
               {step === 0 && 'Lesson details'}

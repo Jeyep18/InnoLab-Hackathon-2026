@@ -1,15 +1,15 @@
 import type { Persona, Resource } from '@/domain/types'
 
-/** Cover tint per subject. Gradients darken toward the bottom where the white text sits. */
+/** Flat cover fill per subject. Every tone keeps white text above 7:1. */
 const TONES: Record<string, string> = {
-  science: 'from-[#7a8b68] to-[#4f5c44]',
-  mathematics: 'from-[#8c6d79] to-[#5e4553]',
-  math: 'from-[#8c6d79] to-[#5e4553]',
-  english: 'from-[#8a7564] to-[#54463b]',
-  filipino: 'from-[#6f7f86] to-[#465359]',
+  science: 'bg-sage-700',
+  mathematics: 'bg-sage-800',
+  math: 'bg-sage-800',
+  english: 'bg-sage-900',
+  filipino: 'bg-[#3a3a3c]',
 }
 export function subjectTone(subject: string) {
-  return TONES[subject.trim().toLowerCase()] ?? 'from-[#6e655f] to-[#433b36]'
+  return TONES[subject.trim().toLowerCase()] ?? 'bg-[#1d1d1f]'
 }
 
 /** "DOCX ×3", "PDF", ... for the cover badges. */

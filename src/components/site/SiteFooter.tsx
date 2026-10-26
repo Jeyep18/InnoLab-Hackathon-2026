@@ -1,6 +1,7 @@
 import { Container, Logo } from './layout'
 
-export function SiteFooter({ teacherPackCount }: { teacherPackCount: number }) {
+export function SiteFooter({ teacherPackCount, library = false }: { teacherPackCount: number; library?: boolean }) {
+  if (library) return <LibraryFooter teacherPackCount={teacherPackCount} />
   return (
     <footer className="mt-24 border-t bg-secondary/50">
       <Container className="grid gap-8 py-12 md:grid-cols-[1.2fr_1fr_1fr]">
@@ -26,6 +27,29 @@ export function SiteFooter({ teacherPackCount }: { teacherPackCount: number }) {
               {teacherPackCount} teacher pack{teacherPackCount === 1 ? '' : 's'} shown for this demonstration only, from this computer.
             </p>
           )}
+        </div>
+      </Container>
+    </footer>
+  )
+}
+
+function LibraryFooter({ teacherPackCount }: { teacherPackCount: number }) {
+  return (
+    <footer className="mt-16 border-t">
+      <Container className="flex flex-col gap-7 py-8 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex flex-col gap-3">
+          <Logo />
+          <nav aria-label="Footer" className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-muted-foreground">
+            <a className="library-link" href="#/browse">Browse</a>
+            <a className="library-link" href="#/share">Share a lesson</a>
+            <a className="library-link" href="#/saved">Saved</a>
+            <a className="library-link" href="#/moderation">Review queue</a>
+          </nav>
+        </div>
+        <div className="flex max-w-md flex-col gap-2 text-xs leading-relaxed text-muted-foreground">
+          <p>Demonstration prototype. Accounts, reviews and activity counts are sample data. Payments are simulated.</p>
+          <p>Sample curriculum references are examples, not official DepEd alignment.</p>
+          {teacherPackCount > 0 && <p>{teacherPackCount} teacher pack{teacherPackCount === 1 ? '' : 's'} shown for this demonstration only, from this computer.</p>}
         </div>
       </Container>
     </footer>

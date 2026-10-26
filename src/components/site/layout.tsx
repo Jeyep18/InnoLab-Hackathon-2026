@@ -19,7 +19,7 @@ export function EmptyState({
   className?: string
 }) {
   return (
-    <div className={cn('flex flex-col items-center rounded-2xl border border-dashed bg-card/50 px-6 py-14 text-center', className)}>
+    <div className={cn('library-empty flex flex-col items-center rounded-2xl border border-dashed bg-card/50 px-6 py-14 text-center', className)}>
       {icon && <div className="mb-4 grid size-12 place-items-center rounded-full bg-secondary text-muted-foreground [&_svg]:size-6">{icon}</div>}
       <h2 className="text-xl font-semibold tracking-tight text-balance">{title}</h2>
       {children && <div className="mt-2 max-w-md text-pretty text-muted-foreground">{children}</div>}
@@ -31,13 +31,18 @@ export function EmptyState({
 /** Temporary wordmark until CJ's logo arrives. */
 export function Logo({ className }: { className?: string }) {
   return (
-    <a href="#/" aria-label="CherIt home" className={cn('flex items-center gap-2.5 rounded-lg outline-none focus-visible:ring-3 focus-visible:ring-ring/50', className)}>
-      <span aria-hidden="true" className="grid size-8 place-items-center rounded-[9px] bg-primary text-[15px] font-bold text-primary-foreground">
-        C
-      </span>
-      <span className="flex items-baseline gap-2">
-        <span className="text-xl font-bold tracking-tight">CherIt</span>
-        <span className="hidden text-xs text-muted-foreground sm:inline">say “share it”</span>
+    <a href="#/" aria-label="CherIt home" className={cn('flex items-center rounded-lg outline-none focus-visible:ring-3 focus-visible:ring-ring/50', className)}>
+      <span aria-hidden="true" className="text-[21px] font-semibold tracking-[-0.02em]">
+        Cher
+        <span className="text-sage-700">
+          {/* Inter's capital I is a bare bar that reads as "l"; the serifs keep "It" legible. */}
+          <svg viewBox="0 0 42 73" className="ml-[0.02em] inline-block h-[0.727em] w-[0.42em] fill-current align-baseline">
+            <rect x="16" width="10" height="73" />
+            <rect x="5" width="32" height="9" />
+            <rect x="5" y="64" width="32" height="9" />
+          </svg>
+          t
+        </span>
       </span>
     </a>
   )

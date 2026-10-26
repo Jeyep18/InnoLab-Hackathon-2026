@@ -1,4 +1,4 @@
-import { Download, FileText, Lock } from 'lucide-react'
+import { Download, Lock } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
@@ -17,7 +17,7 @@ export function FilesPanel({ resource, downloads }: { resource: Resource; downlo
 
   return (
     <section aria-labelledby="files-title" className="scroll-mt-24">
-      <h2 id="files-title" className="text-2xl font-bold tracking-tight">
+      <h2 id="files-title" className="library-section-title text-2xl">
         Files in this pack
       </h2>
       <p className="mt-1 text-muted-foreground">
@@ -36,7 +36,7 @@ function FileGroup({ title, files, dl }: { title: string; files: ResourceFile[];
   return (
     <div className="mt-6">
       <h3 className="mb-2 text-sm font-semibold tracking-wide text-muted-foreground uppercase">{title}</h3>
-      <ul className="divide-y overflow-hidden rounded-2xl border bg-card">
+      <ul className="divide-y border-y">
         {files.map((file) => (
           <FileRow key={file.id} file={file} dl={dl} />
         ))}
@@ -53,10 +53,7 @@ function FileRow({ file, dl }: { file: ResourceFile; dl: PackDownloads }) {
   const busy = dl.busy === file.id
 
   return (
-    <li className="flex flex-col gap-3 p-4 transition-colors hover:bg-secondary/40 sm:flex-row sm:items-center">
-      <span aria-hidden="true" className="hidden size-10 shrink-0 place-items-center rounded-xl bg-secondary text-muted-foreground sm:grid">
-        <FileText className="size-5" />
-      </span>
+    <li className="flex flex-col gap-3 py-4 sm:flex-row sm:items-center">
       <div className="min-w-0 flex-1">
         <p className="font-medium">{file.label}</p>
         <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted-foreground">
@@ -110,7 +107,7 @@ function CheckoutDialog({ resource, dl }: { resource: Resource; dl: PackDownload
           </DialogDescription>
         </DialogHeader>
         {file && (
-          <div className="flex items-center justify-between gap-3 rounded-xl bg-secondary px-4 py-3">
+          <div className="flex items-center justify-between gap-3 border-y py-4">
             <span className="min-w-0">
               <span className="block truncate font-medium">{file.label}</span>
               <span className="block text-sm text-muted-foreground">Sample price, simulated checkout</span>
@@ -118,7 +115,7 @@ function CheckoutDialog({ resource, dl }: { resource: Resource; dl: PackDownload
             <span className="text-lg font-semibold tabular-nums">₱{file.samplePricePhp}</span>
           </div>
         )}
-        <p className="text-sm text-muted-foreground">The core lesson stays free. A browser-side unlock like this is not real access control.</p>
+        <p className="text-sm text-muted-foreground">The core lesson stays free. This demo unlock does not secure paid files.</p>
         <DialogFooter>
           <DialogClose asChild>
             <Button variant="outline">Cancel</Button>

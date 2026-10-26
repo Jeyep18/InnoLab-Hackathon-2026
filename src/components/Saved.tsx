@@ -1,4 +1,3 @@
-import { Bookmark } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { PackCard } from '@/components/site/PackCard'
 import { Container, EmptyState } from '@/components/site/layout'
@@ -12,12 +11,13 @@ export function Saved() {
     .filter((r) => r !== undefined)
 
   return (
-    <Container className="pt-10">
-      <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Saved</h1>
-      <p className="mt-2 mb-8 text-muted-foreground">Lesson packs saved by {persona.alias} in this browser.</p>
+    <Container className="pt-10 sm:pt-14">
+      <header className="mb-8 border-b border-foreground/20 pb-7">
+        <h1 className="library-title text-4xl sm:text-5xl">Saved lesson packs</h1>
+        <p className="mt-3 text-muted-foreground">{persona.alias}'s collection, saved in this browser.</p>
+      </header>
       {saved.length === 0 ? (
         <EmptyState
-          icon={<Bookmark />}
           title="Nothing saved yet"
           actions={
             <Button asChild>
@@ -25,7 +25,7 @@ export function Saved() {
             </Button>
           }
         >
-          Tap the bookmark on any lesson pack to keep it here for later.
+          Save a lesson pack with its bookmark button. It will appear here.
         </EmptyState>
       ) : (
         <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

@@ -1,4 +1,3 @@
-import { motion, useReducedMotion } from 'motion/react'
 import type { ReactNode } from 'react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { RatingLine, ReviewBadge } from '@/components/site/Rating'
@@ -29,7 +28,6 @@ export function ReviewStatus({ resource }: { resource: Resource }) {
  */
 export function TrustPanel({ resource, actions, className }: { resource: Resource; actions?: ReactNode; className?: string }) {
   const { state, reviews, resources, personaById } = useStore()
-  const reduceMotion = useReducedMotion()
   const contributor = personaById(resource.contributorId)
   const packRating = resourceRating(resource, reviews)
   const track = contributorRating(resource.contributorId, resources, reviews)
@@ -40,20 +38,17 @@ export function TrustPanel({ resource, actions, className }: { resource: Resourc
     .some((r) => currentReviews(r, reviews).some((rev) => rev.seeded))
 
   return (
-    <motion.section
+    <section
       aria-labelledby="trust-title"
-      initial={{ opacity: 0, y: reduceMotion ? 0 : 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.22, ease: [0.23, 1, 0.32, 1] }}
-      className={cn('rounded-2xl border bg-card p-5 text-card-foreground shadow-[0_12px_32px_-20px_rgb(51_44_39/0.35)] sm:p-6', className)}
+      className={cn('border-t-2 border-foreground bg-card p-5 text-card-foreground sm:p-6', className)}
     >
-      <h2 id="trust-title" className="text-lg font-semibold tracking-tight">
+      <h2 id="trust-title" className="library-section-title text-2xl">
         Before you download
       </h2>
 
       <div className="mt-4 flex items-center gap-3">
         <Avatar className="size-11">
-          <AvatarFallback className="bg-olive text-sm font-semibold text-white">{initials(contributor)}</AvatarFallback>
+          <AvatarFallback className="bg-secondary text-sm font-semibold text-foreground">{initials(contributor)}</AvatarFallback>
         </Avatar>
         <div className="min-w-0">
           <p className="text-xs font-medium text-muted-foreground">Shared by</p>
@@ -76,8 +71,8 @@ export function TrustPanel({ resource, actions, className }: { resource: Resourc
         )}
       </p>
 
-      <dl className="mt-5 grid grid-cols-2 gap-2">
-        <Tile label="Teacher rating, this version" wide>
+      <dl className="mt-4 divide-y">
+        <Tile label="Teacher rating, this version">
           <RatingLine summary={packRating} />
           <Sub>
             {packRating.count === 0
@@ -86,7 +81,7 @@ export function TrustPanel({ resource, actions, className }: { resource: Resourc
                 `Includes ${sampleCount === packRating.count ? 'only' : sampleCount} sample review${sampleCount === 1 ? '' : 's'}.`}
           </Sub>
         </Tile>
-        <Tile label="Curriculum review" wide>
+        <Tile label="Curriculum review">
           <ReviewBadge resource={resource} />
           <Sub>
             {review
@@ -101,7 +96,7 @@ export function TrustPanel({ resource, actions, className }: { resource: Resourc
       {/* Actions follow the key trust signals so Download stays above the fold on a laptop. */}
       {actions && <div className="mt-4">{actions}</div>}
 
-      <dl className="mt-4 grid grid-cols-2 gap-2">
+      <dl className="mt-4 divide-y">
         <Tile label="Version">
           <span className="font-semibold tabular-nums">{resource.version.label}</span>
           <Sub>
@@ -115,18 +110,18 @@ export function TrustPanel({ resource, actions, className }: { resource: Resourc
           </span>
           <Sub>Shows popularity, not quality.</Sub>
         </Tile>
-        <Tile label="Budget of Work" wide>
+        <Tile label="Budget of Work">
           <span className="font-semibold">{bowLabel(resource)}</span>
           <Sub>{competencyLabel(resource)}</Sub>
         </Tile>
       </dl>
-    </motion.section>
+    </section>
   )
 }
 
-function Tile({ label, wide, children }: { label: string; wide?: boolean; children: ReactNode }) {
+function Tile({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <div className={cn('rounded-xl bg-secondary px-3.5 py-3 transition-colors hover:bg-accent', wide && 'col-span-2')}>
+    <div className="py-3">
       <dt className="text-xs font-medium text-muted-foreground">{label}</dt>
       <dd className="mt-1 flex flex-col items-start gap-1 text-sm">{children}</dd>
     </div>

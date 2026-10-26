@@ -70,3 +70,9 @@ Present exact proposed packages/commands, directory layout, asset loading, local
 ## Completion
 
 Pass the relevant DEMO.md checks, inspect final diff/Git status, add actual verified run/build/test commands to README, and record tested environment/results/limitations. Distinguish seeded, simulated, implemented-but-unverified and verified behavior. Commit/push/deploy/distribution of teacher files requires separate applicable authorization.
+
+## Design restraint pass, 2026-10-27
+
+User authorized applying `emil-unslop-design` everywhere except Share a lesson and Review queue. Implemented with two scoped subagents and parent integration. Removed the centered home hero, decorative gradients/rings on eligible covers, repeated onboarding/CTA blocks, glass filters, static hover effects and nested detail/profile tiles. Preserved CJ's palette, local data behavior, trust disclosures and original shared defaults for excluded routes. No package installation, service setup or publication.
+
+Verification: `bun run build` passed, including TypeScript; `bun run test` passed all 26 tests; `git diff --check` passed. Chromium checked desktop and phone layouts, light/dark appearance, Grade 4 + Science returning three packs, saved packs, lesson download eligibility/counts, 5-star review recalculation to 4.8 from four reviews and contributor 4.4 from five reviews. Excluded-route main content matched before/after screenshots at the same viewport/theme. Full upload/moderation, Dia and Windows checks remain pending. No commit or push performed.

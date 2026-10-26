@@ -20,7 +20,6 @@ import { cn } from '@/lib/utils'
 import { navigate, useRoute } from '@/router'
 import { useStore } from '@/store'
 import { Container, Logo } from './layout'
-import { ThemeToggle } from './ThemeToggle'
 
 const NAV = [
   { to: '/browse', label: 'Browse', match: 'browse' },
@@ -43,7 +42,7 @@ export function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 border-b bg-background/85 backdrop-blur-md supports-[backdrop-filter]:bg-background/75">
-      <Container className="flex h-16 items-center gap-6">
+      <Container className="flex h-12 items-center gap-6">
         <Logo />
         <nav aria-label="Main" className="hidden md:block">
           <ul className="flex items-center gap-1">
@@ -72,13 +71,12 @@ export function SiteHeader() {
             </TooltipTrigger>
             <TooltipContent>Saved</TooltipContent>
           </Tooltip>
-          <ThemeToggle />
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="ml-1 h-10 gap-2 rounded-full pr-3 pl-1" aria-label={`Account: ${persona.alias}, demo account`}>
                 <Avatar className="size-8">
-                  <AvatarFallback className="bg-olive text-xs font-semibold text-white">{initials(persona)}</AvatarFallback>
+                  <AvatarFallback className="bg-sage-300 text-xs font-semibold text-foreground">{initials(persona)}</AvatarFallback>
                 </Avatar>
                 <span className="hidden max-w-32 truncate text-sm sm:inline">{persona.alias}</span>
                 <span className="hidden text-xs text-muted-foreground sm:inline">· demo</span>

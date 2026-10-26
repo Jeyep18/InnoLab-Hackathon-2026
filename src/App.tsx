@@ -82,7 +82,7 @@ function Shell({ teacherPackCount }: { teacherPackCount: number }) {
     )
 
   return (
-    <div className="flex min-h-dvh flex-col">
+    <div className={page === 'share' || page === 'moderation' ? 'flex min-h-dvh flex-col' : 'library-shell flex min-h-dvh flex-col'}>
       <a
         href="#main"
         className="sr-only z-50 rounded-lg bg-primary px-4 py-2 text-primary-foreground focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
@@ -93,9 +93,6 @@ function Shell({ teacherPackCount }: { teacherPackCount: number }) {
       >
         Skip to content
       </a>
-      <p className="border-b bg-secondary px-4 py-1.5 text-center text-xs text-muted-foreground">
-        Demo prototype: sample accounts, reviews and activity counts; payments simulated.
-      </p>
       <SiteHeader />
       {saveFailed && (
         <p role="alert" className="border-b border-destructive/30 bg-destructive/10 px-4 py-2 text-center text-sm text-destructive">
@@ -105,7 +102,7 @@ function Shell({ teacherPackCount }: { teacherPackCount: number }) {
       <main id="main" tabIndex={-1} className="flex-1 outline-none">
         {content}
       </main>
-      <SiteFooter teacherPackCount={teacherPackCount} />
+      <SiteFooter teacherPackCount={teacherPackCount} library={page !== 'share' && page !== 'moderation'} />
       <Toaster position="bottom-center" />
     </div>
   )

@@ -55,7 +55,7 @@ export function ShareLink({ resource, className, label = 'Copy link to share' }:
 
           <div>
             <p className="mb-2 text-sm font-medium text-muted-foreground">How it reads when posted in a teachers’ group (simulated)</p>
-            <figure aria-label="Simulated group post preview" className="rounded-xl border bg-card p-3">
+            <figure aria-label="Simulated group post preview" className="border-y py-4">
               <p className="mb-2.5 flex items-center gap-2 text-sm">
                 <span aria-hidden="true" className="grid size-7 place-items-center rounded-full bg-secondary text-[11px] font-semibold">
                   {initials(persona)}
@@ -64,7 +64,7 @@ export function ShareLink({ resource, className, label = 'Copy link to share' }:
                   <strong className="font-semibold">{persona.alias}</strong> shared a lesson pack
                 </span>
               </p>
-              <div className="overflow-hidden rounded-lg border bg-secondary/60 p-3">
+              <div className="border-l-2 border-primary pl-4">
                 <p className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">CherIt</p>
                 <p className="mt-0.5 font-semibold leading-snug">{resource.title}</p>
                 <p className="mt-1 text-sm text-muted-foreground">

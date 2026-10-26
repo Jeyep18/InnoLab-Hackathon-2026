@@ -31,11 +31,11 @@ export function ReviewsPanel({ resource }: { resource: Resource }) {
 
   return (
     <section aria-labelledby="reviews-title" className="scroll-mt-24">
-      <h2 id="reviews-title" className="text-2xl font-bold tracking-tight">
+      <h2 id="reviews-title" className="library-section-title text-2xl">
         Ratings and feedback
       </h2>
 
-      <div className="mt-4 flex flex-col gap-4 rounded-2xl border bg-card p-5 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mt-4 flex flex-col gap-4 border-y py-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-1">
           <RatingLine summary={summary} className="text-base" />
           <p className="text-sm text-muted-foreground">For version {resource.version.label}. Earlier versions are listed separately.</p>
@@ -43,12 +43,12 @@ export function ReviewsPanel({ resource }: { resource: Resource }) {
         {eligibility === 'ok' && <ReviewFormDialog resource={resource} />}
       </div>
 
-      {hint && <p className="mt-3 rounded-xl bg-secondary px-4 py-3 text-sm text-secondary-foreground">{hint}</p>}
+      {hint && <p className="mt-3 text-sm text-muted-foreground">{hint}</p>}
 
       {current.length === 0 ? (
         <p className="mt-6 text-muted-foreground">No reviews yet for this version.</p>
       ) : (
-        <ul className="mt-6 space-y-3">
+        <ul className="mt-6 divide-y">
           {current.map((r) => (
             <ReviewItem key={r.id} review={r} mine={r.personaId === persona.id} />
           ))}
@@ -56,12 +56,12 @@ export function ReviewsPanel({ resource }: { resource: Resource }) {
       )}
 
       {older.length > 0 && (
-        <details className="group mt-6 rounded-2xl border bg-card/50">
-          <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 rounded-2xl px-5 py-3 text-sm font-medium outline-none hover:bg-secondary/50 focus-visible:ring-3 focus-visible:ring-ring/50 [&::-webkit-details-marker]:hidden">
+        <details className="group mt-6 border-y">
+          <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-3 py-3 text-sm font-medium outline-none hover:text-mauve-ink focus-visible:ring-3 focus-visible:ring-ring/50 [&::-webkit-details-marker]:hidden">
             {older.length} review{older.length === 1 ? '' : 's'} of earlier versions (not counted in the rating)
             <ChevronDown aria-hidden="true" className="size-4 shrink-0 transition-transform duration-200 group-open:rotate-180 motion-reduce:transition-none" />
           </summary>
-          <ul className="space-y-3 px-3 pb-3">
+          <ul className="divide-y">
             {older.map((r) => (
               <ReviewItem key={r.id} review={r} mine={r.personaId === persona.id} />
             ))}
@@ -75,9 +75,9 @@ export function ReviewsPanel({ resource }: { resource: Resource }) {
 function ReviewItem({ review, mine }: { review: Review; mine: boolean }) {
   const { personaById } = useStore()
   return (
-    <li className="rounded-2xl border bg-card p-4 sm:p-5">
+    <li className="py-5">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-        <span aria-hidden="true" className="grid size-9 place-items-center rounded-full border bg-secondary text-xs font-semibold">
+        <span aria-hidden="true" className="grid size-9 place-items-center rounded-full bg-secondary text-xs font-semibold">
           {initials(personaById(review.personaId))}
         </span>
         <span className="flex min-w-0 flex-col">
