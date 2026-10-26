@@ -1,0 +1,890 @@
+{
+  "personas": [
+    {
+      "id": "p-joy",
+      "alias": "Ma'am Joy",
+      "role": "teacher",
+      "area": "Camarines Sur (sample)",
+      "bio": "Grade 4 adviser preparing next week's science lessons."
+    },
+    {
+      "id": "p-lira",
+      "alias": "Ma'am Lira",
+      "role": "teacher",
+      "area": "Albay (sample)",
+      "bio": "Shares science packs built for classrooms without reliable internet."
+    },
+    {
+      "id": "p-dado",
+      "alias": "Sir Dado",
+      "role": "teacher",
+      "area": "Sorsogon (sample)",
+      "bio": "Writes math and science lessons around market days and weather."
+    },
+    {
+      "id": "p-tess",
+      "alias": "Ma'am Tess",
+      "role": "teacher",
+      "area": "Catanduanes (sample)",
+      "bio": "Teaches early-grade reading and number sense."
+    },
+    {
+      "id": "p-mod",
+      "alias": "Demo moderator",
+      "role": "moderator",
+      "area": "CherIt demo",
+      "bio": "Shows the review queue. Not a curriculum expert or DepEd reviewer."
+    }
+  ],
+  "resources": [
+    {
+      "id": "r-water-cycle",
+      "title": "The water cycle around Mayon",
+      "summary": "A 45-minute lesson that follows rain from Mayon's slopes to the Yawa River and back to the clouds, with a cup-and-cover demonstration.",
+      "contributorId": "p-lira",
+      "grade": "Grade 4",
+      "subject": "Science",
+      "competency": {
+        "code": "EX-SCI4-T2-03",
+        "text": "Describe the water cycle and how it affects the local community"
+      },
+      "bow": {
+        "version": "Example BOW, SY 2026–2027",
+        "quarter": "Term 2",
+        "week": "Week 3"
+      },
+      "requirements": [
+        "No internet needed",
+        "One printed worksheet per pair (2 pages)",
+        "Clear cup, warm water and plastic cover for the demonstration"
+      ],
+      "tags": [
+        "offline-ready",
+        "low-print",
+        "local context"
+      ],
+      "files": [
+        {
+          "id": "lesson",
+          "name": "water-cycle-lesson-plan.docx",
+          "label": "Lesson plan",
+          "required": true,
+          "editable": true,
+          "source": {
+            "type": "url",
+            "url": "/samples/water-cycle-lesson-plan.docx"
+          }
+        },
+        {
+          "id": "worksheet",
+          "name": "water-cycle-worksheet.docx",
+          "label": "Pair worksheet",
+          "required": true,
+          "editable": true,
+          "source": {
+            "type": "url",
+            "url": "/samples/water-cycle-worksheet.docx"
+          }
+        },
+        {
+          "id": "answers",
+          "name": "water-cycle-answer-key.docx",
+          "label": "Answer key",
+          "required": false,
+          "editable": true,
+          "source": {
+            "type": "url",
+            "url": "/samples/water-cycle-answer-key.docx"
+          }
+        }
+      ],
+      "references": [
+        {
+          "label": "Team-written fictional sample for the CherIt demonstration. No external sources reproduced."
+        }
+      ],
+      "version": {
+        "label": "2.0",
+        "date": "2026-10-20",
+        "note": "Shortened the worksheet to two pages and added a no-projector option."
+      },
+      "history": [
+        {
+          "label": "1.0",
+          "date": "2026-07-14",
+          "note": "First shared version."
+        }
+      ],
+      "status": "published",
+      "permission": {
+        "kind": "fictional-sample",
+        "notice": "Fictional sample created by the CherIt team for this demonstration. Not a real teacher's file."
+      },
+      "lesson": {
+        "objective": "Learners describe evaporation, condensation and precipitation using places they know around Mayon.",
+        "sections": [
+          {
+            "heading": "Materials",
+            "items": [
+              "Clear cup with warm water",
+              "Plastic cover and an ice cube",
+              "Printed pair worksheet",
+              "Chalkboard sketch of Mayon, the Yawa River and Albay Gulf"
+            ]
+          },
+          {
+            "heading": "Procedure",
+            "items": [
+              "Ask: where does the rain on the school roof go afterwards? (5 min)",
+              "Cup demonstration: cover warm water, put ice on top and watch droplets form (10 min)",
+              "Trace the cycle on the board sketch: river to sky, clouds over Mayon, rain on the slopes (15 min)",
+              "Pairs label the worksheet diagram with the three stages (10 min)"
+            ]
+          },
+          {
+            "heading": "Assessment",
+            "items": [
+              "Exit question: name one place in our barangay where you saw evaporation this week (5 min)"
+            ]
+          }
+        ]
+      },
+      "baseline": {
+        "downloads": 38,
+        "bookmarks": 11
+      },
+      "createdAt": "2026-07-14",
+      "curriculumReview": {
+        "version": "2.0",
+        "reviewer": "Demo reviewer (simulated)",
+        "date": "2026-10-21"
+      }
+    },
+    {
+      "id": "r-water-cycle-bikol",
+      "title": "The water cycle around Mayon, Bikol vocabulary version",
+      "summary": "Ma'am Lira's water cycle lesson with a Bikol–English word bank and a picture-matching warm-up for learners still building English vocabulary.",
+      "contributorId": "p-tess",
+      "grade": "Grade 4",
+      "subject": "Science",
+      "competency": {
+        "code": "EX-SCI4-T2-03",
+        "text": "Describe the water cycle and how it affects the local community"
+      },
+      "bow": {
+        "version": "Example BOW, SY 2026–2027",
+        "quarter": "Term 2",
+        "week": "Week 3"
+      },
+      "requirements": [
+        "No internet needed",
+        "One printed word bank per pair (1 page)",
+        "Clear cup, warm water and plastic cover for the demonstration"
+      ],
+      "tags": [
+        "adaptation",
+        "offline-ready",
+        "mother tongue support"
+      ],
+      "files": [
+        {
+          "id": "lesson",
+          "name": "water-cycle-bikol-lesson-plan.docx",
+          "label": "Lesson plan",
+          "required": true,
+          "editable": true,
+          "source": {
+            "type": "url",
+            "url": "/samples/water-cycle-bikol-lesson-plan.docx"
+          }
+        },
+        {
+          "id": "wordbank",
+          "name": "water-cycle-bikol-word-bank.docx",
+          "label": "Bikol–English word bank",
+          "required": true,
+          "editable": true,
+          "source": {
+            "type": "url",
+            "url": "/samples/water-cycle-bikol-word-bank.docx"
+          }
+        }
+      ],
+      "references": [
+        {
+          "label": "Adapted from “The water cycle around Mayon” version 2.0 by Ma'am Lira. Fictional sample for the CherIt demonstration."
+        }
+      ],
+      "version": {
+        "label": "1.0",
+        "date": "2026-10-24",
+        "note": "First version of this adaptation."
+      },
+      "history": [],
+      "status": "published",
+      "permission": {
+        "kind": "fictional-sample",
+        "notice": "Fictional sample created by the CherIt team for this demonstration. Not a real teacher's file."
+      },
+      "parent": {
+        "resourceId": "r-water-cycle",
+        "version": "2.0",
+        "title": "The water cycle around Mayon",
+        "contributorId": "p-lira"
+      },
+      "changeNote": "Added a Bikol–English word bank and a picture-matching warm-up. Removed the pair worksheet to save printing.",
+      "lesson": {
+        "objective": "Learners describe evaporation, condensation and precipitation, first in Bikol and then in English.",
+        "sections": [
+          {
+            "heading": "Materials",
+            "items": [
+              "Clear cup with warm water",
+              "Plastic cover and an ice cube",
+              "Printed Bikol–English word bank",
+              "Picture cards: sun, cloud, rain, river"
+            ]
+          },
+          {
+            "heading": "Procedure",
+            "items": [
+              "Warm-up: match picture cards to Bikol words, then to English words (10 min)",
+              "Cup demonstration from the original lesson (10 min)",
+              "Trace the cycle on the board sketch, naming each stage in both languages (15 min)",
+              "Pairs explain one stage to each other using the word bank (5 min)"
+            ]
+          },
+          {
+            "heading": "Assessment",
+            "items": [
+              "Exit question: name one stage of the water cycle in Bikol and in English (5 min)"
+            ]
+          }
+        ]
+      },
+      "baseline": {
+        "downloads": 0,
+        "bookmarks": 1
+      },
+      "createdAt": "2026-10-24"
+    },
+    {
+      "id": "r-matter",
+      "title": "States of matter in the kitchen",
+      "summary": "Learners sort kitchen items into solid, liquid and gas, then watch ice and steam change state using a kettle.",
+      "contributorId": "p-lira",
+      "grade": "Grade 4",
+      "subject": "Science",
+      "competency": {
+        "code": "EX-SCI4-T1-02",
+        "text": "Classify materials as solid, liquid or gas"
+      },
+      "bow": {
+        "version": "Example BOW, SY 2026–2027",
+        "quarter": "Term 1",
+        "week": "Week 6"
+      },
+      "requirements": [
+        "No internet needed",
+        "Activity cards, one set per group (can be handwritten)",
+        "Kettle or thermos of hot water, handled by the teacher"
+      ],
+      "tags": [
+        "offline-ready",
+        "group work"
+      ],
+      "files": [
+        {
+          "id": "lesson",
+          "name": "states-of-matter-lesson-plan.docx",
+          "label": "Lesson plan",
+          "required": true,
+          "editable": true,
+          "source": {
+            "type": "url",
+            "url": "/samples/states-of-matter-lesson-plan.docx"
+          }
+        },
+        {
+          "id": "cards",
+          "name": "states-of-matter-activity-cards.docx",
+          "label": "Activity cards",
+          "required": true,
+          "editable": true,
+          "source": {
+            "type": "url",
+            "url": "/samples/states-of-matter-activity-cards.docx"
+          }
+        }
+      ],
+      "references": [
+        {
+          "label": "Team-written fictional sample for the CherIt demonstration. No external sources reproduced."
+        }
+      ],
+      "version": {
+        "label": "1.0",
+        "date": "2026-08-02",
+        "note": "First shared version."
+      },
+      "history": [],
+      "status": "published",
+      "permission": {
+        "kind": "fictional-sample",
+        "notice": "Fictional sample created by the CherIt team for this demonstration. Not a real teacher's file."
+      },
+      "lesson": {
+        "objective": "Learners classify common kitchen materials as solid, liquid or gas and describe one change of state.",
+        "sections": [
+          {
+            "heading": "Materials",
+            "items": [
+              "Activity cards: rice, cooking oil, salt, steam, vinegar, ice",
+              "Kettle or thermos (teacher only)",
+              "Three sorting areas on the board"
+            ]
+          },
+          {
+            "heading": "Procedure",
+            "items": [
+              "Groups sort the cards into solid, liquid and gas (10 min)",
+              "Teacher shows ice melting and steam rising (10 min)",
+              "Groups explain one card they argued about (15 min)"
+            ]
+          },
+          {
+            "heading": "Assessment",
+            "items": [
+              "Each learner writes one solid, one liquid and one gas found at home"
+            ]
+          }
+        ]
+      },
+      "baseline": {
+        "downloads": 21,
+        "bookmarks": 6
+      },
+      "createdAt": "2026-08-02"
+    },
+    {
+      "id": "r-percent",
+      "title": "Percent at the palengke",
+      "summary": "Learners compute discounts and mark-ups from a mock market stall, using prices written on the board.",
+      "contributorId": "p-dado",
+      "grade": "Grade 6",
+      "subject": "Mathematics",
+      "competency": {
+        "code": "EX-MATH6-T2-05",
+        "text": "Solve problems involving percent, discount and mark-up"
+      },
+      "bow": {
+        "version": "Example BOW, SY 2026–2027",
+        "quarter": "Term 2",
+        "week": "Week 5"
+      },
+      "requirements": [
+        "No internet needed",
+        "Price list written on the board",
+        "One worksheet per learner (1 page)"
+      ],
+      "tags": [
+        "offline-ready",
+        "local context"
+      ],
+      "files": [
+        {
+          "id": "lesson",
+          "name": "percent-palengke-lesson-plan.docx",
+          "label": "Lesson plan",
+          "required": true,
+          "editable": true,
+          "source": {
+            "type": "url",
+            "url": "/samples/percent-palengke-lesson-plan.docx"
+          }
+        },
+        {
+          "id": "worksheet",
+          "name": "percent-palengke-worksheet.docx",
+          "label": "Worksheet",
+          "required": true,
+          "editable": true,
+          "source": {
+            "type": "url",
+            "url": "/samples/percent-palengke-worksheet.docx"
+          }
+        },
+        {
+          "id": "flashcards",
+          "name": "percent-palengke-flashcards.docx",
+          "label": "Printable price flashcards",
+          "required": false,
+          "editable": true,
+          "samplePricePhp": 49,
+          "source": {
+            "type": "url",
+            "url": "/samples/percent-palengke-flashcards.docx"
+          }
+        }
+      ],
+      "references": [
+        {
+          "label": "Team-written fictional sample for the CherIt demonstration. No external sources reproduced."
+        }
+      ],
+      "version": {
+        "label": "1.0",
+        "date": "2026-09-09",
+        "note": "First shared version."
+      },
+      "history": [],
+      "status": "published",
+      "permission": {
+        "kind": "fictional-sample",
+        "notice": "Fictional sample created by the CherIt team for this demonstration. Not a real teacher's file."
+      },
+      "lesson": {
+        "objective": "Learners compute a 10%, 20% and 25% discount and explain which stall offers the better price.",
+        "sections": [
+          {
+            "heading": "Materials",
+            "items": [
+              "Board price list: fish, rice, pili nuts, abaca bag",
+              "One-page worksheet",
+              "Optional printed price flashcards"
+            ]
+          },
+          {
+            "heading": "Procedure",
+            "items": [
+              "Review: 10% of 250 by moving the decimal point (5 min)",
+              "Two stalls, two discounts: which is cheaper? (15 min)",
+              "Pairs solve three mark-up problems from the worksheet (15 min)"
+            ]
+          },
+          {
+            "heading": "Assessment",
+            "items": [
+              "Exit slip: compute the sale price of a ₱180 item at 25% off"
+            ]
+          }
+        ]
+      },
+      "baseline": {
+        "downloads": 27,
+        "bookmarks": 9
+      },
+      "createdAt": "2026-09-09",
+      "curriculumReview": {
+        "version": "1.0",
+        "reviewer": "Demo reviewer (simulated)",
+        "date": "2026-09-15"
+      }
+    },
+    {
+      "id": "r-typhoon",
+      "title": "Reading typhoon signals",
+      "summary": "Learners connect wind signal numbers to what families in a coastal barangay should prepare, using a printed signal chart.",
+      "contributorId": "p-dado",
+      "grade": "Grade 5",
+      "subject": "Science",
+      "competency": {
+        "code": "EX-SCI5-T2-04",
+        "text": "Explain weather warnings and the safety measures they call for"
+      },
+      "bow": {
+        "version": "Example BOW, SY 2026–2027",
+        "quarter": "Term 2",
+        "week": "Week 7"
+      },
+      "requirements": [
+        "No internet needed",
+        "One printed signal chart per group",
+        "Poster template is optional"
+      ],
+      "tags": [
+        "offline-ready",
+        "local context",
+        "group work"
+      ],
+      "files": [
+        {
+          "id": "lesson",
+          "name": "typhoon-signals-lesson-plan.docx",
+          "label": "Lesson plan",
+          "required": true,
+          "editable": true,
+          "source": {
+            "type": "url",
+            "url": "/samples/typhoon-signals-lesson-plan.docx"
+          }
+        },
+        {
+          "id": "poster",
+          "name": "typhoon-signals-poster-template.docx",
+          "label": "Poster template",
+          "required": false,
+          "editable": true,
+          "source": {
+            "type": "url",
+            "url": "/samples/typhoon-signals-poster-template.docx"
+          }
+        }
+      ],
+      "references": [
+        {
+          "label": "Team-written fictional sample. Check current official warning definitions before teaching."
+        }
+      ],
+      "version": {
+        "label": "1.0",
+        "date": "2026-09-30",
+        "note": "First shared version."
+      },
+      "history": [],
+      "status": "published",
+      "permission": {
+        "kind": "fictional-sample",
+        "notice": "Fictional sample created by the CherIt team for this demonstration. Not a real teacher's file."
+      },
+      "lesson": {
+        "objective": "Learners match each wind signal level to a family preparation step.",
+        "sections": [
+          {
+            "heading": "Materials",
+            "items": [
+              "Printed signal chart (groups)",
+              "Go-bag picture cards",
+              "Optional poster template"
+            ]
+          },
+          {
+            "heading": "Procedure",
+            "items": [
+              "Share: what did your family do during the last typhoon? (10 min)",
+              "Groups match signal levels to preparation cards (15 min)",
+              "Groups present one level and its steps (15 min)"
+            ]
+          },
+          {
+            "heading": "Assessment",
+            "items": [
+              "Learners list three go-bag items and when the family should pack them"
+            ]
+          }
+        ]
+      },
+      "baseline": {
+        "downloads": 14,
+        "bookmarks": 4
+      },
+      "createdAt": "2026-09-30"
+    },
+    {
+      "id": "r-folk-tale",
+      "title": "Retelling a short Bicol-inspired story",
+      "summary": "Learners read a team-written short story about a fisher's daughter in Catanduanes and retell it in order using picture cues.",
+      "contributorId": "p-tess",
+      "grade": "Grade 3",
+      "subject": "English",
+      "competency": {
+        "code": "EX-ENG3-T2-01",
+        "text": "Retell a story in sequence using beginning, middle and end"
+      },
+      "bow": {
+        "version": "Example BOW, SY 2026–2027",
+        "quarter": "Term 2",
+        "week": "Week 2"
+      },
+      "requirements": [
+        "No internet needed",
+        "One story sheet per learner (1 page)",
+        "Four picture cue cards (can be drawn on the board)"
+      ],
+      "tags": [
+        "offline-ready",
+        "low-print",
+        "reading"
+      ],
+      "files": [
+        {
+          "id": "lesson",
+          "name": "story-retelling-lesson-plan.docx",
+          "label": "Lesson plan",
+          "required": true,
+          "editable": true,
+          "source": {
+            "type": "url",
+            "url": "/samples/story-retelling-lesson-plan.docx"
+          }
+        },
+        {
+          "id": "story",
+          "name": "story-retelling-story-sheet.docx",
+          "label": "Story sheet",
+          "required": true,
+          "editable": true,
+          "source": {
+            "type": "url",
+            "url": "/samples/story-retelling-story-sheet.docx"
+          }
+        }
+      ],
+      "references": [
+        {
+          "label": "Story written by the CherIt team for this demonstration. Not a traditional folk tale."
+        }
+      ],
+      "version": {
+        "label": "1.0",
+        "date": "2026-10-05",
+        "note": "First shared version."
+      },
+      "history": [],
+      "status": "published",
+      "permission": {
+        "kind": "fictional-sample",
+        "notice": "Fictional sample created by the CherIt team for this demonstration. Not a real teacher's file."
+      },
+      "lesson": {
+        "objective": "Learners retell the story in the right order using first, next, then and finally.",
+        "sections": [
+          {
+            "heading": "Materials",
+            "items": [
+              "One-page story sheet",
+              "Four picture cue cards"
+            ]
+          },
+          {
+            "heading": "Procedure",
+            "items": [
+              "Read the story aloud, then together (10 min)",
+              "Order the picture cards on the board (10 min)",
+              "Pairs retell the story using the four sequence words (15 min)"
+            ]
+          },
+          {
+            "heading": "Assessment",
+            "items": [
+              "Each learner draws and labels the story's ending"
+            ]
+          }
+        ]
+      },
+      "baseline": {
+        "downloads": 9,
+        "bookmarks": 3
+      },
+      "createdAt": "2026-10-05"
+    },
+    {
+      "id": "r-fractions",
+      "title": "Fractions with bibingka slices",
+      "summary": "Paper bibingka circles help learners compare halves, thirds and fourths before writing them as fractions.",
+      "contributorId": "p-tess",
+      "grade": "Grade 3",
+      "subject": "Mathematics",
+      "competency": {
+        "code": "EX-MATH3-T2-06",
+        "text": "Represent and compare unit fractions"
+      },
+      "bow": {
+        "version": "Example BOW, SY 2026–2027",
+        "quarter": "Term 2",
+        "week": "Week 4"
+      },
+      "requirements": [
+        "No internet needed",
+        "Paper circles, three per learner",
+        "Scissors or careful folding"
+      ],
+      "tags": [
+        "offline-ready",
+        "hands-on"
+      ],
+      "files": [
+        {
+          "id": "lesson",
+          "name": "bibingka-fractions-lesson-plan.docx",
+          "label": "Lesson plan",
+          "required": true,
+          "editable": true,
+          "source": {
+            "type": "url",
+            "url": "/samples/bibingka-fractions-lesson-plan.docx"
+          }
+        },
+        {
+          "id": "worksheet",
+          "name": "bibingka-fractions-worksheet.docx",
+          "label": "Worksheet",
+          "required": true,
+          "editable": true,
+          "source": {
+            "type": "url",
+            "url": "/samples/bibingka-fractions-worksheet.docx"
+          }
+        }
+      ],
+      "references": [
+        {
+          "label": "Team-written fictional sample for the CherIt demonstration. No external sources reproduced."
+        }
+      ],
+      "version": {
+        "label": "1.0",
+        "date": "2026-10-12",
+        "note": "First shared version."
+      },
+      "history": [],
+      "status": "published",
+      "permission": {
+        "kind": "fictional-sample",
+        "notice": "Fictional sample created by the CherIt team for this demonstration. Not a real teacher's file."
+      },
+      "lesson": {
+        "objective": "Learners fold paper circles into halves, thirds and fourths and order the unit fractions by size.",
+        "sections": [
+          {
+            "heading": "Materials",
+            "items": [
+              "Three paper circles per learner",
+              "Worksheet",
+              "Crayons"
+            ]
+          },
+          {
+            "heading": "Procedure",
+            "items": [
+              "Fold one circle into halves and name each part (10 min)",
+              "Fold thirds and fourths; compare the slices (15 min)",
+              "Order 1/2, 1/3 and 1/4 on the worksheet (10 min)"
+            ]
+          },
+          {
+            "heading": "Assessment",
+            "items": [
+              "Which slice is bigger, 1/3 or 1/4? Learners explain using their circles"
+            ]
+          }
+        ]
+      },
+      "baseline": {
+        "downloads": 12,
+        "bookmarks": 5
+      },
+      "createdAt": "2026-10-12"
+    }
+  ],
+  "seedReviews": [
+    {
+      "id": "s1",
+      "resourceId": "r-water-cycle",
+      "resourceVersion": "2.0",
+      "personaId": "sample-a",
+      "authorLabel": "Sample teacher A",
+      "rating": 5,
+      "text": "The cup demonstration worked without a projector.",
+      "usedInClass": true,
+      "seeded": true,
+      "updatedAt": "2026-10-21"
+    },
+    {
+      "id": "s2",
+      "resourceId": "r-water-cycle",
+      "resourceVersion": "2.0",
+      "personaId": "sample-b",
+      "authorLabel": "Sample teacher B",
+      "rating": 4,
+      "text": "Two pages is easier to print. I added a short Bikol vocabulary list.",
+      "usedInClass": true,
+      "seeded": true,
+      "updatedAt": "2026-10-22"
+    },
+    {
+      "id": "s3",
+      "resourceId": "r-water-cycle",
+      "resourceVersion": "2.0",
+      "personaId": "sample-c",
+      "authorLabel": "Sample teacher C",
+      "rating": 5,
+      "text": "",
+      "usedInClass": false,
+      "seeded": true,
+      "updatedAt": "2026-10-23"
+    },
+    {
+      "id": "s4",
+      "resourceId": "r-water-cycle",
+      "resourceVersion": "1.0",
+      "personaId": "sample-d",
+      "authorLabel": "Sample teacher D",
+      "rating": 2,
+      "text": "Four-page worksheet was too much to print.",
+      "usedInClass": true,
+      "seeded": true,
+      "updatedAt": "2026-08-01"
+    },
+    {
+      "id": "s5",
+      "resourceId": "r-matter",
+      "resourceVersion": "1.0",
+      "personaId": "sample-e",
+      "authorLabel": "Sample teacher E",
+      "rating": 3,
+      "text": "Good sorting game; the steam part needs a safety note.",
+      "usedInClass": true,
+      "seeded": true,
+      "updatedAt": "2026-09-01"
+    },
+    {
+      "id": "s6",
+      "resourceId": "r-percent",
+      "resourceVersion": "1.0",
+      "personaId": "sample-a",
+      "authorLabel": "Sample teacher A",
+      "rating": 4,
+      "text": "Learners liked the pili nut prices.",
+      "usedInClass": true,
+      "seeded": true,
+      "updatedAt": "2026-09-20"
+    },
+    {
+      "id": "s7",
+      "resourceId": "r-percent",
+      "resourceVersion": "1.0",
+      "personaId": "sample-f",
+      "authorLabel": "Sample teacher F",
+      "rating": 5,
+      "text": "",
+      "usedInClass": false,
+      "seeded": true,
+      "updatedAt": "2026-10-02"
+    },
+    {
+      "id": "s8",
+      "resourceId": "r-typhoon",
+      "resourceVersion": "1.0",
+      "personaId": "sample-b",
+      "authorLabel": "Sample teacher B",
+      "rating": 4,
+      "text": "Timely before typhoon season.",
+      "usedInClass": true,
+      "seeded": true,
+      "updatedAt": "2026-10-10"
+    },
+    {
+      "id": "s9",
+      "resourceId": "r-fractions",
+      "resourceVersion": "1.0",
+      "personaId": "sample-c",
+      "authorLabel": "Sample teacher C",
+      "rating": 5,
+      "text": "Folding worked better than cutting.",
+      "usedInClass": true,
+      "seeded": true,
+      "updatedAt": "2026-10-18"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # CherIt prototype plan
 
-Updated: 2026-10-26. Product scope follows team decisions in [PROJECT_MEMORY.md](PROJECT_MEMORY.md). Implementation has not started. Technical stack/dependencies await approval; [DEMO.md](DEMO.md) owns demonstration acceptance.
+Updated: 2026-10-26. Product scope follows team decisions in [PROJECT_MEMORY.md](PROJECT_MEMORY.md). The Vite + React + TypeScript stack is approved and a first implementation exists on local branch `feat/cherit-prototype` (uncommitted, not yet browser-verified). [DEMO.md](DEMO.md) owns demonstration acceptance.
 
 ## Delivery model
 
@@ -44,7 +44,24 @@ CJ can design while Francis prepares permission-cleared catalogue metadata/test 
 
 If a checkpoint slips, stop optional work and request approval for a concrete remaining-P0 reduction. Preserve a runnable catalogue/download slice. Do not silently substitute hard-coded success or animations for claimed behavior.
 
+## Trust-first revision (approved 2026-10-26, in progress)
+
+Follows the product framing and build decisions in PROJECT_MEMORY.md. Checkpoints: 02:00 trust-first page and review model; 04:00 browser walkthrough of demo steps 1-7 twice; 06:00 share preview, folder-based packs (real or fictional), file-property script. 06:00-09:00 debug/polish; 09:00 merge and submit.
+
+| Priority | Change | Acceptance |
+| --- | --- | --- |
+| P0 | Pack page order: author with rating and review count, downloads/saves; then review status, current version and BOW target; then preview; then download/adapt | Trust signals visible without scrolling on a laptop; same order on phone |
+| P0 | Contributor track record on the pack page | Contributor mean and review count shown beside an unrated pack |
+| P0 | Vocabulary: "reviewed", never "verified"; review status shows "Not yet reviewed" or "Reviewed by demo moderator (simulated)" | No "verified" wording in the UI |
+| P0 | Copy-link button for sharing a pack in Facebook groups | Link copies; confirmation announced; failure message if the clipboard is blocked |
+| P0 | Browser verification of the DEMO.md journey, run twice from reset; swap in teacher files under `demo-assets/` when they arrive | Recorded in DEMO.md evidence |
+| Half-build | Review queue (about 20 seconds in the demo), a prepared credited adaptation instead of a live upload, simulated checkout mentioned but not clicked | Works if clicked; not on the critical path |
+
+Demo emphasis: show an unrated pack and how it is handled honestly, then a reviewed pack, then download. LAC distribution is deferred and stays out of the pitch.
+
 ## Technical preflight
+
+Completed 2026-10-26: Vite + React + TypeScript approved; exact dependencies are listed in PROJECT_MEMORY.md and package.json. The original preflight guidance follows for reference.
 
 Reuse a suitable app/packages if a teammate has initialized them. Otherwise compare the smallest suitable static React/TypeScript setup with the team's familiar alternative. Routing/UI/storage libraries must justify their cost. The journey requires no server framework.
 

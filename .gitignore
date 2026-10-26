@@ -19,3 +19,8 @@ Desktop.ini
 
 # Teacher files and permission records are demonstration-only.
 demo-assets/
+
+# Node/Vite generated output.
+node_modules/
+dist/
+*.tsbuildinfo

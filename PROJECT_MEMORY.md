@@ -14,6 +14,7 @@ Updated: 2026-10-26, Asia/Manila. Decisions live here; [PLAN.md](PLAN.md) record
 - Constraints carried forward: free-tier API access only, lightweight technologies preferred, Windows/Mac laptops available, network reliability untested. The current local prototype needs no API.
 - Official rubric: innovation/creativity 25%; technical feasibility 20%; theme relevance 20%; impact/sustainability 20%; presentation/delivery 15%.
 - Interviewed teachers permitted their files **only for the demonstration**, using placeholder names. Public hosting, redistribution, sales and publication of their real names are not authorized.
+- Clarified 2026-10-26: "public sharing for the demo" means showing teacher files on screen during the presentation only. No public website, Git or redistribution. Three teachers will supply copies of their files before the presentation; exact arrival time is unknown.
 - The team agreed to the revised prototype direction. On October 26 the user explicitly authorized updating, committing and pushing this documentation/handoff batch so a partner can pull it. Framework/dependencies remain unselected; installation, scaffolding, deployment and future implementation commits/pushes require their applicable approval.
 
 ## Evidence and product direction
@@ -25,6 +26,22 @@ Team-approved direction: teacher-contributed lesson packs, searchable by curricu
 > For Bicol public-school teachers who struggle to prepare curriculum-aligned lessons, CherIt helps them find, download and adapt reusable lesson packs matched to their Budget of Work and classroom resources, so they can prepare lessons from an existing foundation while preserving contributors' credit.
 
 No workload reduction, literacy improvement, adoption, institutional partnership or funding has been measured or confirmed.
+
+### Interview signals, reported 2026-10-26
+
+Aggregated teacher reports, not individual dated accounts: teachers find materials online, compile and rewrite lesson plans manually for each class and BOW week, and buy some PPTs/materials from Facebook and other sites without knowing whether they are credible. Reported wording: buying online "is like gambling"; preparing takes longer than teaching. No named teacher, specific lesson or timed example was disclosed.
+
+Follow-up with the three teachers supplying demo files: all three said yes to uploading their exact pack for other Bicol teachers. Their main concern is low-quality uploads; copying matters mainly where they want credit for their own intellectual property. Given the opportunity, they would sell supplementary resources. Treat this as a small, friendly, self-reported signal, not demand evidence.
+
+### Product framing, approved by JP 2026-10-26
+
+- One good idea: a teacher can tell whether a lesson pack is legit *before* using it. Show who made it, its rating next to the review count, downloads/saves, review status, current version and BOW target before the preview and download.
+- CherIt does not claim packs are correct. It makes checkable signals visible. Use "reviewed", never "verified". Label every demo review action as simulated. Institutional or expert reviewers are a future goal, not a current claim.
+- Cold start: an unrated pack says "No reviews yet" and never shows fake stars; fall back on the contributor's track record across their other packs, with review counts. Downloads are popularity, not credibility.
+- Chain of must-be-trues: (1) teachers lose hours and gamble on unjudgeable files; (2) teachers with good packs will upload them for credit, track record and possible supplement income; (3) visible trust signals make a teacher pick a CherIt pack over a Facebook file, which is the link the demo tests; (4) downloads turn into reviews and adaptations, and shared links bring new teachers.
+- Distribution for the pitch: the three supplying teachers, plus CherIt links shared in Facebook groups that show contributor name and rating. LAC sessions and Master Teacher reviewers are **deferred**; the team has not confirmed how LAC works at the teachers' schools. Partner institutions and NGO endorsements do not exist; describe them only as something CherIt would seek.
+- Sustainability: core packs stay free; CherIt would take a small commission on optional paid supplements. Payments remain simulated.
+- Impact metric: pilot goal, not a result. Minutes from "I need a Grade 4 Science Week 3 lesson" to an editable, classroom-ready file, timed with the three teachers against their usual workflow. Headline target: "from an evening of searching to under 15 minutes."
 
 ## Agreed prototype scope
 
@@ -80,12 +97,22 @@ Measured declared-color contrast: espresso/cream 12.84:1; muted/cream 5.33:1; mu
 
 ## Current state and next gates
 
-- No application, package manifest, installed project dependencies or working demonstration exists in the inspected checkout.
-- Recommended architecture: locally served frontend, sample personas/catalogue, browser-local interaction persistence, permitted local files. Framework and exact dependencies require technical approval before installation/scaffolding.
-- Pending: exact deadline; sample file locations/formats; starter grade/subject/BOW; modification permission; actual reviewer availability; approved technical stack.
+- Stack approved by JP 2026-10-26: Vite + React + TypeScript; dependencies react, react-dom; dev dependencies vite, @vitejs/plugin-react, typescript, @types/react, @types/react-dom, vitest, plus @types/node for the Vite config. No router or UI library. Metadata in localStorage; uploaded file bytes in IndexedDB; teacher files served locally from ignored `demo-assets/`, never bundled into `dist/`.
+- Implemented but not browser-verified, on local branch `feat/cherit-prototype`, uncommitted: catalogue/filters, pack detail with preview and downloads, bookmarks, reviews and rating aggregates, profiles, local upload/adaptation, demo review queue/report hold, simulated supplement checkout and reset. 13 fictional sample `.docx` files are generated by `npm run samples`; one optional file is intentionally missing to show the missing-file state. Verified 2026-10-26 on macOS/Node 25: `npm test` (15/15 logic tests), `tsc --noEmit` and `npm run build` pass. Browser journey, responsive, keyboard and contrast checks have not been run.
+- Build decisions approved by JP 2026-10-26 (grilling session), superseding the hold above:
+  - Schedule: submission 09:00 on 2026-10-27, presentation 13:00. Features complete by 06:00, debug/polish 06:00-09:00, rehearsal and fallback recording 09:00-13:00. After submission, only separately committed fixes for demo-breaking defects.
+  - Demo runs on the team Mac in Dia (Chromium). JP edits and debugs the code. The feature branch may be committed/pushed at verified checkpoints; merging to `main` at the 09:00 submission is approved.
+  - Two review layers: demo moderation (files, permission, no learner data) publishes a pack; curriculum review is a separate per-version badge, always labelled simulated. Sample packs Water cycle v2.0 and Percent at the palengke start reviewed. A seeded fictional adaptation (Bikol vocabulary version by Ma'am Tess) shows the unrated/unreviewed case.
+  - Teacher files arrive via a Google Drive folder shared with team members only, are downloaded into ignored `demo-assets/`, and the share is removed after the event. Cutoff 04:00. Layout `demo-assets/packs/<alias>/<Grade - Subject - Title>/files`, no per-pack template. PDFs/images preview natively; Word/PowerPoint are previewed through PDF copies exported locally on the Mac after sanitizing, originals stay the download. JP checks content by eye; a local script writes property-stripped copies without touching originals.
+  - Placeholder reviews and counts may appear on real teacher packs for the demo, disclosed on stage: fixed set of two "Sample review" entries (4 and 5 stars) by sample authors, never in the teacher's voice, plus small labelled counts. This relaxes the earlier rule against seeded opinions on real teachers' work.
+  - If teacher files do not arrive, use fictional placeholder packs (lesson plans, PPTs, worksheets) in the same folder layout and present them as mock data.
+  - In-app Share form keeps title, grade, subject, competency and the permission declaration required; files are free-form.
+  - Fallback: local screen recording of the journey in Dia after freeze, plus the production build rehearsed once on the Windows laptop.
+- Pending: exact deadline; teacher file arrival and formats; starter grade/subject/BOW; modification permission; actual reviewer availability.
 - Public marketplace, real authentication/payments, nationwide scope, full offline editing and automatic institutional maintenance are superseded/deferred.
 - Previous repository initialization/publication was separately authorized. This documentation batch is also authorized for commit/push; inspect actual Git state for publication status rather than assuming this text proves a successful push.
 - Earlier setup observed Git, Node/npm and Python availability; recheck the actual environment during technical preflight rather than treating this as framework selection.
 - This revision used better-colors for measured palette checks, writing-for-agents for the handoff, and a scoped read-only reviewer. No skill or dependency was installed.
+- Coding session 2026-10-26 used frontend-design for the UI direction and emil-product-thinking for the product interview behind the framing above. No skill was installed.
 - Research and limitations: [RESEARCH_TEACHER_RESOURCE_TOOLS.md](RESEARCH_TEACHER_RESOURCE_TOOLS.md). It is context, not the implementation contract.
 - Use [IMPLEMENTATION_PROMPT.md](IMPLEMENTATION_PROMPT.md) in the coding conversation. Record actual milestones and test evidence only.
