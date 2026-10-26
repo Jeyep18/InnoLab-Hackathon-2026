@@ -1,6 +1,6 @@
 # CherIt demonstration
 
-Status: specification only; no working application or executed checks yet. [PROJECT_MEMORY.md](PROJECT_MEMORY.md) defines scope/permissions and [PLAN.md](PLAN.md) defines execution.
+Status: working local prototype; checks below were run on 2026-10-26 unless marked otherwise. [PROJECT_MEMORY.md](PROJECT_MEMORY.md) defines scope/permissions and [PLAN.md](PLAN.md) defines execution.
 
 ## Disclosure and audience
 
@@ -10,38 +10,44 @@ Show a concise notice: "Demonstration prototype: sample accounts, reviews and ac
 
 Demo actions do not prove curriculum review, identity, affiliation, ownership, classroom use, secure authentication or real payment. Downloaded files can be used in external software; full offline website/editing is not promised.
 
-## Primary journey
+## Primary journey (stage script)
 
-1. Reset and select a labelled demo teacher persona.
-2. Find a resource by grade, subject and competency/BOW target; inspect classroom requirements and required/optional attachments.
-3. Preview the lesson, inspect source/version and permission notice, bookmark and download its actual available file.
-4. After demo acquisition, submit/edit a sample 1-5 review; show updated resource and alias profile averages/counts. Classroom use is self-reported.
-5. Show a separately uploaded, authorized or synthetic adaptation with parent/version, attribution and change note. Demonstrate review/publication without overwriting the original or claiming expert validation.
-6. Optionally show a labelled sample paid-supplement acquisition. No money or verified-buyer claim.
+Run `npm run dev`, open http://localhost:5173 in Dia, press **Reset demo**. Expected values assume a fresh reset.
 
-Choose exact sample inputs and expected outputs when files/BOW are supplied. Pitch plus demo: 8 minutes; Q&A: 4 minutes. Exact submission deadline remains needed.
+1. Persona is **Ma'am Joy** (demo teacher). The banner states sample accounts, reviews and counts, and simulated payments.
+2. On the home sentence pick **Grade 4** and **Science**. Three packs appear: "The water cycle around Mayon" (4.7 from 3, curriculum-reviewed, simulated) next to its **Bikol vocabulary version** (No reviews yet, Not yet reviewed).
+3. Open the **Bikol vocabulary version**. Before you download: Ma'am Tess's track record 5.0 (1), "No reviews yet", 0 downloads, "Not yet reviewed" with "the original's review doesn't carry over", credit to the original v2.0 by Ma'am Lira.
+4. Click the original. Trust panel: Ma'am Lira 4.3 (4), this version 4.7 from 3 reviews, 38 downloads, curriculum-reviewed (simulated), version 2.0 replacing 1.0, Term 2 Week 3. The older-version review is listed separately and excluded.
+5. Scroll past the pad-paper preview and download the lesson plan (a real .docx). Downloads become 39.
+6. Rate 5 stars and post. This version becomes **4.8 from 4**; Ma'am Lira's track record becomes **4.4 (5)**.
+7. **Copy link to share** shows the copied link and a simulated group-post preview with contributor, rating and review status.
+8. Only if time allows: switch persona to **Demo moderator**, open **Review queue**, mark a pack curriculum-reviewed (simulated).
+
+Backup moments for Q&A: Ma'am Lira cannot rate her own pack; "Reading typhoon signals" shows a missing optional file; "Percent at the palengke" has a simulated ₱49 supplement checkout; **Share a lesson** stores a real uploaded file that survives reload and waits for review.
 
 ## Acceptance checklist
 
-- [ ] Add and run actual install/start/build/test/reset commands after technical approval.
-- [ ] Search/filter correct records; useful no-results, empty and missing-file states.
-- [ ] Preview/download the matching resource/version. Restricted sample files remain local.
-- [ ] Bookmark toggles once/persona; count and saved view stay consistent after reload.
-- [ ] One editable review/persona/resource; demo self-rating blocked; valid 1-5 range; correct no-review state.
-- [ ] Unequal resource review counts produce the correct contributor mean from underlying ratings; editing and reset recompute correctly.
-- [ ] Older-version reviews are labelled and excluded from current rating means/counts; an updated review replaces the persona's earlier review for that resource.
-- [ ] Downloads mean initiated events, not unique users; sample counts/opinions are labelled.
-- [ ] Local upload handles invalid/empty files and metadata, cancellation and storage failure. File bytes survive reload if that persistence is claimed.
-- [ ] Pending/demo publish/hold actions change state; no secure authorization or real academic-review claim.
-- [ ] Adaptation preserves original credit/parent version and original file; curriculum approval does not transfer automatically.
-- [ ] Reset clears demo-created state/files and restores baselines without modifying teacher originals. Complete the journey twice without repairs.
-- [ ] Phone/tablet/laptop layout; keyboard navigation, focus, form labels and readable actual color pairs/states.
-- [ ] Check documents, metadata, screenshots/logs, tracked files and build outputs for contributor/student information and restricted assets.
-- [ ] Teacher files/permission records are Git-ignored; no public hosting, external processing, real credentials or financial collection.
-- [ ] Check whether the local demo still works after internet disconnection; disclose any network dependencies without implying full offline website support.
-- [ ] Prepare a known-good local build or clearly labelled private recording/screenshots fallback under the same asset restrictions.
-- [ ] Rehearse timing and confirm submission sharing respects teacher permissions; sanitize/substitute assets or obtain broader permission when required.
+- [x] Install/start/build/test/reset commands run: `npm install`, `npm run dev`, `npm test` (26 passing), `npm run build`, `npm run preview`, and the Reset demo button.
+- [x] Search/filter: Grade 4 + Science returns the three expected packs; unmatched keywords show "No lesson packs match" with recovery actions; the typhoon pack's missing optional file shows an error and is not counted as a download.
+- [x] Preview/download: lesson-plan .docx downloaded at its exact size (4,082 bytes); folder-pack PDF previews render in Chromium's viewer.
+- [x] Bookmark toggles once per persona; count 6 → 7 → 6; Saved view and count survive reload; empty Saved state shown.
+- [x] One editable review per persona/resource; self-rating blocked for the contributor; posting without a rating shows "Choose a rating from 1 to 5 stars"; unrated packs say "No reviews yet". Unit tests cover the 1-5 range.
+- [x] Contributor mean uses underlying reviews (4.25 shown as 4.3, not the 3.8 average of averages); edit 5 → 3 recalculated to 4.3 / 4.0; reset restores baselines (unit tests and browser).
+- [x] Older-version review labelled and excluded; an edit moves a persona's review to the current version (unit test).
+- [x] Download counts are events, including repeats; sample counts and reviews labelled.
+- [x] Upload: empty file and .exe rejected with messages; valid .docx + .txt submitted; bytes survive reload (re-downloaded at 3,701 bytes). Not run: storage-full failure (handled in code, untested).
+- [x] Pending → publish and report → hold change state; review queue labelled as simulated, not expert review.
+- [x] Adaptation credits parent and version, keeps the original unchanged, starts "Not yet reviewed".
+- [x] Journey steps 1-6 completed twice from reset with identical results.
+- [x] Laptop (1366), tablet (iPad Air 820) and phone (iPhone 12 Pro 390) layouts; keyboard Tab/Enter to open a pack with a visible 3px focus ring; route change moves focus to content and scrolls to top. All text colour pairs ≥ 4.59:1; control borders and rating stars ≥ 3:1.
+- [ ] Check real teacher documents, metadata and screenshots once they arrive (sanitize script tested on fictional files only).
+- [x] `npm run check-assets` passes: no teacher files tracked or in `dist/`. No external network requests in the bundle.
+- [ ] Disconnect Wi-Fi on the demo Mac and repeat the journey (expected to work: no network dependencies found).
+- [ ] Record the fallback video in Dia after the freeze; rehearse `npm run preview` once on the Windows laptop.
+- [ ] Rehearse timing and confirm submission sharing respects teacher permissions.
 
 ## Evidence
 
-When checks run, record date, tested revision, browser/device, scenario, outcomes and limitations here. All checks remain unexecuted until recorded. Do not invent endorsements, partnerships, review results or workload savings.
+2026-10-26, branch `feat/cherit-prototype`, macOS, Node 25.9, Chromium-based automated preview browser (not Dia itself). Dev-server hot reload during editing once crashed the page (development only); an error screen with Reload and Reset now prevents a blank page. Rehearse once in Dia itself before presenting.
+
+Do not invent endorsements, partnerships, review results or workload savings.

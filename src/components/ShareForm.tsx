@@ -26,7 +26,7 @@ export function ShareForm({ parentId }: { parentId?: string }) {
   const [grade, setGrade] = useState(parent?.grade ?? '')
   const [subject, setSubject] = useState(parent?.subject ?? '')
   const [competency, setCompetency] = useState(parent?.competency.text ?? '')
-  const [week, setWeek] = useState(parent ? `${parent.bow.quarter}, ${parent.bow.week}` : '')
+  const [week, setWeek] = useState(parent ? [parent.bow.quarter, parent.bow.week].filter(Boolean).join(', ') : '')
   const [requirements, setRequirements] = useState(parent?.requirements.join('\n') ?? '')
   const [changeNote, setChangeNote] = useState('')
   const [picked, setPicked] = useState<PickedFile[]>([])

@@ -1,6 +1,6 @@
 # CherIt prototype plan
 
-Updated: 2026-10-26. Product scope follows team decisions in [PROJECT_MEMORY.md](PROJECT_MEMORY.md). The Vite + React + TypeScript stack is approved and a first implementation exists on local branch `feat/cherit-prototype` (uncommitted, not yet browser-verified). [DEMO.md](DEMO.md) owns demonstration acceptance.
+Updated: 2026-10-26. Product scope follows team decisions in [PROJECT_MEMORY.md](PROJECT_MEMORY.md). The Vite + React + TypeScript stack is approved; the prototype is implemented on `feat/cherit-prototype` and its checks are recorded in DEMO.md. [DEMO.md](DEMO.md) owns demonstration acceptance.
 
 ## Delivery model
 
@@ -44,9 +44,9 @@ CJ can design while Francis prepares permission-cleared catalogue metadata/test 
 
 If a checkpoint slips, stop optional work and request approval for a concrete remaining-P0 reduction. Preserve a runnable catalogue/download slice. Do not silently substitute hard-coded success or animations for claimed behavior.
 
-## Trust-first revision (approved 2026-10-26, in progress)
+## Trust-first revision (approved 2026-10-26, implemented)
 
-Follows the product framing and build decisions in PROJECT_MEMORY.md. Checkpoints: 02:00 trust-first page and review model; 04:00 browser walkthrough of demo steps 1-7 twice; 06:00 share preview, folder-based packs (real or fictional), file-property script. 06:00-09:00 debug/polish; 09:00 merge and submit.
+Follows the product framing and build decisions in PROJECT_MEMORY.md. All three checkpoints were completed by 22:30 on 2026-10-26. Remaining before 09:00: load teacher files if they arrive by 04:00, rehearse in Dia with Wi-Fi off, rehearse `npm run preview` on the Windows laptop, record the fallback video, then merge to `main` and submit.
 
 | Priority | Change | Acceptance |
 | --- | --- | --- |

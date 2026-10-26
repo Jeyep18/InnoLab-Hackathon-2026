@@ -26,7 +26,7 @@ export function Profile({ id }: { id: string }) {
       <header className="profile-head">
         <h1>{profile.alias}</h1>
         <p className="muted">
-          Demo persona{profile.role === 'moderator' ? ', moderator' : ''}. {profile.area}.
+          {profile.listed === false ? 'Contributor alias' : `Demo persona${profile.role === 'moderator' ? ', moderator' : ''}`}. {profile.area}.
         </p>
         <p>{profile.bio}</p>
         {profile.role === 'teacher' && (
