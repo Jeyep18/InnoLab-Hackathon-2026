@@ -1,18 +1,20 @@
 import { FileText, Trash2, Upload } from 'lucide-react'
 import { useState, type Dispatch, type SetStateAction } from 'react'
 import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { formatBytes } from '@/domain/logic'
 import { ACCEPTED_EXTENSIONS, extension, MAX_FILE_BYTES } from '@/files'
 import { cn } from '@/lib/utils'
 import { FieldError } from './FormField'
+import { PagePreviewEditor } from './PagePreviewEditor'
+import type { PreviewPage } from '@/lib/document-preview'
 
 export interface PickedFile {
   file: File
   label: string
   required: boolean
+  previewPages?: PreviewPage[]
 }
 
 /** Why a file can't be shared, or null. Same rules as before the redesign. */
@@ -29,22 +31,26 @@ export function FilePicker({
   setPicked,
   error,
   onAdded,
+  kind = 'lesson-plan',
+  paid = false,
 }: {
   id: string
   picked: PickedFile[]
   setPicked: Dispatch<SetStateAction<PickedFile[]>>
   error?: string
   onAdded: () => void
+  kind?: 'lesson-plan' | 'supplement'
+  paid?: boolean
 }) {
   const [dragging, setDragging] = useState(false)
   const errorId = error ? `${id}-error` : undefined
 
   function addFiles(list: FileList | null) {
     if (!list || list.length === 0) return
+    const added = [...list].map((file) => ({ file, label: file.name.replace(/\.[^.]+$/, ''), required: kind === 'lesson-plan' }))
     setPicked((current) => [
       ...current,
-      // Files in the first batch start as "needed to teach", as before.
-      ...[...list].map((file) => ({ file, label: file.name.replace(/\.[^.]+$/, ''), required: current.length === 0 })),
+      ...added,
     ])
     onAdded()
   }
@@ -53,7 +59,7 @@ export function FilePicker({
 
   return (
     <fieldset className="flex flex-col gap-4" aria-describedby={[`${id}-hint`, errorId].filter(Boolean).join(' ')}>
-      <legend className="sr-only">Files</legend>
+      <legend className="sr-only">{kind === 'lesson-plan' ? 'Lesson plan files' : 'Supplementary files'}</legend>
       <div>
         <input
           id={id}
@@ -94,7 +100,7 @@ export function FilePicker({
             <span className="font-normal text-muted-foreground max-sm:hidden"> or drop them here</span>
           </span>
           <span id={`${id}-hint`} className="max-w-sm text-sm text-pretty text-muted-foreground">
-            Word, PowerPoint, Excel, OpenDocument, PDF, text or images, up to {formatBytes(MAX_FILE_BYTES)} each.
+            Documents, images or videos · {formatBytes(MAX_FILE_BYTES)} max
           </span>
         </label>
       </div>
@@ -104,7 +110,6 @@ export function FilePicker({
           {picked.map((p, i) => {
             const problem = fileProblem(p.file)
             const labelId = `${id}-label-${i}`
-            const requiredId = `${id}-required-${i}`
             return (
               <li key={`${p.file.name}-${i}`} className={cn('rounded-2xl border bg-card p-4', problem && 'border-destructive/50')}>
                 <div className="flex items-start gap-3">
@@ -125,17 +130,14 @@ export function FilePicker({
                 <div className="mt-3 grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
                   <div className="flex flex-col gap-1.5">
                     <Label htmlFor={labelId} className="text-sm font-normal text-muted-foreground">
-                      Name shown for {p.file.name}
+                      Display name
                     </Label>
                     <Input id={labelId} value={p.label} onChange={(e) => update(i, { label: e.target.value })} />
                   </div>
-                  <div className="flex h-10 items-center gap-2.5">
-                    <Checkbox id={requiredId} checked={p.required} onCheckedChange={(v) => update(i, { required: v === true })} />
-                    <Label htmlFor={requiredId} className="text-sm font-normal">
-                      Needed to teach
-                    </Label>
-                  </div>
                 </div>
+                {kind === 'supplement' && paid && (/\.(mp4|webm|mov)$/i.test(p.file.name)
+                  ? <p className="mt-3 text-sm text-muted-foreground">Video locked until bundle purchase</p>
+                  : <PagePreviewEditor picked={p} onChange={(previewPages) => update(i, { previewPages })} />)}
               </li>
             )
           })}

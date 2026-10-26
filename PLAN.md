@@ -27,7 +27,11 @@ Partner bootstrap: teacher assets do not arrive through Git pull. Missing assets
 
 The lightweight simulated acquisition UI is part of the prototype; showing it in the timed live walkthrough is optional. It must not consume time needed for the real catalogue/download journey.
 
+2026-10-27 approved refinement, implemented: the Share wizard separates free lesson-plan uploads from optional free/paid supplementary bundles. PDF/image page selection produces contributor-controlled preview images; Office files require a PDF preview copy, and videos stay locked before acquisition. A bundle acquisition unlocks all supplementary files for the current persona. PDF.js is loaded only for page rendering. Real checkout and protected server-side file delivery remain Future scope.
+
 ## Execution checkpoints
+
+2026-10-27 approved buyer-flow refinement, implemented: attached lesson-plan download, reviews-only sidebar, prominent supplementary product card, and a modal with file previews, demo billing, simulated verification and ZIP download. Existing legacy file categories are inferred from lesson-plan names so worksheets/slides stay in supplements. No real billing service is configured.
 
 Plan around 12 hours from actual implementation start, capped by the real deadline. The earlier 12-16-hour estimate is historical. Keep the final two hours for rehearsal/submission; approve a concrete reduction if that time no longer exists.
 

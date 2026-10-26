@@ -36,6 +36,8 @@ export interface ResourceFile {
   source: FileSource
   /** Sample price for a simulated paid supplement. Never a real sale. */
   samplePricePhp?: number
+  category?: 'lesson-plan' | 'supplement'
+  previewPages?: { source: FileSource; blurred: boolean; page: number }[]
 }
 
 export interface CurriculumReview {
@@ -66,6 +68,7 @@ export interface Resource {
   requirements: string[]
   tags: string[]
   files: ResourceFile[]
+  supplementBundle?: { pricePhp: number }
   references: { label: string; url?: string }[]
   version: VersionInfo
   history: VersionInfo[]
