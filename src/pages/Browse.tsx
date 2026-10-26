@@ -10,10 +10,10 @@ const ANY = 'any'
 export function Browse() {
   const model = useBrowse()
   return (
-    <Container className="pt-10 sm:pt-14">
-      <header className="mb-8 max-w-2xl">
-        <h1 className="library-title text-4xl sm:text-5xl">Browse lesson packs</h1>
-        <p className="mt-3 text-muted-foreground">Find a topic for your class. Check the contributor and reviews before you download.</p>
+    <Container className="pt-6">
+      <header className="mb-4 max-w-2xl">
+        <h1 className="library-title text-3xl sm:text-4xl">Browse lesson packs</h1>
+        <p className="mt-2 text-muted-foreground">Find a topic for your class. Check the contributor and reviews before you download.</p>
       </header>
       <BrowseFilters model={model} />
       <ResultsBar model={model} />
@@ -53,7 +53,7 @@ function BrowseFilters({ model }: { model: BrowseModel }) {
 function ResultsBar({ model }: { model: BrowseModel }) {
   const { results, chips, sort, setSort, update, clear } = model
   return (
-    <div className="mt-6 mb-5 flex flex-wrap items-center gap-3">
+    <div className="mt-4 mb-4 flex flex-wrap items-center gap-3">
       <h2 className="text-base font-medium tabular-nums" aria-live="polite">
         {results.length} lesson pack{results.length === 1 ? '' : 's'}
       </h2>

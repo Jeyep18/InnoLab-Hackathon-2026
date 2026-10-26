@@ -9,23 +9,12 @@ import type { PackDownloads } from './usePackDownloads'
 import type { PackPageModel } from './usePackPage'
 
 export function PackActions({ model }: { model: PackPageModel }) {
-  const { resource, downloads, primaryRef, teacherActions, canReport, setReporting } = model
-  const optional = resource.files.filter((file) => !file.required).length
+  const { resource, teacherActions, canReport, setReporting } = model
   return (
     <div className="grid gap-2">
-      {downloads.canDownload && (
-        <div ref={primaryRef} className="grid gap-2">
-          <PackDownloadButton dl={downloads} size="lg" className="w-full" />
-          <p className="text-xs leading-relaxed text-muted-foreground">
-            {packSummary(downloads)}
-            {optional > 0 && ` · ${plural(optional, 'optional extra')} listed under Files`}
-          </p>
-          {downloads.packError && <p id="pack-download-error" role="alert" className="text-sm text-destructive">{downloads.packError}</p>}
-        </div>
-      )}
       {teacherActions && (
         <>
-          <div className="mt-1 grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-2">
             <SaveToggle resource={resource} className="w-full" />
             <ShareLink resource={resource} label="Share link" className="w-full" />
           </div>

@@ -33,6 +33,10 @@ The lightweight simulated acquisition UI is part of the prototype; showing it in
 
 2026-10-27 approved buyer-flow refinement, implemented: attached lesson-plan download, reviews-only sidebar, prominent supplementary product card, and a modal with file previews, demo billing, simulated verification and ZIP download. Existing legacy file categories are inferred from lesson-plan names so worksheets/slides stay in supplements. No real billing service is configured.
 
+2026-10-27: paid non-PDF documents no longer need a PDF preview copy; they are listed as download-to-open.
+
+2026-10-27 approved Share/bundle refinement, implemented: compact file list with previews, floating error card, contributor-chosen license on Review (paid bundles fixed to buyer's classroom use), .docx preview through lazily loaded docx-preview, and a bundle preview that shows locked pages explicitly.
+
 Plan around 12 hours from actual implementation start, capped by the real deadline. The earlier 12-16-hour estimate is historical. Keep the final two hours for rehearsal/submission; approve a concrete reduction if that time no longer exists.
 
 | Checkpoint | Proposed owner | Acceptance |

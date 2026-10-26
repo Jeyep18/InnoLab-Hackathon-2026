@@ -16,6 +16,7 @@ import type { Resource } from '@/domain/types'
 import { initials } from '@/lib/pack'
 import { cn } from '@/lib/utils'
 import { useStore } from '@/store'
+import { ReviewsDialog } from './ReviewsPanel'
 
 /** Kept for older callers (ResourceCard). Same honesty label as ReviewBadge. */
 export function ReviewStatus({ resource }: { resource: Resource }) {
@@ -24,7 +25,7 @@ export function ReviewStatus({ resource }: { resource: Resource }) {
 
 /**
  * Everything a teacher can check before downloading, in the order the team agreed,
- * laid out like a product spec sheet. `actions` holds the Download/Save/Share buttons.
+ * laid out like a product spec sheet. `actions` holds the Save/Share buttons.
  */
 export function TrustPanel({ resource, actions, className }: { resource: Resource; actions?: ReactNode; className?: string }) {
   const { state, reviews, resources, personaById } = useStore()
@@ -40,14 +41,14 @@ export function TrustPanel({ resource, actions, className }: { resource: Resourc
   return (
     <section
       aria-labelledby="trust-title"
-      className={cn('border-t-2 border-foreground bg-card p-5 text-card-foreground sm:p-6', className)}
+      className={cn('border-t-2 border-foreground bg-card p-4 text-card-foreground', className)}
     >
-      <h2 id="trust-title" className="library-section-title text-2xl">
-        Before you download
+      <h2 id="trust-title" className="library-section-title text-xl">
+        About this pack
       </h2>
 
-      <div className="mt-4 flex items-center gap-3">
-        <Avatar className="size-11">
+      <div className="mt-3 flex items-center gap-3">
+        <Avatar className="size-9">
           <AvatarFallback className="bg-secondary text-sm font-semibold text-foreground">{initials(contributor)}</AvatarFallback>
         </Avatar>
         <div className="min-w-0">
@@ -71,12 +72,13 @@ export function TrustPanel({ resource, actions, className }: { resource: Resourc
         )}
       </p>
 
-      <dl className="mt-4 divide-y">
+      <dl className="mt-3 divide-y">
         <Tile label="Teacher rating, this version">
           <RatingLine summary={packRating} />
+          <ReviewsDialog resource={resource} />
           <Sub>
             {packRating.count === 0
-              ? 'Be the first to rate it after downloading.'
+              ? 'No ratings yet.'
               : sampleCount > 0 &&
                 `Includes ${sampleCount === packRating.count ? 'only' : sampleCount} sample review${sampleCount === 1 ? '' : 's'}.`}
           </Sub>
@@ -93,10 +95,9 @@ export function TrustPanel({ resource, actions, className }: { resource: Resourc
         </Tile>
       </dl>
 
-      {/* Actions follow the key trust signals so Download stays above the fold on a laptop. */}
-      {actions && <div className="mt-4">{actions}</div>}
+      {actions && <div className="mt-3">{actions}</div>}
 
-      <dl className="mt-4 divide-y">
+      <dl className="mt-3 grid grid-cols-2 gap-x-4 border-t">
         <Tile label="Version">
           <span className="font-semibold tabular-nums">{resource.version.label}</span>
           <Sub>
@@ -110,7 +111,7 @@ export function TrustPanel({ resource, actions, className }: { resource: Resourc
           </span>
           <Sub>Shows popularity, not quality.</Sub>
         </Tile>
-        <Tile label="Budget of Work">
+        <Tile label="Budget of Work" className="col-span-2 border-t">
           <span className="font-semibold">{bowLabel(resource)}</span>
           <Sub>{competencyLabel(resource)}</Sub>
         </Tile>
@@ -119,9 +120,9 @@ export function TrustPanel({ resource, actions, className }: { resource: Resourc
   )
 }
 
-function Tile({ label, children }: { label: string; children: ReactNode }) {
+function Tile({ label, children, className }: { label: string; children: ReactNode; className?: string }) {
   return (
-    <div className="py-3">
+    <div className={cn('py-2', className)}>
       <dt className="text-xs font-medium text-muted-foreground">{label}</dt>
       <dd className="mt-1 flex flex-col items-start gap-1 text-sm">{children}</dd>
     </div>

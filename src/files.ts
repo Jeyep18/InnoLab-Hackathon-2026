@@ -52,5 +52,21 @@ export function extension(name: string): string {
   return dot === -1 ? '' : name.slice(dot + 1).toLowerCase()
 }
 
+export type PreviewKind = 'pdf' | 'image' | 'text' | 'docx' | 'video'
+
+/** How a file can be shown in the browser, or null when it can only be downloaded. */
+export function previewKind(name: string): PreviewKind | null {
+  const ext = extension(name)
+  if (ext === 'pdf') return 'pdf'
+  if (['png', 'jpg', 'jpeg'].includes(ext)) return 'image'
+  if (ext === 'txt') return 'text'
+  if (ext === 'docx') return 'docx'
+  if (['mp4', 'webm', 'mov'].includes(ext)) return 'video'
+  return null
+}
+
+/** Shown wherever teachers pick files, so they know what will preview. */
+export const PREVIEWABLE_TYPES_LABEL = 'PDF, Word (.docx), images, text and video preview here. PowerPoint, Excel and .doc files download only.'
+
 export const ACCEPTED_EXTENSIONS = ['docx', 'doc', 'pptx', 'ppt', 'xlsx', 'odt', 'odp', 'pdf', 'txt', 'png', 'jpg', 'jpeg', 'mp4', 'webm', 'mov']
 export const MAX_FILE_BYTES = 15 * 1024 * 1024

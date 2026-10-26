@@ -560,3 +560,16 @@
   font-size: 1.75rem;
   font-weight: 600;
 }
+
+/* docx-preview renders fixed-width A4 pages; let them fit the preview dialog and pack page. */
+.docx-view .docx-wrapper {
+  padding: 0.75rem;
+  background: transparent;
+}
+.docx-view .docx-wrapper > section.docx {
+  width: 100% !important;
+  min-height: auto !important;
+  padding: clamp(1rem, 5%, 3rem) !important;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.12);
+}

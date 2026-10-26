@@ -16,19 +16,22 @@ import { cn } from '@/lib/utils'
 import { navigate } from '@/router'
 import { deleteFiles, putFile } from '@/storage/fileStore'
 import { useStore } from '@/store'
-import { FilePicker, fileProblem, type PickedFile } from './share/FilePicker'
+import { FilePicker, fileProblem, isVideo, type PickedFile } from './share/FilePicker'
 import { describedBy, FieldError, FormField } from './share/FormField'
 import { Stepper } from './share/Stepper'
+import { ErrorCard } from './share/ErrorCard'
+import { LicenseTerms } from './LicenseTerms'
+import { LICENSES, licenseById, PAID_SUPPLEMENT_TERMS, type LicenseId } from '@/lib/licenses'
 
 const SUBJECTS = ['English', 'Filipino', 'Mathematics', 'Science', 'Araling Panlipunan', 'MAPEH', 'EPP / TLE', 'Values Education', 'Reading']
 const COMMON_CLASSROOM_NEEDS = ['Internet', 'Phone or tablet', 'Computer', 'Projector', 'Laboratory', 'Printer', 'Speakers', 'Printed worksheets']
 const STEPS = ['Lesson info', 'Teaching files', 'Review'] as const
 
-type ErrorKey = 'title' | 'summary' | 'schoolLevel' | 'grade' | 'subject' | 'competency' | 'files' | 'permission' | 'changeNote' | 'submit'
+type ErrorKey = 'title' | 'summary' | 'schoolLevel' | 'grade' | 'subject' | 'competency' | 'files' | 'supplements' | 'price' | 'license' | 'permission' | 'changeNote' | 'submit'
 type Errors = Partial<Record<ErrorKey, string>>
 
 /** Which wizard step owns each validated field, in on-screen order. */
-const STEP_FIELDS: ErrorKey[][] = [['title', 'summary', 'schoolLevel', 'grade', 'subject', 'competency', 'changeNote'], ['files'], ['permission']]
+const STEP_FIELDS: ErrorKey[][] = [['title', 'summary', 'schoolLevel', 'grade', 'subject', 'competency', 'changeNote'], ['files', 'price', 'supplements'], ['license', 'permission']]
 
 const pageTitle = 'text-3xl font-bold tracking-tight sm:text-4xl'
 
@@ -50,6 +53,7 @@ export function ShareForm({ parentId }: { parentId?: string }) {
   const [supplements, setSupplements] = useState<PickedFile[]>([])
   const [supplementAccess, setSupplementAccess] = useState('free')
   const [bundlePrice, setBundlePrice] = useState('')
+  const [license, setLicense] = useState<LicenseId | ''>('')
   const [permission, setPermission] = useState(false)
   const [errors, setErrors] = useState<Errors>({})
   const [saving, setSaving] = useState(false)
@@ -122,17 +126,22 @@ export function ShareForm({ parentId }: { parentId?: string }) {
     if (!grade) next.grade = 'Choose a grade.'
     if (!subject.trim()) next.subject = 'Enter a subject.'
     if (!competency.trim()) next.competency = 'Name the competency or learning target.'
+    const problems = (files: PickedFile[]) => files.map((p) => fileProblem(p.file)).filter(Boolean)
+    const planProblems = problems(picked)
     if (picked.length === 0) next.files = 'Upload a free lesson plan.'
-    else if (picked.some((p) => /\.(mp4|webm|mov)$/i.test(p.file.name))) next.files = 'Upload a document for the lesson plan. Add videos under supplements.'
-    else {
-      const problems = [...picked, ...supplements].map((p) => fileProblem(p.file)).filter(Boolean)
-      if (problems.length > 0) next.files = `${problems.join(' ')} Remove ${problems.length === 1 ? 'it' : 'them'} to continue.`
-      else if ([...picked, ...supplements].some((p) => !p.label.trim())) next.files = 'Give every file a short name.'
-      else if (supplementAccess === 'paid' && supplements.length > 0) {
-        if (!Number.isFinite(Number(bundlePrice)) || Number(bundlePrice) <= 0 || !/^\d+(\.\d{1,2})?$/.test(bundlePrice)) next.files = 'Enter a bundle price greater than ₱0 (up to two decimal places).'
-        else if (supplements.some((p) => !/\.(mp4|webm|mov)$/i.test(p.file.name) && !p.previewPages?.length)) next.files = 'Set preview pages for each paid document. Videos stay fully locked.'
-      }
-    }
+    else if (picked.some((p) => isVideo(p.file.name))) next.files = 'Upload a document for the lesson plan. Add videos under supplementary materials.'
+    else if (planProblems.length > 0) next.files = `${planProblems.join(' ')} Remove ${planProblems.length === 1 ? 'it' : 'them'} to continue.`
+    else if (picked.some((p) => !p.label.trim())) next.files = 'Give every lesson-plan file a display name.'
+    const paid = supplementAccess === 'paid'
+    const extraProblems = problems(supplements)
+    // Only PDFs and images can be cut into preview pages. Other documents are sold without one.
+    const missingPreview = supplements.filter((p) => /\.(pdf|png|jpe?g)$/i.test(p.file.name) && !p.previewPages?.length)
+    if (extraProblems.length > 0) next.supplements = `${extraProblems.join(' ')} Remove ${extraProblems.length === 1 ? 'it' : 'them'} to continue.`
+    else if (supplements.some((p) => !p.label.trim())) next.supplements = 'Give every supplementary file a display name.'
+    else if (paid && supplements.length === 0) next.supplements = 'Add files to the paid bundle, or switch supplements to Free.'
+    else if (paid && missingPreview.length > 0) next.supplements = `Choose buyer preview pages for ${missingPreview.map((p) => `“${p.label.trim() || p.file.name}”`).join(', ')}.`
+    if (paid && supplements.length > 0 && (!/^\d+(\.\d{1,2})?$/.test(bundlePrice.trim()) || Number(bundlePrice) <= 0)) next.price = 'Enter a bundle price above ₱0, like 49 or 49.50.'
+    if (!license) next.license = 'Choose a license so teachers know what they can do with your lesson plan.'
     if (!permission) next.permission = 'Confirm you made this pack or have permission to share it.'
     if (parent && !changeNote.trim()) next.changeNote = 'Explain what you changed from the original.'
     return next
@@ -227,9 +236,10 @@ export function ShareForm({ parentId }: { parentId?: string }) {
         version: { label: '1.0', date: today, note: parent ? 'First version of this adaptation.' : 'First shared version.' },
         history: [],
         status: 'pending',
+        license: license || undefined,
         permission: {
           kind: 'local-upload',
-          notice: `${persona.alias} declared they made this pack or have permission to share it. Stored only in this browser for the demonstration.`,
+          notice: `${persona.alias} declared they made this pack or have permission to share it, and chose the license shown. Stored only in this browser for the demonstration.`,
         },
         parent: parent && { resourceId: parent.id, version: parent.version.label, title: parent.title, contributorId: parent.contributorId },
         changeNote: parent ? changeNote.trim() : undefined,
@@ -549,10 +559,11 @@ export function ShareForm({ parentId }: { parentId?: string }) {
                   <div role="group" aria-label="Supplement pricing" className="mb-4 flex flex-wrap items-center gap-2">
                     <Button type="button" variant={supplementAccess === 'free' ? 'default' : 'outline'} aria-pressed={supplementAccess === 'free'} onClick={() => setSupplementAccess('free')}>Free</Button>
                     <Button type="button" variant={supplementAccess === 'paid' ? 'default' : 'outline'} aria-pressed={supplementAccess === 'paid'} onClick={() => setSupplementAccess('paid')}>Paid bundle</Button>
-                    {supplementAccess === 'paid' && <div className="flex items-center gap-2"><label htmlFor={f('bundle-price')} className="text-sm">₱</label><Input id={f('bundle-price')} aria-label="Supplement bundle price in pesos" className="w-28" inputMode="decimal" placeholder="0.00" value={bundlePrice} onChange={(event) => setBundlePrice(event.target.value)} /><span className="text-xs text-muted-foreground">One price · All supplements</span></div>}
+                    {supplementAccess === 'paid' && <div className="flex items-center gap-2"><label htmlFor={f('price')} className="text-sm">₱</label><Input id={f('price')} aria-label="Supplement bundle price in pesos" className="w-28" inputMode="decimal" placeholder="0.00" value={bundlePrice} aria-invalid={!!errors.price} aria-describedby={describedBy(f('price'), { error: errors.price })} onChange={(event) => { setBundlePrice(event.target.value); if (errors.price) setErrors((e) => ({ ...e, price: undefined })) }} /><span className="text-xs text-muted-foreground">One price · All supplements</span></div>}
                   </div>
-                  <FilePicker id={f('supplements')} picked={supplements} setPicked={setSupplements} kind="supplement" paid={supplementAccess === 'paid'} onAdded={() => setErrors((e) => ({ ...e, files: undefined }))} />
-                  {supplementAccess === 'paid' && <p className="mt-3 text-xs text-muted-foreground">Simulated checkout · Videos stay locked · Documents use your page preview</p>}
+                  {errors.price && <FieldError id={`${f('price')}-error`}><span className="-mt-2 mb-3 block">{errors.price}</span></FieldError>}
+                  <FilePicker id={f('supplements')} picked={supplements} setPicked={setSupplements} kind="supplement" paid={supplementAccess === 'paid'} error={errors.supplements} onAdded={() => setErrors((e) => ({ ...e, supplements: undefined }))} />
+                  {supplementAccess === 'paid' && <p className="mt-3 text-xs text-muted-foreground">Simulated checkout · PDFs and images use your page preview · Other files are listed by name and open after download</p>}
                 </section>
                 <div className="mt-4 flex items-center gap-2 text-xs text-muted-foreground">
                   <ShieldCheck aria-hidden="true" className="size-4 shrink-0 text-mauve-ink" />
@@ -594,6 +605,17 @@ export function ShareForm({ parentId }: { parentId?: string }) {
                   ]}
                 />
                 {supplementAccess === 'paid' && supplements.length > 0 && <p className="text-sm font-medium">Supplement bundle · ₱{Number(bundlePrice).toFixed(2)} · {supplements.length} files · Simulated checkout</p>}
+
+                <LicensePicker
+                  id={f('license')}
+                  value={license}
+                  error={errors.license}
+                  paidBundle={supplementAccess === 'paid' && supplements.length > 0}
+                  onChange={(value) => {
+                    setLicense(value)
+                    setErrors((e) => ({ ...e, license: undefined }))
+                  }}
+                />
 
                 <div className={cn('rounded-xl border p-4 transition-colors', permission ? 'border-primary/40 bg-secondary/50' : 'bg-background/60', errors.permission && 'border-destructive/60')}>
                   <div className="flex items-start gap-3">
@@ -671,6 +693,14 @@ export function ShareForm({ parentId }: { parentId?: string }) {
           </div>
         )}
       </form>
+      <ErrorCard
+        items={[...STEP_FIELDS.flat(), 'submit' as const].filter((key) => errors[key]).map((key) => ({ target: f(key), message: errors[key]! }))}
+        onSelect={(target) => {
+          const el = document.getElementById(target)
+          el?.scrollIntoView({ block: 'center', behavior: reduceMotion ? 'auto' : 'smooth' })
+          el?.focus({ preventScroll: true })
+        }}
+      />
     </Container>
   )
 }
@@ -703,5 +733,64 @@ function ReviewSummary({ rows, onEdit }: { rows: { step: number; label: string; 
         ))}
       </dl>
     </section>
+  )
+}
+
+function LicensePicker({ id, value, error, paidBundle, onChange }: { id: string; value: LicenseId | ''; error?: string; paidBundle: boolean; onChange: (value: LicenseId) => void }) {
+  const selected = licenseById(value)
+  return (
+    <fieldset className={cn('rounded-xl border p-4', error && 'border-destructive/60 bg-destructive/5')} aria-describedby={describedBy(id, { hint: true, error })}>
+      <legend className="px-1 font-semibold">License</legend>
+      <p id={`${id}-hint`} className="text-sm text-muted-foreground">
+        Tell other teachers what they can do with your {paidBundle ? 'free lesson plan' : 'pack'}. You keep the copyright either way.
+      </p>
+      <div role="radiogroup" aria-label="License" className="mt-3 grid gap-2 sm:grid-cols-2">
+        {LICENSES.map((option, index) => {
+          const checked = value === option.id
+          return (
+            <label
+              key={option.id}
+              className={cn(
+                'flex cursor-pointer items-start gap-3 rounded-xl border bg-card p-3 transition-colors hover:border-primary/50 has-[:focus-visible]:ring-3 has-[:focus-visible]:ring-ring/50',
+                checked && 'border-primary bg-secondary/60',
+              )}
+            >
+              <input
+                id={index === 0 ? id : undefined}
+                type="radio"
+                name={id}
+                value={option.id}
+                checked={checked}
+                onChange={() => onChange(option.id)}
+                aria-invalid={!!error}
+                className="mt-1 size-4 shrink-0 accent-primary"
+              />
+              <span className="min-w-0">
+                <span className="block text-sm font-semibold">{option.short}</span>
+                <span className="block text-sm text-muted-foreground">{option.summary}</span>
+              </span>
+            </label>
+          )
+        })}
+      </div>
+      <FieldError id={error ? `${id}-error` : undefined}>
+        <span className="mt-2 block">{error}</span>
+      </FieldError>
+      {selected && (
+        <div className="mt-4 rounded-xl bg-secondary/50 p-4">
+          <p className="text-sm font-semibold">
+            {selected.url ? <a href={selected.url} target="_blank" rel="noreferrer" className="underline-offset-2 hover:underline">{selected.name}</a> : selected.name}
+          </p>
+          <LicenseTerms license={selected} className="mt-3" />
+        </div>
+      )}
+      {paidBundle && (
+        <div className="mt-3 rounded-xl border border-dashed p-4">
+          <p className="text-sm font-semibold">Paid bundle · {PAID_SUPPLEMENT_TERMS.name}</p>
+          <p className="text-sm text-muted-foreground">{PAID_SUPPLEMENT_TERMS.summary}</p>
+          <LicenseTerms license={PAID_SUPPLEMENT_TERMS} className="mt-3" />
+        </div>
+      )}
+    </fieldset>
   )
 }

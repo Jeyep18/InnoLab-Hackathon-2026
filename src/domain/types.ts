@@ -75,6 +75,8 @@ export interface Resource {
   status: ResourceStatus
   holdReason?: string
   permission: { kind: PermissionKind; notice: string }
+  /** License the contributor chose for the free lesson plan. Absent on seed and folder packs. */
+  license?: 'cc-by' | 'cc-by-sa' | 'cc-by-nc' | 'cc-by-nc-sa' | 'all-rights-reserved'
   parent?: { resourceId: string; version: string; title: string; contributorId: string }
   changeNote?: string
   /** Simulated curriculum review of one specific version. Separate from publishing. */

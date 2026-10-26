@@ -13,7 +13,34 @@ import { initials } from '@/lib/pack'
 import { useStore } from '@/store'
 import { StarRatingInput } from './detail/StarRatingInput'
 
-export function ReviewsPanel({ resource }: { resource: Resource }) {
+/** Sidebar entry point: the rating row opens every review and the review form in a dialog. */
+export function ReviewsDialog({ resource }: { resource: Resource }) {
+  const { state, reviews, persona } = useStore()
+  const count = currentReviews(resource, reviews).length
+  const canReview = reviewEligibility(state, resource, persona.role) === 'ok'
+  if (count === 0 && !canReview) return null
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="link" size="sm" className="h-auto px-0 text-mauve-ink">
+          <MessageSquareText aria-hidden="true" />
+          {count > 0 ? `Read ${count} review${count === 1 ? '' : 's'}${canReview ? ' or rate it' : ''}` : 'Rate this pack'}
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="flex max-h-[88dvh] flex-col gap-0 p-0 sm:max-w-2xl">
+        <DialogHeader className="border-b p-4 pr-12">
+          <DialogTitle>Ratings and feedback</DialogTitle>
+          <DialogDescription className="sr-only">Teacher reviews for this version of the pack.</DialogDescription>
+        </DialogHeader>
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 pb-4">
+          <ReviewsPanel resource={resource} embedded />
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+export function ReviewsPanel({ resource, embedded = false }: { resource: Resource; embedded?: boolean }) {
   const { state, reviews, persona } = useStore()
   const current = currentReviews(resource, reviews)
   const older = olderReviews(resource, reviews)
@@ -21,21 +48,21 @@ export function ReviewsPanel({ resource }: { resource: Resource }) {
   const eligibility = reviewEligibility(state, resource, persona.role)
 
   const hint =
-    eligibility === 'not-acquired'
-      ? 'Download a file from this pack to rate it. Ratings come from teachers who got the pack.'
-      : eligibility === 'own-resource'
+    eligibility === 'own-resource'
         ? 'You shared this pack, so you can’t rate it.'
         : eligibility === 'moderator'
           ? 'The demo moderator doesn’t rate packs. Switch to a teacher persona.'
           : null
 
   return (
-    <section aria-labelledby="reviews-title" className="scroll-mt-24">
-      <h2 id="reviews-title" className="library-section-title text-2xl">
-        Ratings and feedback
-      </h2>
+    <section aria-labelledby={embedded ? undefined : 'reviews-title'} aria-label={embedded ? 'Reviews' : undefined} className="scroll-mt-24">
+      {!embedded && (
+        <h2 id="reviews-title" className="library-section-title text-2xl">
+          Ratings and feedback
+        </h2>
+      )}
 
-      <div className="mt-4 flex flex-col gap-4 border-y py-5 sm:flex-row sm:items-center sm:justify-between">
+      <div className={`${embedded ? '' : 'mt-4 '}flex flex-col gap-4 border-b py-5 sm:flex-row sm:items-center sm:justify-between ${embedded ? '' : 'border-t'}`}>
         <div className="space-y-1">
           <RatingLine summary={summary} className="text-base" />
           <p className="text-sm text-muted-foreground">For version {resource.version.label}. Earlier versions are listed separately.</p>
