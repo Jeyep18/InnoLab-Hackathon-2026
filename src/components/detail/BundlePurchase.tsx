@@ -78,7 +78,7 @@ export function BundlePurchase({ resource, files, price, dl, open, onClose }: {
 
   const title = ['Bundle files', 'Checkout', 'Processing payment', receipt ? 'Payment successful' : 'Ready to download'][step]
   return <Dialog open={open} onOpenChange={(next) => { if (!next && !processing) onClose() }}>
-    <DialogContent showCloseButton={!processing} className="flex max-h-[90dvh] flex-col gap-0 p-0 sm:max-w-2xl" onEscapeKeyDown={(event) => processing && event.preventDefault()} onInteractOutside={(event) => processing && event.preventDefault()}>
+    <DialogContent showCloseButton={!processing} className="flex max-h-[90dvh] flex-col gap-0 p-0 sm:max-w-2xl">
       <DialogHeader className="border-b p-4 pr-12">
         <div className="flex items-center gap-2"><DialogTitle>Supplementary bundle</DialogTitle>{price > 0 && <span className="rounded-full bg-secondary px-2 py-1 text-xs font-medium">Demo payment</span>}</div>
         <DialogDescription className="sr-only">Preview files, check out with a simulated payment, and download the bundle.</DialogDescription>

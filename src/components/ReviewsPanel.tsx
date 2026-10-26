@@ -21,11 +21,9 @@ export function ReviewsDialog({ resource }: { resource: Resource }) {
   if (count === 0 && !canReview) return null
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="link" size="sm" className="h-auto px-0 text-mauve-ink">
-          <MessageSquareText aria-hidden="true" />
-          {count > 0 ? `Read ${count} review${count === 1 ? '' : 's'}${canReview ? ' or rate it' : ''}` : 'Rate this pack'}
-        </Button>
+      <DialogTrigger render={<Button variant="link" size="sm" className="h-auto px-0 text-mauve-ink" />}>
+        <MessageSquareText aria-hidden="true" />
+        {count > 0 ? `Read ${count} review${count === 1 ? '' : 's'}${canReview ? ' or rate it' : ''}` : 'Rate this pack'}
       </DialogTrigger>
       <DialogContent className="flex max-h-[88dvh] flex-col gap-0 p-0 sm:max-w-2xl">
         <DialogHeader className="border-b p-4 pr-12">
