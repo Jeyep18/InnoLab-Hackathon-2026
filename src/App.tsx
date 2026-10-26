@@ -44,10 +44,10 @@ function Shell({ teacherPackCount }: { teacherPackCount: number }) {
 
   let content
   if (!page) content = <Catalogue />
-  else if (page === 'resource' && id) content = <ResourceDetail id={id} />
+  else if (page === 'resource' && id) content = <ResourceDetail key={id} id={id} />
   else if (page === 'profile' && id) content = <Profile id={id} />
   else if (page === 'saved') content = <Saved />
-  else if (page === 'share') content = <ShareForm parentId={params.get('adapt') ?? undefined} />
+  else if (page === 'share') content = <ShareForm key={params.get('adapt') ?? 'new'} parentId={params.get('adapt') ?? undefined} />
   else if (page === 'moderation') content = <Moderation />
   else
     content = (

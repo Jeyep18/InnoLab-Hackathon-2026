@@ -27,7 +27,7 @@ export function ReviewsPanel({ resource }: { resource: Resource }) {
       {eligibility === 'moderator' && <p className="hint">The demo moderator doesn’t rate packs. Switch to a teacher persona.</p>}
 
       {current.length === 0 ? (
-        <p className="muted">No one has rated this version yet.</p>
+        <p className="muted">No reviews yet for this version.</p>
       ) : (
         <ul className="review-list">
           {current.map((r) => (

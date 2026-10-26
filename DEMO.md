@@ -23,6 +23,8 @@ Run `npm run dev`, open http://localhost:5173 in Dia, press **Reset demo**. Expe
 7. **Copy link to share** shows the copied link and a simulated group-post preview with contributor, rating and review status.
 8. Only if time allows: switch persona to **Demo moderator**, open **Review queue**, mark a pack curriculum-reviewed (simulated).
 
+The trust panel labels sample data where averages appear ("Includes only sample reviews", "including sample reviews" on the track record).
+
 Backup moments for Q&A: Ma'am Lira cannot rate her own pack; "Reading typhoon signals" shows a missing optional file; "Percent at the palengke" has a simulated ₱49 supplement checkout; **Share a lesson** stores a real uploaded file that survives reload and waits for review.
 
 ## Acceptance checklist
@@ -40,8 +42,9 @@ Backup moments for Q&A: Ma'am Lira cannot rate her own pack; "Reading typhoon si
 - [x] Adaptation credits parent and version, keeps the original unchanged, starts "Not yet reviewed".
 - [x] Journey steps 1-6 completed twice from reset with identical results.
 - [x] Laptop (1366), tablet (iPad Air 820) and phone (iPhone 12 Pro 390) layouts; keyboard Tab/Enter to open a pack with a visible 3px focus ring; route change moves focus to content and scrolls to top. All text colour pairs ≥ 4.59:1; control borders and rating stars ≥ 3:1.
-- [ ] Check real teacher documents, metadata and screenshots once they arrive (sanitize script tested on fictional files only).
-- [x] `npm run check-assets` passes: no teacher files tracked or in `dist/`. No external network requests in the bundle.
+- [ ] Check real teacher documents, metadata and screenshots once they arrive. The sanitize script was tested on fictional files carrying Word/PowerPoint/Excel author, comment, co-author and PDF Author fields; it cannot clean compressed PDF metadata and says so.
+- [x] `npm run check-assets` passes, and fails on a renamed teacher-file copy in `public/` (tested). Raw `/demo-assets/` URLs return 404. No external network requests in the bundle. A fresh clone passes install, tests, build, check-assets and byte-identical sample regeneration.
+- [x] Independent code review: fixed stale state between pack pages, manifest failure on one unreadable file, sanitizer gaps and unrated wording.
 - [ ] Disconnect Wi-Fi on the demo Mac and repeat the journey (expected to work: no network dependencies found).
 - [ ] Record the fallback video in Dia after the freeze; rehearse `npm run preview` once on the Windows laptop.
 - [ ] Rehearse timing and confirm submission sharing respects teacher permissions.

@@ -30,7 +30,22 @@ const TYPES: Record<string, string> = {
 }
 
 const visible = (name: string) => !name.startsWith('.') && !name.startsWith('~$')
-const subdirs = (dir: string) => readdirSync(dir).filter((n) => visible(n) && statSync(path.join(dir, n)).isDirectory())
+// One broken link or unreadable file must not hide every other pack.
+const safeStat = (p: string) => {
+  try {
+    return statSync(p)
+  } catch {
+    return undefined
+  }
+}
+const safeList = (dir: string) => {
+  try {
+    return readdirSync(dir).filter(visible)
+  } catch {
+    return []
+  }
+}
+const subdirs = (dir: string) => safeList(dir).filter((n) => safeStat(path.join(dir, n))?.isDirectory())
 
 function manifest() {
   const packs = []
@@ -40,13 +55,13 @@ function manifest() {
     for (const alias of subdirs(root)) {
       for (const folder of subdirs(path.join(root, alias))) {
         const dir = path.join(root, alias, folder)
-        const files = readdirSync(dir)
-          .filter((name) => visible(name) && statSync(path.join(dir, name)).isFile())
+        const files = safeList(dir)
+          .filter((name) => safeStat(path.join(dir, name))?.isFile())
           .filter((name) => path.extname(name).slice(1).toLowerCase() in TYPES)
           .sort((a, b) => a.localeCompare(b))
           .map((name) => ({
             name,
-            sizeBytes: statSync(path.join(dir, name)).size,
+            sizeBytes: safeStat(path.join(dir, name))?.size ?? 0,
             url: `/pack-files/${source}/${[alias, folder, name].map(encodeURIComponent).join('/')}`,
           }))
         if (files.length > 0) packs.push({ source, alias, folder, files })
@@ -56,9 +71,22 @@ function manifest() {
   return { packs }
 }
 
+function decodeURIComponentSafe(s: string) {
+  try {
+    return decodeURIComponent(s)
+  } catch {
+    return s
+  }
+}
+
 function servePacks(): Plugin {
   const middleware: Connect.NextHandleFunction = (req, res, next) => {
     const url = req.url?.split('?')[0] ?? ''
+    // Teacher files are reachable only through /pack-files, never as raw project paths.
+    if (decodeURIComponentSafe(url).toLowerCase().startsWith('/demo-assets')) {
+      res.statusCode = 404
+      return res.end('Not found')
+    }
     if (url === '/packs-manifest.json') {
       res.setHeader('Content-Type', 'application/json')
       res.setHeader('Cache-Control', 'no-store')
@@ -73,7 +101,7 @@ function servePacks(): Plugin {
     } catch {
       filePath = ''
     }
-    if (!filePath || !filePath.startsWith(root + path.sep) || !existsSync(filePath) || !statSync(filePath).isFile()) {
+    if (!filePath || !filePath.startsWith(root + path.sep) || !existsSync(filePath) || !safeStat(filePath)?.isFile()) {
       res.statusCode = 404
       res.setHeader('Content-Type', 'text/plain')
       return res.end('Not found')

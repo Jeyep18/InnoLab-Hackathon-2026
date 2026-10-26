@@ -23,13 +23,13 @@ if (output === input || output.startsWith(input + path.sep)) {
 
 const OFFICE = new Set(['.docx', '.pptx', '.xlsx'])
 const blankTag = (xml, tag, found) =>
-  xml.replace(new RegExp(`<${tag}([^>]*)>([\\s\\S]*?)</${tag}>`, 'g'), (_m, attrs, value) => {
+  xml.replace(new RegExp(`<${tag}(\\s[^>]*)?>([\\s\\S]*?)</${tag}>`, 'g'), (_m, attrs = '', value) => {
     if (value.trim()) found.push(`${tag}="${value.trim()}"`)
     return `<${tag}${attrs}></${tag}>`
   })
 const blankAttr = (xml, attr, replacement, found) =>
-  xml.replace(new RegExp(`(\\s${attr}=")([^"]*)(")`, 'g'), (_m, a, value, b) => {
-    if (value && value !== replacement) found.push(`${attr}="${value}"`)
+  xml.replace(new RegExp(`(\\s(?:[\\w]+:)?${attr}=")([^"]*)(")`, 'g'), (_m, a, value, b) => {
+    if (value && value !== replacement) found.push(`${a.trim()}${value}"`)
     return `${a}${replacement}${b}`
   })
 
@@ -46,13 +46,13 @@ function sanitizeOffice(buf) {
     } else if (name === 'docProps/custom.xml') {
       xml = blankTag(xml, 'vt:lpwstr', found)
     } else {
-      // Comment and tracked-change authors in Word; comment authors in PowerPoint.
-      xml = blankAttr(xml, 'w:author', 'Teacher', found)
-      xml = blankAttr(xml, 'w:initials', 'T', found)
-      if (name === 'ppt/commentAuthors.xml') {
-        xml = blankAttr(xml, 'name', 'Teacher', found)
-        xml = blankAttr(xml, 'initials', 'T', found)
-      }
+      // Comment, tracked-change and co-author identities, in any namespace (w:, w15:, p188: ...).
+      xml = blankAttr(xml, 'author', 'Teacher', found)
+      xml = blankAttr(xml, 'initials', 'T', found)
+      xml = blankAttr(xml, 'userId', '', found)
+      xml = blankAttr(xml, 'providerId', '', found)
+      if (name === 'ppt/commentAuthors.xml' || name === 'ppt/authors.xml') xml = blankAttr(xml, 'name', 'Teacher', found)
+      if (/^xl\/comments\d*\.xml$/.test(name)) xml = blankTag(xml, 'author', found)
     }
     return { name, data: Buffer.from(xml, 'utf8') }
   })
@@ -70,6 +70,7 @@ function sanitizePdf(buf) {
   const warnings = []
   if (/<dc:creator|<pdf:Producer|<xmp:CreatorTool/.test(text)) warnings.push('has XMP metadata; export the PDF again from the sanitized source if it names a person')
   if (/\/(Author|Creator)\s*</.test(text)) warnings.push('has hex-encoded properties this script cannot read; export the PDF again')
+  if (/\/ObjStm|\/Type\s*\/Metadata/.test(text)) warnings.push('has compressed or embedded metadata this script cannot clean; export the PDF again from the sanitized source')
   return { data: Buffer.from(text, 'latin1'), found, warnings }
 }
 
@@ -91,11 +92,11 @@ function walk(dir) {
       if (OFFICE.has(ext)) {
         const { data, found } = sanitizeOffice(readFileSync(from))
         writeFileSync(to, data)
-        console.log(`${rel}: ${found.length ? `removed ${found.join(', ')}` : 'no identifying properties found'}`)
+        console.log(`${rel}: ${found.length ? `removed ${found.join(', ')}` : 'none of the properties this script knows about were set'}`)
       } else if (ext === '.pdf') {
         const { data, found, warnings } = sanitizePdf(readFileSync(from))
         writeFileSync(to, data)
-        console.log(`${rel}: ${found.length ? `blanked ${found.join(', ')}` : 'no identifying properties found'}`)
+        console.log(`${rel}: ${found.length ? `blanked ${found.join(', ')}` : 'none of the properties this script knows about were set'}`)
         for (const w of warnings) console.log(`  CHECK ${rel}: ${w}`)
       } else {
         copyFileSync(from, to)

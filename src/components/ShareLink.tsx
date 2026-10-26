@@ -54,7 +54,7 @@ export function ShareLink({ resource }: { resource: Resource }) {
             <p className="post-meta">
               By {contributor}.{' '}
               {rating.mean === null
-                ? 'No teacher ratings yet.'
+                ? 'No reviews yet.'
                 : `${rating.mean.toFixed(1)} stars from ${rating.count} teacher rating${rating.count === 1 ? '' : 's'}.`}{' '}
               {reviewed ? 'Curriculum-reviewed (simulated).' : 'Not yet curriculum-reviewed.'}
             </p>

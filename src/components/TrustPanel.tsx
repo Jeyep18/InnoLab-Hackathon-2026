@@ -1,4 +1,4 @@
-import { bookmarkCount, bowLabel, competencyLabel, contributorRating, currentCurriculumReview, downloadCount, plural, resourceRating } from '../domain/logic'
+import { bookmarkCount, bowLabel, competencyLabel, contributorRating, currentCurriculumReview, currentReviews, downloadCount, plural, resourceRating } from '../domain/logic'
 import type { Resource } from '../domain/types'
 import { useStore } from '../store'
 import { RatingLine } from './ui'
@@ -21,6 +21,10 @@ export function TrustPanel({ resource }: { resource: Resource }) {
   const review = currentCurriculumReview(resource)
   const parent = resource.parent && resources.find((r) => r.id === resource.parent!.resourceId)
   const parentReview = parent && currentCurriculumReview(parent)
+  const sampleCount = currentReviews(resource, reviews).filter((r) => r.seeded).length
+  const trackHasSamples = resources
+    .filter((r) => r.contributorId === resource.contributorId && r.status === 'published')
+    .some((r) => currentReviews(r, reviews).some((rev) => rev.seeded))
 
   return (
     <section className="trust" aria-labelledby="trust-title">
@@ -38,9 +42,10 @@ export function TrustPanel({ resource }: { resource: Resource }) {
             {track.count > 0 ? (
               <>
                 Track record: <RatingLine summary={track} compact /> across their packs
+                {trackHasSamples && ', including sample reviews'}
               </>
             ) : (
-              'No ratings on their packs yet'
+              'No reviews yet on their packs'
             )}
           </p>
         </div>
@@ -49,7 +54,15 @@ export function TrustPanel({ resource }: { resource: Resource }) {
           <p className="trust-value">
             <RatingLine summary={packRating} />
           </p>
-          {packRating.count === 0 && <p className="trust-sub">Be the first to rate it after downloading.</p>}
+          {packRating.count === 0 ? (
+            <p className="trust-sub">Be the first to rate it after downloading.</p>
+          ) : (
+            sampleCount > 0 && (
+              <p className="trust-sub">
+                Includes {sampleCount === packRating.count ? 'only' : sampleCount} sample review{sampleCount === 1 ? '' : 's'}.
+              </p>
+            )
+          )}
         </div>
         <div className="trust-cell">
           <p className="trust-label">Activity</p>
