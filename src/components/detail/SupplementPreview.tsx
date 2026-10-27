@@ -110,7 +110,7 @@ function PreviewPage({ file, page, total, unlockLabel, onUnlock }: { file: Resou
       {page.blurred && url && (
         <div className="absolute inset-0 grid place-items-center bg-background/20">
           {onUnlock ? (
-            <button type="button" onClick={onUnlock} className="flex cursor-pointer items-center gap-2 rounded-full bg-foreground/90 px-4 py-2 text-sm font-semibold text-background shadow-lg outline-none transition-transform hover:scale-[1.03] focus-visible:ring-3 focus-visible:ring-ring active:scale-[0.98] motion-reduce:transition-none">
+            <button type="button" onClick={onUnlock} className="flex cursor-pointer items-center gap-2 rounded-full bg-foreground/90 px-4 py-2 text-sm font-semibold text-background shadow-lg outline-none transition-transform hover:scale-[1.03] focus-visible:ring-3 focus-visible:ring-ring active:scale-[0.96] motion-reduce:transition-none">
               <Lock aria-hidden="true" className="size-4" /> Page {page.page} locked · {unlockLabel ?? 'Unlock bundle'}
             </button>
           ) : (

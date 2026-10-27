@@ -15,6 +15,8 @@ import { loadCatalogue } from './data/loadCatalogue'
 import type { Catalogue as CatalogueData } from './domain/types'
 import { Browse } from './pages/Browse'
 import { Home } from './pages/Home'
+import { SignIn } from './pages/SignIn'
+import { Settings } from './pages/Settings'
 import { useRoute } from './router'
 import { StoreProvider, useStore } from './store'
 
@@ -32,18 +34,21 @@ export default function App() {
   return (
     <StoreProvider catalogue={loaded.catalogue}>
       <TooltipProvider delay={400}>
-        <Shell teacherPackCount={loaded.teacherPackCount} />
+        <Shell />
       </TooltipProvider>
     </StoreProvider>
   )
 }
 
-function Shell({ teacherPackCount }: { teacherPackCount: number }) {
+function Shell() {
   const { parts, params } = useRoute()
   const { notice, saveFailed } = useStore()
   const [page, id] = parts
   const routeKey = parts.join('/')
   const firstRender = useRef(true)
+  // Fade only on real route changes: not on first load (Home has its own intro) and not on query-string updates.
+  const [fadeRoute, setFadeRoute] = useState({ key: routeKey, navigated: false })
+  if (fadeRoute.key !== routeKey) setFadeRoute({ key: routeKey, navigated: true })
 
   // Each route is a new page: start at the top and move keyboard focus to the content.
   useEffect(() => {
@@ -67,6 +72,8 @@ function Shell({ teacherPackCount }: { teacherPackCount: number }) {
   else if (page === 'saved') content = <Saved />
   else if (page === 'share') content = <ShareForm key={params.get('adapt') ?? 'new'} parentId={params.get('adapt') ?? undefined} />
   else if (page === 'moderation') content = <Moderation />
+  else if (page === 'signin') content = <SignIn />
+  else if (page === 'settings') content = <Settings />
   else
     content = (
       <Container className="pt-16">
@@ -94,13 +101,13 @@ function Shell({ teacherPackCount }: { teacherPackCount: number }) {
       <SiteHeader />
       {saveFailed && (
         <p role="alert" className="border-b border-destructive/30 bg-destructive/10 px-4 py-2 text-center text-sm text-destructive">
-          This browser isn’t saving demo changes. They will be lost on reload. Private browsing or full storage can cause this.
+          This browser isn’t saving your changes. They will be lost on reload. Private browsing or full storage can cause this.
         </p>
       )}
       <main id="main" tabIndex={-1} className="flex-1 outline-none">
-        {content}
+        <div key={routeKey} className={fadeRoute.navigated ? 'page-enter' : undefined}>{content}</div>
       </main>
-      <SiteFooter teacherPackCount={teacherPackCount} library={page !== 'share' && page !== 'moderation'} />
+      <SiteFooter library={page !== 'share' && page !== 'moderation'} />
       <Toaster position="bottom-center" />
     </div>
   )

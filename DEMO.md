@@ -1,6 +1,6 @@
 # CherIt demonstration
 
-Status: working local prototype; checks below were run on 2026-10-26 unless marked otherwise. [PROJECT_MEMORY.md](PROJECT_MEMORY.md) defines scope/permissions and [PLAN.md](PLAN.md) defines execution.
+Status: working local prototype; checks below were run on 2026-10-26 unless marked otherwise. Uploads are public immediately; verification is optional (see step 8). [PROJECT_MEMORY.md](PROJECT_MEMORY.md) defines scope/permissions and [PLAN.md](PLAN.md) defines execution.
 
 ## Disclosure and audience
 
@@ -15,17 +15,17 @@ Demo actions do not prove curriculum review, identity, affiliation, ownership, c
 Run `npm run dev`, open http://localhost:5173 in Dia, press **Reset demo**. Expected values assume a fresh reset.
 
 1. Persona is **Ma'am Joy** (demo teacher). The banner states sample accounts, reviews and counts, and simulated payments.
-2. On the home sentence pick **Grade 4** and **Science**. Three packs appear: "The water cycle around Mayon" (4.7 from 3, curriculum-reviewed, simulated) next to its **Bikol vocabulary version** (No reviews yet, Not yet reviewed).
-3. Open the **Bikol vocabulary version**. Before you download: Ma'am Tess's track record 5.0 (1), "No reviews yet", 0 downloads, "Not yet reviewed" with "the original's review doesn't carry over", credit to the original v2.0 by Ma'am Lira.
-4. Click the original. Trust panel: Ma'am Lira 4.3 (4), this version 4.7 from 3 reviews, 38 downloads, curriculum-reviewed (simulated), version 2.0 replacing 1.0, Term 2 Week 3. The older-version review is listed separately and excluded.
+2. On the home sentence pick **Grade 4** and **Science**. Three packs appear: "The water cycle around Mayon" (4.7 from 3, Verified v2.0) next to its **Bikol vocabulary version** (No reviews yet, Not verified).
+3. Open the **Bikol vocabulary version**. Before you download: Ma'am Tess's track record 5.0 (1), "No reviews yet", 0 downloads, "Not verified" with "Reviews of the original don’t carry over", credit to the original v2.0 by Ma'am Lira.
+4. Click the original. Trust panel: Ma'am Lira 4.3 (4), this version 4.7 from 3 reviews, 38 downloads, Verified v2.0, version 2.0 replacing 1.0, Term 2 Week 3. The older-version review is listed separately and excluded.
 5. Scroll past the pad-paper preview and download the lesson plan (a real .docx). Downloads become 39.
 6. Rate 5 stars and post. This version becomes **4.8 from 4**; Ma'am Lira's track record becomes **4.4 (5)**.
 7. **Copy link to share** shows the copied link and a simulated group-post preview with contributor, rating and review status.
-8. Only if time allows: switch persona to **Demo moderator**, open **Review queue**, mark a pack curriculum-reviewed (simulated).
+8. Only if time allows: as Ma'am Joy, open her pack "Writing a friendly letter to a pen pal" and press **Request verification (free)**; press **Get priority with Pro** to show the Free vs Pro plan dialog (display only). Switch to **CherIt Review Team**, open **Verification queue**, and press **Mark verified** on the request.
 
 The trust panel labels sample data where averages appear ("Includes only sample reviews", "including sample reviews" on the track record).
 
-Backup moments for Q&A: Ma'am Lira cannot rate her own pack; "Reading typhoon signals" shows a missing optional file; "Percent at the palengke" has a simulated ₱49 supplement checkout; **Share a lesson** stores a real uploaded file that survives reload and waits for review.
+Backup moments for Q&A: Ma'am Lira cannot rate her own pack; "Reading typhoon signals" shows a missing optional file; "Percent at the palengke" has a simulated ₱49 supplement checkout; **Share a lesson** stores a real uploaded file that survives reload and is public immediately, with optional free verification.
 
 ## Acceptance checklist
 
@@ -38,8 +38,9 @@ Backup moments for Q&A: Ma'am Lira cannot rate her own pack; "Reading typhoon si
 - [x] Older-version review labelled and excluded; an edit moves a persona's review to the current version (unit test).
 - [x] Download counts are events, including repeats; sample counts and reviews labelled.
 - [x] Upload: empty file and .exe rejected with messages; valid .docx + .txt submitted; bytes survive reload (re-downloaded at 3,701 bytes). Not run: storage-full failure (handled in code, untested).
-- [x] Pending → publish and report → hold change state; review queue labelled as simulated, not expert review.
-- [x] Adaptation credits parent and version, keeps the original unchanged, starts "Not yet reviewed".
+- [x] Upload is public immediately; optional verification request → verifier queue → Mark verified (2026-10-27, Chromium); report → hidden until restored. Verification is a demo action, not expert review.
+- [x] Pro plan dialog opens from the Share form, storage meter, pack page, Saved and the account menu; upgrading only shows a "not part of this demo" notice.
+- [x] Adaptation credits parent and version, keeps the original unchanged, starts "Not verified".
 - [x] Journey steps 1-6 completed twice from reset with identical results.
 - [x] Laptop (1366), tablet (iPad Air 820) and phone (iPhone 12 Pro 390) layouts; keyboard Tab/Enter to open a pack with a visible 3px focus ring; route change moves focus to content and scrolls to top. All text colour pairs ≥ 4.59:1; control borders and rating stars ≥ 3:1.
 - [ ] Check real teacher documents, metadata and screenshots once they arrive. The sanitize script was tested on fictional files carrying Word/PowerPoint/Excel author, comment, co-author and PDF Author fields; it cannot clean compressed PDF metadata and says so.
@@ -69,3 +70,7 @@ Do not invent endorsements, partnerships, review results or workload savings.
 2026-10-27 no-PDF-copy check: a paid bundle with one .docx supplement and a ₱30 price passed step 2 to Review with no errors; the card read "No online preview. Buyers download it to open it." Submission and the buyer modal for this case were not run.
 
 2026-10-27 merge with the homepage/Base UI update: rebased onto `fa3d55b`, ported the review-dialog trigger and payment-dialog dismissal guard to Base UI, and recorded `docx-preview` in `bun.lock`. Typecheck, 40 tests and the production build pass. On a fresh dev server: the new homepage renders; on "Percent at the palengke", the sidebar reviews dialog opened, card checkout ran to a receipt, and Escape did not close the dialog mid-payment; the Share wizard showed the floating error card, a .docx preview, and the license step.
+
+2026-10-27 realism, profile and revisions checks: typecheck, 47 tests (7 new for revisions, migration and earnings) and the production build pass. In the browser: the profile header, sidebar and earnings rendered for Ma'am Joy Villanueva; she sent a revision for the water-cycle answer key; Ma'am Lira Bañares compared the files and approved it; the pack became version 2.1 and the history credited Ma'am Joy. Schema 2 data in the browser upgraded without loss. Twelve routes were scanned for "sample", "demo", "simulated", "fictional", "placeholder" and "illustrative" with no matches. The step-by-step journey above still references old names and the old homepage and needs rewriting. Not checked: phone widths, the moderator's profile and the notifications tab.
+
+2026-10-27 public uploads, verification and Pro display: typecheck, 51 tests (4 new: request rules, closing a request on verify, schema 3 → 4 migration) and the production build pass; `npm run check-assets` passes. In Chromium: a new upload with a .docx lesson plan went public on submit and created a free verification request; as the verifier, the request appeared under Requested and Mark verified cleared it and set Verified v1.0; the Pro plan dialog opened from the author’s pack page. Scroll/fade animations and the ui-polish pass were checked by build and code review only, not watched by eye. Not checked: phone widths, Dia, Windows.

@@ -22,7 +22,6 @@ export function Browse() {
           Try another keyword or widen the grade, subject or competency.
         </EmptyState>
       ) : <PackGrid packs={model.results} />}
-      <p className="mt-8 max-w-2xl text-sm text-muted-foreground">Competencies and Budget of Work weeks in sample packs are examples, not official DepEd alignment.</p>
     </Container>
   )
 }

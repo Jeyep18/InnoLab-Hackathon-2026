@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { PackCover } from '@/components/site/PackCover'
-import { bowLabel, competencyLabel } from '@/domain/logic'
+import { competencyLabel } from '@/domain/logic'
 import type { Resource } from '@/domain/types'
 import { licenseById, PAID_SUPPLEMENT_TERMS } from '@/lib/licenses'
 import { cn } from '@/lib/utils'
@@ -13,7 +13,7 @@ export function PackNotes({ resource }: { resource: Resource }) {
     <div className="space-y-5">
       <section aria-labelledby="pack-details-title" className="border-t pt-4">
         <h2 id="pack-details-title" className="sr-only">Pack details</h2>
-        <dl className="grid gap-x-6 gap-y-4 sm:grid-cols-3">
+        <dl className="grid gap-x-6 gap-y-4 sm:grid-cols-2">
           <Detail label="Classroom needs">
             {resource.requirements.length === 0 ? <span className="text-muted-foreground">None listed</span> : (
               <ul className="flex flex-wrap gap-1.5">
@@ -24,11 +24,7 @@ export function PackNotes({ resource }: { resource: Resource }) {
           <Detail label="Competency">
             {competencyLabel(resource)}{resource.competency.code && <span className="text-muted-foreground"> ({resource.competency.code})</span>}
           </Detail>
-          <Detail label="Budget of Work">
-            {resource.bow.version ? `${resource.bow.version}, ${bowLabel(resource)}` : bowLabel(resource)}
-          </Detail>
         </dl>
-        {resource.permission.kind === 'fictional-sample' && <p className="mt-2 text-xs text-muted-foreground">Sample codes and weeks, not official DepEd alignment.</p>}
         {resource.parent && (
           <p className="mt-3 text-sm"><span className="font-medium">Changed from the original: </span>{resource.changeNote ?? 'No change note given.'} <span className="text-muted-foreground">Reviews of the original don’t carry over.</span></p>
         )}

@@ -1,4 +1,4 @@
-import { emptyState, STATE_SCHEMA } from '../domain/logic'
+import { emptyState, migrateState } from '../domain/logic'
 import type { DemoState } from '../domain/types'
 
 const KEY = 'cherit-demo-state'
@@ -7,8 +7,7 @@ export function loadState(defaultPersonaId: string): DemoState {
   try {
     const raw = localStorage.getItem(KEY)
     if (!raw) return emptyState(defaultPersonaId)
-    const parsed = JSON.parse(raw) as DemoState
-    return parsed.schema === STATE_SCHEMA ? parsed : emptyState(defaultPersonaId)
+    return migrateState(JSON.parse(raw), defaultPersonaId)
   } catch {
     return emptyState(defaultPersonaId)
   }

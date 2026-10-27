@@ -26,7 +26,7 @@ export function FilesPanel({ resource, downloads }: { resource: Resource; downlo
     <button
       type="button"
       onClick={() => setOpen(true)}
-      className="group flex w-full cursor-pointer flex-wrap items-center gap-4 rounded-2xl border bg-card p-4 text-left shadow-xs outline-none transition-[border-color,box-shadow,transform] duration-150 hover:border-primary/60 hover:shadow-md focus-visible:ring-3 focus-visible:ring-ring/50 active:scale-[0.99] motion-reduce:transition-none"
+      className="group flex w-full cursor-pointer flex-wrap items-center gap-4 rounded-2xl border bg-card p-4 text-left shadow-xs outline-none transition-[border-color,box-shadow,scale] duration-150 hover:border-primary/60 hover:shadow-md focus-visible:ring-3 focus-visible:ring-ring/50 active:scale-[0.99] motion-reduce:transition-none"
     >
       <span aria-hidden="true" className="grid size-11 shrink-0 place-items-center rounded-xl bg-secondary text-mauve-ink"><Files className="size-5" /></span>
       <span className="min-w-0 flex-1">

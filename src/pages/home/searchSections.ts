@@ -8,5 +8,5 @@ export const FILTER_SECTIONS: FilterSection[] = [
   { id: 'reviews', title: 'Reviews', fields: ['review'] },
 ]
 export const FIELD_LABELS: Record<HomeFilterKey, string> = {
-  level: 'School level', grade: 'Grade', subject: 'Subject', competency: 'Competency', quarter: 'Term / quarter', week: 'BOW week', needs: 'Classroom needs', format: 'File format', editable: 'Editable files', review: 'Review status', supplement: 'Optional supplements',
+  level: 'School level', grade: 'Grade', subject: 'Subject', competency: 'Competency', quarter: 'Term / quarter', week: 'BOW week', needs: 'Classroom needs', format: 'File format', editable: 'Editable files', review: 'Review status', supplement: 'Price',
 }

@@ -5,14 +5,14 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import { Input } from '@/components/ui/input'
 import { bowLabel, currentCurriculumReview, resourceRating } from '@/domain/logic'
 import type { Resource } from '@/domain/types'
-import { initials } from '@/lib/pack'
+import { PersonAvatar } from '@/components/site/PersonAvatar'
 import { useStore } from '@/store'
 
 /**
  * Copies the pack link and shows how it would read when posted in a teachers' group.
  * The post is a simulated preview: CherIt isn't connected to any social network.
  */
-export function ShareLink({ resource, className, label = 'Copy link to share' }: { resource: Resource; className?: string; label?: string }) {
+export function ShareLink({ resource, className, label = 'Copy link to share', iconOnly = false }: { resource: Resource; className?: string; label?: string; iconOnly?: boolean }) {
   const { persona, reviews, personaById } = useStore()
   const [open, setOpen] = useState(false)
   const [copied, setCopied] = useState<boolean | null>(null)
@@ -34,9 +34,9 @@ export function ShareLink({ resource, className, label = 'Copy link to share' }:
 
   return (
     <>
-      <Button variant="outline" className={className} onClick={share}>
+      <Button variant="outline" size={iconOnly ? 'icon' : 'default'} className={className} onClick={share} aria-label={iconOnly ? 'Share this pack' : undefined} title={iconOnly ? 'Share' : undefined}>
         <Link2 aria-hidden="true" />
-        {label}
+        {!iconOnly && label}
       </Button>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="sm:max-w-md">
@@ -54,12 +54,10 @@ export function ShareLink({ resource, className, label = 'Copy link to share' }:
           <Input id={linkId} readOnly value={link} onFocus={(e) => e.target.select()} className="h-10 font-mono text-sm" />
 
           <div>
-            <p className="mb-2 text-sm font-medium text-muted-foreground">How it reads when posted in a teachers’ group (simulated)</p>
-            <figure aria-label="Simulated group post preview" className="border-y py-4">
+            <p className="mb-2 text-sm font-medium text-muted-foreground">How it reads when posted in a teachers’ group</p>
+            <figure aria-label="Group post preview" className="border-y py-4">
               <p className="mb-2.5 flex items-center gap-2 text-sm">
-                <span aria-hidden="true" className="grid size-7 place-items-center rounded-full bg-secondary text-[11px] font-semibold">
-                  {initials(persona)}
-                </span>
+                <PersonAvatar name={persona.alias} seed={persona.id} className="size-7" />
                 <span>
                   <strong className="font-semibold">{persona.alias}</strong> shared a lesson pack
                 </span>
@@ -75,13 +73,13 @@ export function ShareLink({ resource, className, label = 'Copy link to share' }:
                   {rating.mean === null
                     ? 'No reviews yet.'
                     : `${rating.mean.toFixed(1)} stars from ${rating.count} teacher rating${rating.count === 1 ? '' : 's'}.`}{' '}
-                  {reviewed ? 'Curriculum-reviewed (simulated).' : 'Not yet curriculum-reviewed.'}
+                  {reviewed ? `Verified v${reviewed.version}.` : 'Not verified.'}
                 </p>
               </div>
             </figure>
           </div>
           <p className="text-sm text-muted-foreground">
-            A preview only. CherIt isn’t connected to Facebook, and this local link opens only on this computer.
+            Paste the link into a Facebook group or group chat. Teachers can open the pack directly.
           </p>
           <DialogFooter>
             <DialogClose render={<Button />}> Done</DialogClose>

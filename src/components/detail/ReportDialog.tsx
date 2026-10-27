@@ -19,7 +19,7 @@ export function ReportDialog({ resource, open, onClose }: { resource: Resource; 
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-lg font-semibold">Report a problem with this pack</DialogTitle>
-          <DialogDescription>The pack is hidden from search until the demo moderator looks at it.</DialogDescription>
+          <DialogDescription>The pack is hidden from search until a verifier checks it.</DialogDescription>
         </DialogHeader>
         <div className="grid gap-1.5">
           <Label htmlFor={fieldId}>What’s wrong?</Label>
@@ -45,12 +45,12 @@ export function ReportDialog({ resource, open, onClose }: { resource: Resource; 
           </Button>
           <Button
             onClick={() => {
-              if (!reason.trim()) return setError('Describe the problem so the moderator can check it.')
+              if (!reason.trim()) return setError('Describe the problem so the verifier can check it.')
               dispatch({ type: 'set-status', resourceId: resource.id, status: 'held', holdReason: reason.trim() })
               setReason('')
               setError('')
               onClose()
-              notify('Reported. The pack is on hold until the demo moderator reviews it.')
+              notify('Reported. The pack is hidden until a verifier checks it.')
               navigate('/')
             }}
           >

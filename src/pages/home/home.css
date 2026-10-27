@@ -4,10 +4,19 @@
 .discovery-section-heading { display:flex; justify-content:space-between; align-items:center; gap:16px; margin-bottom:22px; }
 .discovery-section-heading h1,.discovery-section-heading h2 { font-size:24px; font-weight:600; letter-spacing:-.035em; line-height:1.2; }
 .discovery-section-heading p { margin-top:7px; color:var(--muted-foreground); font-size:12px; }
-.discovery-track { display:flex; gap:20px; overflow-x:auto; scroll-snap-type:x proximity; padding-bottom:14px; }
+.discovery-track { display:flex; gap:20px; overflow-x:auto; scroll-snap-type:x proximity; padding-top:4px; margin-top:-4px; padding-bottom:14px; } /* top padding keeps the hover lift from clipping */
 .discovery-track > li { flex:0 0 calc((100% - 60px)/4); min-width:215px; scroll-snap-align:start; }
 .discovery-cover { display:flex; flex-direction:column; justify-content:space-between; gap:28px; min-height:225px; padding:22px; border-radius:16px; color:white; }
+.discovery-cover { transition:opacity 150ms ease, transform 200ms var(--ease-out); }
+@media (prefers-reduced-motion:no-preference) {
+.discovery-cover:active { transform:scale(.98); transition-duration:150ms, 120ms; }
+}
+@media (hover:hover) and (pointer:fine) {
 .discovery-cover:hover { opacity:.93; }
+}
+@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference) {
+.discovery-cover:hover:not(:active) { transform:translateY(-2px); }
+}
 .discovery-cover-meta,.discovery-cover-files { font-size:10px; letter-spacing:.05em; }
 .discovery-cover-title { font-size:23px; font-weight:550; letter-spacing:-.035em; line-height:1.13; }
 .discovery-cover-header { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }

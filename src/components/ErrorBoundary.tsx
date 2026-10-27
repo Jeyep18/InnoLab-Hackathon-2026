@@ -15,7 +15,7 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, { failed: 
     return (
       <main className="mx-auto flex min-h-dvh max-w-lg flex-col justify-center px-6">
         <h1 className="text-3xl font-bold tracking-tight">CherIt hit a problem</h1>
-        <p className="mt-3 text-muted-foreground">Reload the page first. If it happens again, reset the demo to restore the sample data.</p>
+        <p className="mt-3 text-muted-foreground">Reload the page first. If it happens again, reset the app data in this browser.</p>
         <div className="mt-6 flex flex-wrap gap-3">
           <button className="inline-flex h-10 items-center rounded-lg bg-primary px-4 font-medium text-primary-foreground" onClick={() => window.location.reload()}>
             Reload
@@ -29,7 +29,7 @@ export class ErrorBoundary extends Component<{ children: ReactNode }, { failed: 
               window.location.reload()
             }}
           >
-            Reset demo and reload
+            Reset and reload
           </button>
         </div>
       </main>

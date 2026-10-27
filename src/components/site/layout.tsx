@@ -28,21 +28,29 @@ export function EmptyState({
   )
 }
 
-/** Temporary wordmark until CJ's logo arrives. */
+/** CJ's open-book mark: a pink and a green page either side of a gap for the spine. */
+export function LogoMark({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 316 312" aria-hidden="true" className={className}>
+      <path d="M0 6C66-6 140 34 153 94V300c0 7-6 13-12 10C116 262 64 229 0 227Z" fill="#EBA0B3" />
+      <path d="M316 6C250-6 176 34 163 94V300c0 7 6 13 12 10C200 262 252 229 316 227Z" fill="#BFCF98" />
+    </svg>
+  )
+}
+
+/** CJ's logo: the book mark plus "CherIt", whose capital I is drawn as a pencil. */
 export function Logo({ className }: { className?: string }) {
   return (
-    <a href="#/" aria-label="CherIt home" className={cn('flex items-center rounded-lg outline-none focus-visible:ring-3 focus-visible:ring-ring/50', className)}>
-      <span aria-hidden="true" className="text-[21px] font-semibold tracking-[-0.02em]">
+    <a href="#/" aria-label="CherIt home" className={cn('flex items-center gap-2 rounded-lg outline-none focus-visible:ring-3 focus-visible:ring-ring/50', className)}>
+      <LogoMark className="h-7 w-auto shrink-0" />
+      <span aria-hidden="true" className="font-logo text-[24px] leading-none tracking-[0.01em] text-foreground">
         Cher
-        <span className="text-sage-700">
-          {/* Inter's capital I is a bare bar that reads as "l"; the serifs keep "It" legible. */}
-          <svg viewBox="0 0 42 73" className="ml-[0.02em] inline-block h-[0.727em] w-[0.42em] fill-current align-baseline">
-            <rect x="16" width="10" height="73" />
-            <rect x="5" width="32" height="9" />
-            <rect x="5" y="64" width="32" height="9" />
-          </svg>
-          t
-        </span>
+        <svg viewBox="0 0 26 160" className="mx-[0.04em] inline-block h-[0.76em] w-[0.105em] translate-y-[0.05em] fill-current align-baseline">
+          <rect width="26" height="14" />
+          <rect y="19" width="26" height="113" />
+          <path d="M0 136h26l-13 24z" />
+        </svg>
+        t
       </span>
     </a>
   )

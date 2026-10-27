@@ -1,7 +1,9 @@
+import { useStore } from '@/store'
 import { Container, Logo } from './layout'
 
-export function SiteFooter({ teacherPackCount, library = false }: { teacherPackCount: number; library?: boolean }) {
-  if (library) return <LibraryFooter teacherPackCount={teacherPackCount} />
+export function SiteFooter({ library = false }: { library?: boolean }) {
+  const moderator = useStore().persona.role === 'moderator'
+  if (library) return <LibraryFooter />
   return (
     <footer className="mt-24 border-t bg-secondary/50">
       <Container className="grid gap-8 py-12 md:grid-cols-[1.2fr_1fr_1fr]">
@@ -15,25 +17,21 @@ export function SiteFooter({ teacherPackCount, library = false }: { teacherPackC
             <li><a className="hover:text-foreground" href="#/browse">Browse lesson packs</a></li>
             <li><a className="hover:text-foreground" href="#/share">Share a lesson</a></li>
             <li><a className="hover:text-foreground" href="#/saved">Saved</a></li>
-            <li><a className="hover:text-foreground" href="#/moderation">Review queue</a></li>
+            {moderator && <li><a className="hover:text-foreground" href="#/moderation">Verification queue</a></li>}
           </ul>
         </nav>
         <div className="space-y-2 text-sm text-muted-foreground">
-          <p className="font-semibold text-foreground">About this demo</p>
-          <p>Accounts, reviews and activity counts are sample data. Payments are simulated.</p>
-          <p>Curriculum references in sample packs are examples, not official DepEd alignment.</p>
-          {teacherPackCount > 0 && (
-            <p>
-              {teacherPackCount} teacher pack{teacherPackCount === 1 ? '' : 's'} shown for this demonstration only, from this computer.
-            </p>
-          )}
+          <p className="font-semibold text-foreground">About CherIt</p>
+          <p>Teachers keep the copyright to what they share. Each pack shows its license and version history.</p>
+          <p>© 2026 CherIt · Naga City, Camarines Sur</p>
         </div>
       </Container>
     </footer>
   )
 }
 
-function LibraryFooter({ teacherPackCount }: { teacherPackCount: number }) {
+function LibraryFooter() {
+  const moderator = useStore().persona.role === 'moderator'
   return (
     <footer className="mt-16 border-t">
       <Container className="flex flex-col gap-7 py-8 sm:flex-row sm:items-start sm:justify-between">
@@ -43,13 +41,12 @@ function LibraryFooter({ teacherPackCount }: { teacherPackCount: number }) {
             <a className="library-link" href="#/browse">Browse</a>
             <a className="library-link" href="#/share">Share a lesson</a>
             <a className="library-link" href="#/saved">Saved</a>
-            <a className="library-link" href="#/moderation">Review queue</a>
+            {moderator && <a className="library-link" href="#/moderation">Verification queue</a>}
           </nav>
         </div>
         <div className="flex max-w-md flex-col gap-2 text-xs leading-relaxed text-muted-foreground">
-          <p>Demonstration prototype. Accounts, reviews and activity counts are sample data. Payments are simulated.</p>
-          <p>Sample curriculum references are examples, not official DepEd alignment.</p>
-          {teacherPackCount > 0 && <p>{teacherPackCount} teacher pack{teacherPackCount === 1 ? '' : 's'} shown for this demonstration only, from this computer.</p>}
+          <p>Lesson packs shared by Bicol teachers. Teachers keep the copyright to what they share; each pack shows its license and version history.</p>
+          <p>© 2026 CherIt · Naga City, Camarines Sur</p>
         </div>
       </Container>
     </footer>

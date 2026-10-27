@@ -16,9 +16,9 @@ export function PackCover({ resource, className, size = 'card', variant = 'origi
       )}
     >
       {/* Decorative ring, the same mark on every cover. */}
-      <span aria-hidden="true" className="absolute -top-10 -right-10 -z-10 size-40 rounded-full border-[22px] border-white/10" />
+      <span aria-hidden="true" className="pointer-events-none absolute -top-10 -right-10 -z-10 size-40 rounded-full border-[22px] border-white/10" />
       {size !== 'thumb' && (
-        <span aria-hidden="true" className="absolute top-3.5 left-4 flex flex-wrap gap-1.5">
+        <span aria-hidden="true" className="pointer-events-none absolute top-3.5 left-4 flex flex-wrap gap-1.5">
           {fileKinds(resource).map((k) => (
             <span key={k} className="rounded-md bg-white/20 px-1.5 py-0.5 text-[11px] font-semibold tracking-wide ">
               {k}

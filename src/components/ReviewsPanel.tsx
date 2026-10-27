@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { RatingLine, Stars } from '@/components/site/Rating'
 import { currentReviews, DemoRuleError, olderReviews, personaReview, resourceRating, reviewEligibility } from '@/domain/logic'
 import type { Resource, Review } from '@/domain/types'
-import { initials } from '@/lib/pack'
+import { PersonAvatar } from '@/components/site/PersonAvatar'
 import { useStore } from '@/store'
 import { StarRatingInput } from './detail/StarRatingInput'
 
@@ -49,7 +49,7 @@ export function ReviewsPanel({ resource, embedded = false }: { resource: Resourc
     eligibility === 'own-resource'
         ? 'You shared this pack, so you can’t rate it.'
         : eligibility === 'moderator'
-          ? 'The demo moderator doesn’t rate packs. Switch to a teacher persona.'
+          ? 'Verifiers don’t rate packs.'
           : null
 
   return (
@@ -63,7 +63,7 @@ export function ReviewsPanel({ resource, embedded = false }: { resource: Resourc
       <div className={`${embedded ? '' : 'mt-4 '}flex flex-col gap-4 border-b py-5 sm:flex-row sm:items-center sm:justify-between ${embedded ? '' : 'border-t'}`}>
         <div className="space-y-1">
           <RatingLine summary={summary} className="text-base" />
-          <p className="text-sm text-muted-foreground">For version {resource.version.label}. Earlier versions are listed separately.</p>
+          <p className="text-sm text-muted-foreground">For version {resource.version.label.split(".")[0]}.x. Earlier versions are listed separately.</p>
         </div>
         {eligibility === 'ok' && <ReviewFormDialog resource={resource} />}
       </div>
@@ -102,9 +102,7 @@ function ReviewItem({ review, mine }: { review: Review; mine: boolean }) {
   return (
     <li className="py-5">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-        <span aria-hidden="true" className="grid size-9 place-items-center rounded-full bg-secondary text-xs font-semibold">
-          {initials(personaById(review.personaId))}
-        </span>
+        <PersonAvatar name={personaById(review.personaId)?.alias ?? review.authorLabel} seed={review.personaId} className="size-9" />
         <span className="flex min-w-0 flex-col">
           <strong className="truncate font-semibold">{review.authorLabel}</strong>
           <span className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -115,16 +113,11 @@ function ReviewItem({ review, mine }: { review: Review; mine: boolean }) {
           </span>
         </span>
         <span className="flex flex-wrap gap-1.5 sm:ml-auto">
-          {review.seeded && (
-            <Badge variant="secondary" className="text-muted-foreground">
-              Sample review
-            </Badge>
-          )}
           {mine && <Badge>Your review</Badge>}
         </span>
       </div>
       {review.text && <p className="mt-3 text-pretty">{review.text}</p>}
-      {review.usedInClass && <p className="mt-2 text-sm text-muted-foreground">Says they used it in class (self-reported).</p>}
+      {review.usedInClass && <p className="mt-2 text-sm text-muted-foreground">Used it in class</p>}
     </li>
   )
 }
@@ -171,7 +164,7 @@ function ReviewForm({ resource, onDone }: { resource: Resource; onDone: () => vo
         type: 'save-review',
         resource,
         role: persona.role,
-        authorLabel: `${persona.alias} (demo persona)`,
+        authorLabel: persona.alias,
         rating,
         text,
         usedInClass,

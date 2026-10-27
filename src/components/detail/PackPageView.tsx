@@ -1,7 +1,7 @@
 import { Container } from '@/components/site/layout'
 import { FilesPanel } from '../FilesPanel'
 import { TrustPanel } from '../TrustPanel'
-import { PackActions, MobileDownloadBar } from './PackActions'
+import { PackActions, MobileDownloadBar, QuickActions } from './PackActions'
 import { PackHeader, StatusNotice } from './PackHeader'
 import { PackNotes, Adaptations } from './PackNotes'
 import { Preview } from './Preview'
@@ -21,7 +21,7 @@ export function PackPageView({ model }: { model: PackPageModel }) {
           {/* Phones retain the title, trust, preview order. */}
           <div className="lg:col-start-2 lg:row-span-2 lg:row-start-1">
             <div className="lg:sticky lg:top-20 lg:max-h-[calc(100dvh-6rem)] lg:overflow-y-auto lg:overscroll-contain">
-              <TrustPanel resource={resource} actions={<PackActions model={model} />} />
+              <TrustPanel resource={resource} quickActions={<QuickActions model={model} />} actions={<PackActions model={model} />} />
             </div>
           </div>
           <div className="min-w-0 space-y-5 lg:col-start-1 lg:row-start-2">

@@ -1,4 +1,4 @@
-import { Inbox, PauseCircle, ShieldCheck, ShieldUser } from 'lucide-react'
+import { BadgeCheck, Flag, Inbox, ShieldCheck, ShieldUser } from 'lucide-react'
 import { useState, type ReactNode } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -7,26 +7,34 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Container, EmptyState } from '@/components/site/layout'
 import { PackCover } from '@/components/site/PackCover'
 import { ReviewBadge } from '@/components/site/Rating'
-import { bowLabel, competencyLabel, currentCurriculumReview, plural } from '@/domain/logic'
-import type { Resource, ResourceStatus } from '@/domain/types'
+import { bowLabel, competencyLabel, currentCurriculumReview, openVerificationRequest, plural } from '@/domain/logic'
+import type { Resource, ResourceStatus, VerificationRequest } from '@/domain/types'
 import { cn } from '@/lib/utils'
 import { useStore } from '@/store'
 import { QueueActions } from './moderation/QueueActions'
 
-type Tab = 'pending' | 'held' | 'published'
+type Tab = 'requested' | 'held' | 'published'
 
-const STATUS_LABEL: Record<ResourceStatus, string> = { pending: 'Pending', held: 'On hold', published: 'Published' }
+const STATUS_LABEL: Record<ResourceStatus, string> = { held: 'Hidden', published: 'Public' }
 
 export function Moderation() {
-  const { resources, persona, dispatch, notify } = useStore()
-  const [tab, setTab] = useState<Tab>('pending')
-  const pending = resources.filter((r) => r.status === 'pending')
+  const { resources, state, persona, dispatch, notify } = useStore()
+  const [tab, setTab] = useState<Tab>('requested')
+  const requestFor = (r: Resource) => openVerificationRequest(state, r)
+  // Priority (Pro, not implemented) would come first; then oldest request first.
+  const requested = resources
+    .filter((r) => r.status === 'published' && requestFor(r) && !currentCurriculumReview(r))
+    .sort((a, b) => {
+      const ra = requestFor(a)!
+      const rb = requestFor(b)!
+      return Number(rb.tier === 'priority') - Number(ra.tier === 'priority') || ra.requestedAt.localeCompare(rb.requestedAt)
+    })
   const held = resources.filter((r) => r.status === 'held')
-  // Packs still needing a curriculum review for their current version come first.
+  // Unverified packs come first.
   const published = resources
     .filter((r) => r.status === 'published')
     .sort((a, b) => Number(!!currentCurriculumReview(a)) - Number(!!currentCurriculumReview(b)))
-  const unreviewed = published.filter((r) => !currentCurriculumReview(r))
+  const unverified = published.filter((r) => !currentCurriculumReview(r))
 
   if (persona.role !== 'moderator') {
     return (
@@ -35,32 +43,32 @@ export function Moderation() {
         <EmptyState
           className="mt-8"
           icon={<ShieldUser />}
-          title="Only the demo moderator can use the review queue"
+          title="Only the verifier can use the verification queue"
           actions={
             <Button
               size="lg"
               onClick={() => {
                 dispatch({ type: 'select-persona', personaId: 'p-mod' })
-                notify('Now browsing as the demo moderator.')
+                notify('Now signed in as the verifier, CherIt Review Team.')
               }}
             >
-              Switch to demo moderator
+              Switch to the verifier account
             </Button>
           }
         >
           <p className="tabular-nums">
-            {pending.length} waiting, {held.length} on hold. Switch persona to publish or hold packs.
+            {requested.length} asking for verification, {held.length} hidden after a report. Switch persona to verify or restore packs.
           </p>
-          <p className="mt-2 text-sm">You can also switch demo account from the avatar menu at the top right.</p>
+          <p className="mt-2 text-sm">You can also switch accounts from the avatar menu at the top right.</p>
         </EmptyState>
       </Container>
     )
   }
 
   const tabs: { value: Tab; label: string; items: Resource[] }[] = [
-    { value: 'pending', label: 'Pending', items: pending },
-    { value: 'held', label: 'Held', items: held },
-    { value: 'published', label: 'Published', items: published },
+    { value: 'requested', label: 'Requested', items: requested },
+    { value: 'held', label: 'Reported', items: held },
+    { value: 'published', label: 'All public', items: published },
   ]
 
   return (
@@ -72,20 +80,21 @@ export function Moderation() {
           {tabs.map((t) => (
             <TabsTrigger key={t.value} value={t.value} className="h-full min-h-9 gap-1 px-1.5 text-sm sm:gap-1.5 sm:px-4 sm:text-[15px]">
               {t.label}
-              <Badge variant={t.value === 'pending' && t.items.length > 0 ? 'default' : 'secondary'} className="min-w-5 tabular-nums">
+              <Badge variant={t.value !== 'published' && t.items.length > 0 ? 'default' : 'secondary'} className="min-w-5 tabular-nums">
                 {t.items.length}
               </Badge>
             </TabsTrigger>
           ))}
         </TabsList>
 
-        <TabsContent value="pending" className="text-base">
+        <TabsContent value="requested" className="text-base">
           <QueueList
-            items={pending}
-            description="New submissions from Share a lesson. Publishing checks the files, the permission statement and that no learner information is included."
+            items={requested}
+            requestFor={requestFor}
+            description="Authors asked for these versions to be checked. Verifying checks the lesson against its stated competency and covers the current version only."
             empty={
-              <EmptyState icon={<Inbox />} title="Nothing is waiting">
-                New submissions from Share a lesson appear here.
+              <EmptyState icon={<Inbox />} title="No verification requests">
+                When an author asks for verification, their pack appears here.
               </EmptyState>
             }
           />
@@ -93,8 +102,12 @@ export function Moderation() {
         <TabsContent value="held" className="text-base">
           <QueueList
             items={held}
-            description="Packs held by the moderator or after a report. Publish one to return it to Browse."
-            empty={<EmptyState icon={<PauseCircle />} title="No packs are on hold" />}
+            description="Packs hidden after a report. Restore one to make it public again."
+            empty={
+              <EmptyState icon={<Flag />} title="No reported packs">
+                When a report hides a pack, it appears here so you can review and restore it.
+              </EmptyState>
+            }
           />
         </TabsContent>
         <TabsContent value="published" className="text-base">
@@ -104,12 +117,16 @@ export function Moderation() {
             description={
               <>
                 <span className="font-medium text-foreground tabular-nums">
-                  {unreviewed.length === 0 ? 'Every published pack has a review for its current version.' : `${plural(unreviewed.length, 'pack')} not yet curriculum-reviewed.`}
+                  {unverified.length === 0 ? 'Every public pack is verified for its current version.' : `${plural(unverified.length, 'pack')} not verified.`}
                 </span>{' '}
-                Marking a pack reviewed covers its current version only. A new version or an adaptation starts unreviewed.
+                You can verify any public pack, requested or not. A new version or an adaptation starts unverified.
               </>
             }
-            empty={<EmptyState icon={<ShieldCheck />} title="No published packs yet" />}
+            empty={
+              <EmptyState icon={<ShieldCheck />} title="No public packs yet">
+                Packs appear here as soon as teachers share them.
+              </EmptyState>
+            }
           />
         </TabsContent>
       </Tabs>
@@ -120,16 +137,19 @@ export function Moderation() {
 function PageHeader() {
   return (
     <header>
-      <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Review queue</h1>
+      <h1 className="flex items-center gap-2 text-3xl font-bold tracking-tight sm:text-4xl">
+        <BadgeCheck aria-hidden="true" className="size-8 text-mauve-ink" /> Verification queue
+      </h1>
       <p className="mt-2 max-w-3xl text-pretty text-muted-foreground">
-        This demonstrates the workflow. Publishing checks the files, the permission statement and that no learner information is included.
-        Curriculum review is a separate step. Both are simulated: no expert or DepEd reviewer is involved.
+        Packs go public as soon as they’re shared. Authors can ask for free verification of a version, and reports hide a pack until you restore it.
       </p>
     </header>
   )
 }
 
-function QueueList({ items, description, empty, showTarget = false }: { items: Resource[]; description: ReactNode; empty: ReactNode; showTarget?: boolean }) {
+type RequestFor = (resource: Resource) => VerificationRequest | undefined
+
+function QueueList({ items, description, empty, showTarget = false, requestFor }: { items: Resource[]; description: ReactNode; empty: ReactNode; showTarget?: boolean; requestFor?: RequestFor }) {
   return (
     <div className="flex flex-col gap-4">
       <p className="text-sm text-pretty text-muted-foreground">{description}</p>
@@ -144,14 +164,14 @@ function QueueList({ items, description, empty, showTarget = false }: { items: R
                 <TableRow className="hover:bg-transparent">
                   <TableHead className="h-11 pl-4">Pack</TableHead>
                   <TableHead className="h-11">Contributor</TableHead>
-                  <TableHead className="h-11">Submitted</TableHead>
+                  <TableHead className="h-11">{requestFor ? 'Requested' : 'Shared'}</TableHead>
                   <TableHead className="h-11">Status</TableHead>
                   <TableHead className="h-11 min-w-64 pr-4 text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {items.map((r) => (
-                  <QueueTableRow key={r.id} resource={r} showTarget={showTarget} />
+                  <QueueTableRow key={r.id} resource={r} showTarget={showTarget} request={requestFor?.(r)} />
                 ))}
               </TableBody>
             </Table>
@@ -159,7 +179,7 @@ function QueueList({ items, description, empty, showTarget = false }: { items: R
           {/* Mobile: one card per pack */}
           <ul className="flex flex-col gap-3 md:hidden">
             {items.map((r) => (
-              <QueueCard key={r.id} resource={r} showTarget={showTarget} />
+              <QueueCard key={r.id} resource={r} showTarget={showTarget} request={requestFor?.(r)} />
             ))}
           </ul>
         </>
@@ -168,7 +188,7 @@ function QueueList({ items, description, empty, showTarget = false }: { items: R
   )
 }
 
-function QueueTableRow({ resource, showTarget }: { resource: Resource; showTarget: boolean }) {
+function QueueTableRow({ resource, showTarget, request }: { resource: Resource; showTarget: boolean; request?: VerificationRequest }) {
   const { personaById } = useStore()
   return (
     <TableRow className="align-top">
@@ -177,11 +197,11 @@ function QueueTableRow({ resource, showTarget }: { resource: Resource; showTarge
       </TableCell>
       <TableCell className="py-4 align-top whitespace-normal">{personaById(resource.contributorId)?.alias ?? 'Unknown contributor'}</TableCell>
       <TableCell className="py-4 align-top tabular-nums">
-        <span className="block">{resource.createdAt}</span>
+        <span className="block">{request ? request.requestedAt.slice(0, 10) : resource.createdAt}</span>
         <span className="block text-sm text-muted-foreground">Version {resource.version.label}</span>
       </TableCell>
       <TableCell className="py-4 align-top">
-        <StatusBadges resource={resource} />
+        <StatusBadges resource={resource} request={request} />
       </TableCell>
       <TableCell className="py-4 pr-4 align-top">
         <QueueActions resource={resource} className="justify-end" />
@@ -190,7 +210,7 @@ function QueueTableRow({ resource, showTarget }: { resource: Resource; showTarge
   )
 }
 
-function QueueCard({ resource, showTarget }: { resource: Resource; showTarget: boolean }) {
+function QueueCard({ resource, showTarget, request }: { resource: Resource; showTarget: boolean; request?: VerificationRequest }) {
   const { personaById } = useStore()
   return (
     <li className="rounded-2xl border bg-card p-4">
@@ -201,13 +221,13 @@ function QueueCard({ resource, showTarget }: { resource: Resource; showTarget: b
           <dd className="font-medium">{personaById(resource.contributorId)?.alias ?? 'Unknown contributor'}</dd>
         </div>
         <div>
-          <dt className="text-muted-foreground">Submitted</dt>
+          <dt className="text-muted-foreground">{request ? 'Requested' : 'Shared'}</dt>
           <dd className="font-medium tabular-nums">
-            {resource.createdAt} · v{resource.version.label}
+            {request ? request.requestedAt.slice(0, 10) : resource.createdAt} · v{resource.version.label}
           </dd>
         </div>
       </dl>
-      <StatusBadges resource={resource} className="mt-3" />
+      <StatusBadges resource={resource} request={request} className="mt-3" />
       <QueueActions resource={resource} className="mt-4 border-t pt-4 [&>*]:grow" />
     </li>
   )
@@ -246,16 +266,16 @@ function PackSummary({ resource, showTarget }: { resource: Resource; showTarget:
   )
 }
 
-function StatusBadges({ resource, className }: { resource: Resource; className?: string }) {
+function StatusBadges({ resource, request, className }: { resource: Resource; request?: VerificationRequest; className?: string }) {
   return (
     <div className={cn('flex flex-wrap gap-1.5 md:flex-col md:items-start', className)}>
-      <Badge
-        variant={resource.status === 'held' ? 'destructive' : resource.status === 'pending' ? 'outline' : 'secondary'}
-        className={cn(resource.status === 'pending' && 'border-primary/40 text-mauve-ink')}
-      >
-        {STATUS_LABEL[resource.status]}
-      </Badge>
+      <Badge variant={resource.status === 'held' ? 'destructive' : 'secondary'}>{STATUS_LABEL[resource.status]}</Badge>
       <ReviewBadge resource={resource} />
+      {request && (
+        <Badge variant="outline" className="border-primary/40 text-mauve-ink">
+          {request.tier === 'priority' ? 'Priority queue' : 'Free queue'}
+        </Badge>
+      )}
     </div>
   )
 }

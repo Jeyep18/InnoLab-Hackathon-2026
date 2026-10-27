@@ -26,7 +26,7 @@ export async function fetchFileBlob(file: ResourceFile): Promise<Blob> {
   try {
     response = await fetch(file.source.url, { cache: 'no-store' })
   } catch {
-    throw new FileUnavailableError('The file could not be reached. Check that the local demo server is still running.')
+    throw new FileUnavailableError('The file could not be reached. Check your connection and try again.')
   }
   const type = response.headers.get('content-type') ?? ''
   // The dev server answers unknown paths with index.html, so treat HTML as missing too.
@@ -50,6 +50,14 @@ export function saveBlob(blob: Blob, name: string) {
 export function extension(name: string): string {
   const dot = name.lastIndexOf('.')
   return dot === -1 ? '' : name.slice(dot + 1).toLowerCase()
+}
+
+/** "Grade4_Science_Quarter2…revised_v3.docx": keeps the start and the extension, drops the middle. */
+export function shortFileName(name: string, max = 42): string {
+  if (name.length <= max) return name
+  const ext = extension(name)
+  const tail = ext ? Math.min(14, Math.floor(max / 3)) + ext.length + 1 : Math.floor(max / 3)
+  return `${name.slice(0, max - tail - 1)}…${name.slice(-tail)}`
 }
 
 export type PreviewKind = 'pdf' | 'image' | 'text' | 'docx' | 'video'

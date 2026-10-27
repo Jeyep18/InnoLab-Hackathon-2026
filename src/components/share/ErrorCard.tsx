@@ -52,7 +52,7 @@ export function ErrorCard({ items, onSelect }: { items: ErrorItem[]; onSelect: (
                 ))}
               </ul>
             </div>
-            <Button type="button" variant="ghost" size="icon" className="-mt-1 -mr-1 size-8 shrink-0" onClick={() => setDismissed(true)} aria-label="Dismiss">
+            <Button type="button" variant="ghost" size="icon-sm" className="-mt-1 -mr-1 shrink-0" onClick={() => setDismissed(true)} aria-label="Dismiss">
               <X />
             </Button>
           </div>

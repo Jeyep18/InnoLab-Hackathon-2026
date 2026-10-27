@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import { formatBytes } from '@/domain/logic'
-import { ACCEPTED_EXTENSIONS, extension, MAX_FILE_BYTES, PREVIEWABLE_TYPES_LABEL, previewKind } from '@/files'
+import { ACCEPTED_EXTENSIONS, extension, MAX_FILE_BYTES, PREVIEWABLE_TYPES_LABEL, previewKind, shortFileName } from '@/files'
 import { cn } from '@/lib/utils'
 import { FieldError } from './FormField'
 import { PagePreviewEditor } from './PagePreviewEditor'
@@ -20,9 +20,10 @@ export interface PickedFile {
 
 /** Why a file can't be shared, or null. Same rules as before the redesign. */
 export function fileProblem(file: File): string | null {
-  if (!ACCEPTED_EXTENSIONS.includes(extension(file.name))) return `${file.name}: this file type isn’t accepted.`
-  if (file.size === 0) return `${file.name} is empty.`
-  if (file.size > MAX_FILE_BYTES) return `${file.name} is larger than ${formatBytes(MAX_FILE_BYTES)}.`
+  const name = shortFileName(file.name)
+  if (!ACCEPTED_EXTENSIONS.includes(extension(file.name))) return `${name}: this file type isn’t accepted.`
+  if (file.size === 0) return `${name} is empty.`
+  if (file.size > MAX_FILE_BYTES) return `${name} is larger than ${formatBytes(MAX_FILE_BYTES)}.`
   return null
 }
 
@@ -62,7 +63,7 @@ export function FilePicker({
 
   function addFiles(list: FileList | null) {
     if (!list || list.length === 0) return
-    const added = [...list].map((file) => ({ file, label: file.name.replace(/\.[^.]+$/, ''), required: kind === 'lesson-plan' }))
+    const added = [...list].map((file) => ({ file, label: file.name.replace(/\.[^.]+$/, '').replace(/[_]+/g, ' ').trim().slice(0, 80), required: kind === 'lesson-plan' }))
     setPicked((current) => [...current, ...added])
     onAdded()
   }
@@ -82,7 +83,7 @@ export function FilePicker({
   }
 
   return (
-    <fieldset className="flex flex-col gap-3" aria-describedby={[`${id}-hint`, errorId].filter(Boolean).join(' ')}>
+    <fieldset className="flex min-w-0 flex-col gap-3" aria-describedby={[`${id}-hint`, errorId].filter(Boolean).join(' ')}>
       <legend className="sr-only">{kind === 'lesson-plan' ? 'Lesson plan files' : 'Supplementary files'}</legend>
 
       {hasFiles && (
@@ -112,10 +113,11 @@ export function FilePicker({
                       onChange={(e) => update(i, { label: e.target.value })}
                       placeholder="Display name"
                       aria-invalid={!p.label.trim()}
-                      className="h-8 border-transparent bg-transparent px-1.5 font-medium shadow-none hover:border-input focus-visible:border-ring aria-invalid:border-destructive"
+                      title={p.label}
+                      className="h-8 truncate border-transparent bg-transparent px-1.5 font-medium shadow-none hover:border-input focus-visible:border-ring aria-invalid:border-destructive"
                     />
-                    <p className="truncate px-1.5 text-xs text-muted-foreground tabular-nums">
-                      {p.file.name} · {formatBytes(p.file.size)}
+                    <p className="truncate px-1.5 text-xs text-muted-foreground tabular-nums" title={p.file.name}>
+                      {shortFileName(p.file.name)} · {formatBytes(p.file.size)}
                       {!problem && !canPreview && ' · No preview'}
                     </p>
                   </div>
@@ -197,8 +199,8 @@ export function FilePicker({
       <Dialog open={!!previewing} onOpenChange={(open) => !open && setPreviewing(null)}>
         <DialogContent className="flex max-h-[88dvh] flex-col gap-0 p-0 sm:max-w-3xl">
           <DialogHeader className="border-b p-4 pr-12">
-            <DialogTitle>{previewing?.label.trim() || previewing?.file.name}</DialogTitle>
-            <DialogDescription>{previewing && `${previewing.file.name} · ${formatBytes(previewing.file.size)} · as other teachers will see it`}</DialogDescription>
+            <DialogTitle className="truncate">{previewing?.label.trim() || (previewing && shortFileName(previewing.file.name))}</DialogTitle>
+            <DialogDescription>{previewing && `${shortFileName(previewing.file.name)} · ${formatBytes(previewing.file.size)} · as other teachers will see it`}</DialogDescription>
           </DialogHeader>
           {previewing && (
             <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain bg-secondary/40 p-2">

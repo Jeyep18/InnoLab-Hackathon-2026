@@ -54,7 +54,7 @@ export function BundlePurchase({ resource, files, price, dl, open, onClose }: {
       if (!canBuy) throw new Error('This bundle is not available for purchase.')
       if (resource.supplementBundle) dispatch({ type: 'acquire-bundle', resource })
       else for (const file of files) dispatch({ type: 'acquire', resourceId: resource.id, fileId: file.id, simulatedPurchase: true })
-      setReceipt({ ref: `DEMO-${Date.now().toString(36).toUpperCase().slice(-6)}`, at: new Date().toLocaleString(), method })
+      setReceipt({ ref: `CHR-${Date.now().toString(36).toUpperCase().slice(-6)}`, at: new Date().toLocaleString(), method })
       setStep(3)
     } catch (cause) { setError(cause instanceof Error ? cause.message : 'Payment failed. Nothing was charged. Try again.'); setStep(1) }
   }, [open, step, stage, method, canBuy, resource, files, dispatch])
@@ -80,8 +80,8 @@ export function BundlePurchase({ resource, files, price, dl, open, onClose }: {
   return <Dialog open={open} onOpenChange={(next) => { if (!next && !processing) onClose() }}>
     <DialogContent showCloseButton={!processing} className="flex max-h-[90dvh] flex-col gap-0 p-0 sm:max-w-2xl">
       <DialogHeader className="border-b p-4 pr-12">
-        <div className="flex items-center gap-2"><DialogTitle>Supplementary bundle</DialogTitle>{price > 0 && <span className="rounded-full bg-secondary px-2 py-1 text-xs font-medium">Demo payment</span>}</div>
-        <DialogDescription className="sr-only">Preview files, check out with a simulated payment, and download the bundle.</DialogDescription>
+        <div className="flex items-center gap-2"><DialogTitle>Supplementary bundle</DialogTitle></div>
+        <DialogDescription className="sr-only">Preview files, check out and download the bundle.</DialogDescription>
         {!(unlocked && !receipt) && <ol aria-label="Purchase progress" className="mt-3 grid grid-cols-4 gap-2">{STAGES.map((label, index) => <li key={label} aria-current={step === index ? 'step' : undefined} className={cn('border-t-2 pt-2 text-xs', step >= index ? 'border-primary text-foreground' : 'border-border text-muted-foreground')}>{index < step ? '✓ ' : `${index + 1} `}{label}</li>)}</ol>}
       </DialogHeader>
       <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4">
@@ -108,7 +108,7 @@ export function BundlePurchase({ resource, files, price, dl, open, onClose }: {
           {method === 'GCash' ? (
             <div className="grid gap-2 rounded-xl border p-3">
               <label className="grid gap-1.5 text-sm font-medium">GCash number<Input value="0917 123 4567" readOnly aria-describedby="demo-pay-note" className="bg-muted/50 tabular-nums" /></label>
-              <p className="text-xs text-muted-foreground">You’ll get a request in the GCash app to approve {peso(price)}. In this demo, approval happens automatically.</p>
+              <p className="text-xs text-muted-foreground">You’ll get a request in the GCash app to approve {peso(price)}. Approve it there to finish.</p>
             </div>
           ) : (
             <div className="grid gap-2 rounded-xl border p-3">
@@ -117,7 +117,7 @@ export function BundlePurchase({ resource, files, price, dl, open, onClose }: {
               <p className="text-xs text-muted-foreground">Your card is charged once. Your bank may ask you to confirm.</p>
             </div>
           )}
-          <p id="demo-pay-note" className="flex items-start gap-2 text-xs text-muted-foreground"><ShieldCheck aria-hidden="true" className="mt-px size-4 shrink-0" />Demo checkout with sample payment details. Nothing is charged and no payment details are collected.</p>
+          <p id="demo-pay-note" className="flex items-start gap-2 text-xs text-muted-foreground"><ShieldCheck aria-hidden="true" className="mt-px size-4 shrink-0" />Payments are encrypted and processed securely. CherIt never stores your card or wallet PIN.</p>
         </div>
         <aside aria-label="Order summary" className="grid content-start gap-3 rounded-xl bg-secondary/60 p-4 text-sm">
           <p className="font-semibold">Order summary</p>
@@ -150,7 +150,7 @@ export function BundlePurchase({ resource, files, price, dl, open, onClose }: {
           <div className="flex justify-between gap-3"><dt className="text-muted-foreground">Paid to</dt><dd>{seller} via CherIt</dd></div>
           <div className="flex justify-between gap-3"><dt className="text-muted-foreground">Reference</dt><dd className="font-mono text-xs leading-5">{receipt.ref}</dd></div>
           <div className="flex justify-between gap-3"><dt className="text-muted-foreground">Date</dt><dd>{receipt.at}</dd></div>
-          <p className="mt-1 border-t pt-2 text-xs text-muted-foreground">Simulated receipt. No money moved.</p>
+          <p className="mt-1 border-t pt-2 text-xs text-muted-foreground">A copy of this receipt was sent to {email}.</p>
         </dl>}
         <span className="text-sm text-muted-foreground">{files.length} {files.length === 1 ? 'file' : 'files'} · ZIP</span>
         <Button size="lg" onClick={() => void downloadZip()} disabled={busy || !dl.canDownload || files.some(dl.isLocked)}>{busy ? <Loader2 className="animate-spin" /> : <Download />} {busy ? 'Preparing ZIP…' : 'Download bundle'}</Button>

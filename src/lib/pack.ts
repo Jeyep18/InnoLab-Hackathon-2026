@@ -22,6 +22,14 @@ export function fileKinds(resource: Resource): string[] {
   return [...counts].map(([ext, n]) => (n > 1 ? `${ext} ×${n}` : ext))
 }
 
+/** Price of the optional paid files, or 0 when everything in the pack is free. Payments are simulated. */
+export function paidFilesPrice(resource: Resource): number {
+  if ((resource.supplementBundle?.pricePhp ?? 0) > 0) return resource.supplementBundle!.pricePhp
+  return resource.files.reduce((sum, file) => sum + (file.samplePricePhp ?? 0), 0)
+}
+
+export const hasPaidFiles = (resource: Resource) => paidFilesPrice(resource) > 0
+
 const HONORIFICS = /^(ma'?am|sir|teacher|tr\.?|mr\.?|ms\.?|mrs\.?|demo)$/i
 export function initials(persona?: Persona) {
   const words = (persona?.alias ?? '?').split(/\s+/).filter((w) => !HONORIFICS.test(w.replace(/[’']/g, "'")))

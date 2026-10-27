@@ -5,6 +5,12 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Motion tokens. Overrides Tailwind's weak defaults, so `ease-out` / `ease-in-out` utilities use the same curves. */
+@theme {
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
 @theme inline {
     --color-sage-50: var(--sage-50);
     --color-sage-100: var(--sage-100);
@@ -167,6 +173,10 @@
     --lh-micro: 16px;
     --fs-micro-compact: 11px;
     --lh-micro-compact: 14px;
+    /* Scroll reveals and the home intro (see Reveal.tsx). */
+    --reveal-duration: 560ms;
+    --reveal-distance: 12px;
+    --reveal-stagger: 70ms;
 }
 
 @layer base {
@@ -188,6 +198,13 @@
   :where(h1, h2, h3, h4) {
     font-weight: 600;
     letter-spacing: -0.015em;
+    }
+  :where(h1, h2, h3) {
+    text-wrap: balance;
+    }
+  /* In-page scroll targets clear the 48px sticky header. */
+  :where([id]) {
+    scroll-margin-top: 4rem;
     }
   :where(a:not([data-slot])):not(.no-link-style) {
     text-underline-offset: 0.2em;
@@ -561,15 +578,79 @@
   font-weight: 600;
 }
 
-/* docx-preview renders fixed-width A4 pages; let them fit the preview dialog and pack page. */
+/* docx-preview pages keep their own size and orientation; FileView scales them to fit. */
 .docx-view .docx-wrapper {
-  padding: 0.75rem;
+  padding: 12px;
   background: transparent;
 }
 .docx-view .docx-wrapper > section.docx {
-  width: 100% !important;
-  min-height: auto !important;
-  padding: clamp(1rem, 5%, 3rem) !important;
-  margin-bottom: 0.75rem;
+  margin-bottom: 12px;
   box-shadow: 0 1px 3px rgb(0 0 0 / 0.12);
+}
+
+/* Humanist sans close to the logo's lettering: Optima on Mac, Candara on Windows. */
+.font-logo {
+  font-family: Optima, Candara, "Segoe UI", "Noto Sans", sans-serif;
+  font-weight: 400;
+}
+
+/* Motion: one-time reveals. Content is visible by default; Reveal.tsx sets data-reveal="hidden"
+   just before first paint, then "shown" once, when the element enters the viewport. */
+[data-reveal]:not([data-reveal-stagger]),
+[data-reveal][data-reveal-stagger] > * {
+  transition:
+    opacity var(--reveal-duration) var(--ease-out),
+    transform var(--reveal-duration) var(--ease-out);
+  transition-delay: calc(var(--reveal-delay, 0ms) + var(--reveal-step, 0) * var(--reveal-stagger));
+}
+
+[data-reveal="hidden"]:not([data-reveal-stagger]),
+[data-reveal="hidden"][data-reveal-stagger] > * {
+  opacity: 0;
+  transform: translateY(var(--reveal-distance));
+}
+
+/* Stagger caps at the sixth item so late items never wait long. */
+[data-reveal-stagger] > :nth-child(2) { --reveal-step: 1; }
+[data-reveal-stagger] > :nth-child(3) { --reveal-step: 2; }
+[data-reveal-stagger] > :nth-child(4) { --reveal-step: 3; }
+[data-reveal-stagger] > :nth-child(5) { --reveal-step: 4; }
+[data-reveal-stagger] > :nth-child(n + 6) { --reveal-step: 5; }
+
+/* Route change: a near-imperceptible opacity fade so pages don't hard-cut. */
+@keyframes page-enter {
+  from { opacity: 0; }
+}
+
+.page-enter {
+  animation: page-enter 180ms var(--ease-out);
+}
+
+/* Pack cards: small lift on hover (real pointers only), press feedback on tap or click. */
+.library-pack {
+  transition:
+    background-color 150ms ease,
+    transform 200ms var(--ease-out);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .library-pack:has(> h3 a:active) {
+    transform: scale(0.98);
+    transition-duration: 150ms, 120ms;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .library-pack:hover:not(:has(> h3 a:active)) {
+    transform: translateY(-2px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Keep the fade, drop the movement. */
+  :root {
+    --reveal-duration: 320ms;
+    --reveal-distance: 0px;
+    --reveal-stagger: 40ms;
+  }
 }

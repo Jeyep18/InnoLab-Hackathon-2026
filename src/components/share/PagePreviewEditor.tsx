@@ -25,7 +25,7 @@ export function PagePreviewEditor({ picked, onChange }: { picked: PickedFile; on
   const pages = picked.previewPages
   const readable = pages?.filter((page) => !page.blurred).length ?? 0
   return (
-    <section className="mt-2 rounded-lg bg-secondary/50 px-2.5 py-2" aria-label={`Buyer preview for ${picked.file.name}`}>
+    <section className="mt-2 rounded-lg bg-secondary/50 px-2.5 py-2" aria-label={`Buyer preview for ${picked.label || picked.file.name}`}>
       <div className="flex flex-wrap items-center gap-2">
         <p className="mr-auto text-xs">
           <span className="font-semibold">Buyer preview</span>

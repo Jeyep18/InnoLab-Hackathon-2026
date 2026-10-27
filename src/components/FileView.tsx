@@ -78,32 +78,49 @@ function PdfPages({ blob, name, label }: { blob: Blob; name: string; label: stri
   return <div className="space-y-3">{pages.map((url, index) => <img key={url} src={url} alt={`${label}, page ${index + 1}`} className="mx-auto w-full bg-white" loading={index ? 'lazy' : 'eager'} />)}</div>
 }
 
+/**
+ * Word pages keep their real size and orientation (portrait or landscape) and are scaled down
+ * as a whole to fit the preview, like a PDF viewer, so wide tables never reflow into a column.
+ */
 function DocxView({ blob }: { blob: Blob }) {
+  const frame = useRef<HTMLDivElement>(null)
   const container = useRef<HTMLDivElement>(null)
   const [state, setState] = useState<'loading' | 'ready' | 'error'>('loading')
   useEffect(() => {
     let active = true
     const el = container.current
-    if (!el) return
+    const outer = frame.current
+    if (!el || !outer) return
     setState('loading')
+    const fit = () => {
+      const pages = [...el.querySelectorAll<HTMLElement>('section.docx')]
+      if (!pages.length) return
+      el.style.zoom = '1'
+      const widest = Math.max(...pages.map((page) => page.offsetWidth)) + 24
+      el.style.zoom = String(Math.min(1, outer.clientWidth / widest))
+    }
+    const observer = new ResizeObserver(fit)
     void (async () => {
       try {
         const { renderAsync } = await import('docx-preview')
         if (!active) return
         el.replaceChildren()
         await renderAsync(blob, el, el, { inWrapper: true, ignoreLastRenderedPageBreak: true, breakPages: true, experimental: false })
-        if (active) setState('ready')
+        if (!active) return
+        fit()
+        observer.observe(outer)
+        setState('ready')
       } catch {
         if (active) setState('error')
       }
     })()
-    return () => { active = false; el.replaceChildren() }
+    return () => { active = false; observer.disconnect(); el.replaceChildren() }
   }, [blob])
   return (
-    <>
+    <div ref={frame} className="overflow-hidden">
       {state === 'loading' && <Loading />}
       {state === 'error' && <Failed />}
-      <div ref={container} className="docx-view overflow-x-auto" hidden={state === 'error'} />
-    </>
+      <div ref={container} className="docx-view" hidden={state === 'error'} />
+    </div>
   )
 }

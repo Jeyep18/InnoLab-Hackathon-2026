@@ -1,29 +1,51 @@
-import { Download } from 'lucide-react'
+import { Download, GitFork, GitPullRequestArrow } from 'lucide-react'
+import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Container } from '@/components/site/layout'
 import { formatBytes, plural } from '@/domain/logic'
 import { cn } from '@/lib/utils'
 import { ShareLink } from '../ShareLink'
 import { SaveToggle } from './SaveToggle'
+import { SuggestRevision } from './SuggestRevision'
 import type { PackDownloads } from './usePackDownloads'
 import type { PackPageModel } from './usePackPage'
 
 export function PackActions({ model }: { model: PackPageModel }) {
   const { resource, teacherActions, canReport, setReporting } = model
+  const [suggesting, setSuggesting] = useState(false)
+  if (!teacherActions) return null
+  const button = 'h-10 rounded-full px-3'
   return (
     <div className="grid gap-2">
-      {teacherActions && (
+      <div className={cn('grid gap-2', canReport && 'grid-cols-2')}>
+        <Button variant="outline" className={button} render={<a href={`#/share?adapt=${resource.id}`} />} nativeButton={false}>
+          <GitFork aria-hidden="true" /> {canReport ? 'Adapt' : 'Adapt this pack'}
+        </Button>
+        {canReport && (
+          <Button variant="outline" className={button} onClick={() => setSuggesting(true)}>
+            <GitPullRequestArrow aria-hidden="true" /> Suggest edits
+          </Button>
+        )}
+      </div>
+      {canReport && (
         <>
-          <div className="grid grid-cols-2 gap-2">
-            <SaveToggle resource={resource} className="w-full" />
-            <ShareLink resource={resource} label="Share link" className="w-full" />
-          </div>
-          <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 pt-1">
-            <Button variant="link" className="px-0 text-sm" render={<a href={`#/share?adapt=${resource.id}`} />} nativeButton={false}>Adapt this pack</Button>
-            {canReport && <Button variant="link" className="px-0 text-sm text-muted-foreground" onClick={() => setReporting(true)}>Report a problem</Button>}
-          </div>
+          <Button variant="link" size="sm" className="ml-auto h-auto px-0 text-muted-foreground" onClick={() => setReporting(true)}>
+            Report a problem
+          </Button>
+          <SuggestRevision resource={resource} open={suggesting} onOpenChange={setSuggesting} />
         </>
       )}
+    </div>
+  )
+}
+
+/** Save and Share as icon buttons, shown beside the pack's rating. */
+export function QuickActions({ model }: { model: PackPageModel }) {
+  if (!model.teacherActions) return null
+  return (
+    <div className="flex gap-1.5">
+      <SaveToggle resource={model.resource} iconOnly className="rounded-full" />
+      <ShareLink resource={model.resource} iconOnly className="rounded-full" />
     </div>
   )
 }

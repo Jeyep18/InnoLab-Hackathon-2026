@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useReducer, useRef, useState, type ReactNode } from 'react'
-import { allResources, allReviews, emptyState, reduce, type Action } from './domain/logic'
+import { allResources, allReviews, emptyState, reduce, withEdits, type Action } from './domain/logic'
 import type { Catalogue, DemoState, Persona, Resource, Review } from './domain/types'
 import { clearFiles } from './storage/fileStore'
 import { clearState, loadState, saveState } from './storage/persist'
@@ -55,7 +55,10 @@ export function StoreProvider({ catalogue, children }: { catalogue: Catalogue; c
   }, [])
 
   const value = useMemo<Store>(() => {
-    const personaById = (id: string) => catalogue.personas.find((p) => p.id === id)
+    const personaById = (id: string) => {
+      const found = catalogue.personas.find((p) => p.id === id)
+      return found && withEdits(found, state.profileEdits[id])
+    }
     const persona = personaById(state.personaId) ?? catalogue.personas[0]
     return {
       catalogue,

@@ -20,6 +20,7 @@ export async function loadCatalogue(): Promise<{ catalogue: Catalogue; teacherPa
         personas: [...seedCatalogue.personas, ...folder.personas],
         resources: [...seedCatalogue.resources, ...folder.resources],
         seedReviews: [...seedCatalogue.seedReviews, ...folder.reviews],
+        seedSales: seedCatalogue.seedSales,
       },
       teacherPackCount: manifest.packs.filter((p) => p.source === 'teacher').length,
     }

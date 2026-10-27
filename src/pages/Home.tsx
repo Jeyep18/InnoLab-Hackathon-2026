@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { PackGrid } from '@/components/site/PackCard'
@@ -12,6 +12,17 @@ import { SearchDialog } from './home/SearchDialog'
 import { useHomeFilters, HOME_SORTS, type HomeFilterModel } from './useHomeFilters'
 import './home/home.css'
 
+let introPlayed = false
+
+/** True only for the first Home visit of a page load, so the hero intro never replays on return trips. */
+function useHomeIntro() {
+  const [intro, setIntro] = useState(() => !introPlayed)
+  useEffect(() => {
+    introPlayed = true
+  }, [])
+  return [intro, () => setIntro(false)] as const
+}
+
 export function Home() {
   const { resources, state } = useStore()
   const model = useHomeFilters(resources)
@@ -20,14 +31,15 @@ export function Home() {
   const [resultsMode, setResultsMode] = useState(model.hasSearch)
   const packs = resources.filter(pack => pack.status === 'published')
   const popular = useMemo(() => [...packs].sort((a, b) => downloadCount(b, state) - downloadCount(a, state)), [packs, state])
-  const showResults = () => setResultsMode(true)
+  const [intro, endIntro] = useHomeIntro()
+  const showResults = () => { endIntro(); setResultsMode(true) }
   return <Container className="pt-8 pb-12">
     {resultsMode
       ? <HomeResults model={model} onSearch={showResults} onExplore={() => { model.clear(); setResultsMode(false) }} />
       : <>
-          <HomeIntro searchSlot={<SearchDialog model={model} onSubmit={showResults} />} />
+          <HomeIntro intro={intro} searchSlot={<SearchDialog model={model} onSubmit={showResults} />} />
           {packs.length
-            ? <LevelShelf popular={popular} level={level} expanded={expanded} onLevel={value => { setLevel(value); setExpanded(false) }} onAll={() => setExpanded(true)} />
+            ? <LevelShelf intro={intro} popular={popular} level={level} expanded={expanded} onLevel={value => { setLevel(value); setExpanded(false) }} onAll={() => setExpanded(true)} />
             : <EmptyState title="The library is empty">Published lesson packs will appear here.</EmptyState>}
         </>}
   </Container>

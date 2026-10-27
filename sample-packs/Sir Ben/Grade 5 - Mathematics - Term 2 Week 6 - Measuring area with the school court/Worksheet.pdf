@@ -12,7 +12,7 @@ endobj
 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
 endobj
 5 0 obj
-<< /Length 721 >>
+<< /Length 599 >>
 stream
 0.98 0.97 0.95 rg 0 0 595 842 re f
 0.55 0.43 0.47 rg
@@ -24,7 +24,6 @@ BT /F1 12 Tf 56 683.5999999999999 Td (2. Width of the court: ______ m) Tj ET
 BT /F1 12 Tf 56 664.3999999999999 Td (3. Area: ______ square metres) Tj ET
 BT /F1 12 Tf 56 645.1999999999998 Td (4. Area of one tile: ______ square metres) Tj ET
 BT /F1 12 Tf 56 625.9999999999998 Td (5. Tiles needed to cover the court: ______) Tj ET
-BT /F1 12 Tf 56 606.7999999999997 Td (Fictional placeholder made by the CherIt team for a hackathon demonstration.) Tj ET
 endstream
 endobj
 6 0 obj
@@ -38,9 +37,9 @@ xref
 0000000115 00000 n 
 0000000212 00000 n 
 0000000314 00000 n 
-0000001086 00000 n 
+0000000964 00000 n 
 trailer
 << /Size 7 /Root 1 0 R >>
 startxref
-1222
+1100
 %%EOF

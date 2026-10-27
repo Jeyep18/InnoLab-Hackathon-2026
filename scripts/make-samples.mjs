@@ -1,4 +1,4 @@
-// Generates the fictional sample .docx files in public/samples from src/data/catalogue.json.
+// Generates the lesson .docx files in public/samples from src/data/catalogue.json.
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -16,9 +16,9 @@ function contentFor(resource, file) {
   const lesson = resource.lesson
   const out = [
     para(`${resource.title}: ${file.label}`, { bold: true, size: 32 }),
-    para(`${resource.grade} ${resource.subject}. Version ${resource.version.label}. Shared by ${contributor.alias} (demo persona).`, { size: 20 }),
-    para(`Illustrative competency ${resource.competency.code} (example, not official alignment): ${resource.competency.text}`, { size: 20 }),
-    para('Fictional sample created by the CherIt team for a hackathon demonstration. Edit freely.', { italic: true, size: 20 }),
+    para(`${resource.grade} · ${resource.subject} · ${[resource.bow.quarter, resource.bow.week].filter(Boolean).join(', ')}`, { size: 20 }),
+    para(`Prepared by ${contributor.alias}${contributor.school ? `, ${contributor.school}` : ''}. Version ${resource.version.label}.`, { size: 20 }),
+    para(`Competency: ${resource.competency.text} (${resource.competency.code})`, { size: 20 }),
     para(''),
   ]
   if (file.id === 'lesson') {
@@ -28,10 +28,20 @@ function contentFor(resource, file) {
       section.items.forEach((item, i) => out.push(para(section.heading === 'Procedure' ? `${i + 1}. ${item}` : `• ${item}`)))
     }
   } else if (file.id === 'wordbank') {
-    out.push(para('Bikol–English word bank', { bold: true, size: 26 }), para('Placeholder vocabulary for the demonstration. Check words with a Bikol speaker before teaching.', { italic: true, size: 20 }))
+    out.push(para('Bikol–English word bank', { bold: true, size: 26 }), para('Read each Bikol word aloud first, then its English meaning.', { italic: true, size: 20 }))
     for (const [bikol, english] of [['init', 'heat'], ['panganuron', 'cloud'], ['uran', 'rain'], ['salog', 'river'], ['dagat', 'sea']]) out.push(para(`${bikol}: ${english}`))
   } else if (file.id === 'answers') {
     out.push(para('Answer key', { bold: true, size: 26 }), para('1. Evaporation: water warms and rises as vapour.'), para('2. Condensation: vapour cools into cloud droplets over Mayon.'), para('3. Precipitation: rain falls on the slopes and flows to the Yawa River.'))
+  } else if (file.id === 'rubric') {
+    out.push(para('Rubric', { bold: true, size: 26 }))
+    for (const [criterion, levels] of [['Map shows the main roads and landmarks', '4 all · 3 most · 2 some · 1 few'], ['Hazard areas marked with the correct symbols', '4 all · 3 most · 2 some · 1 few'], ['Legend is complete and readable', '4 complete · 3 minor gaps · 2 several gaps · 1 missing'], ['Group explains one way to prepare', '4 clear · 3 mostly clear · 2 unclear · 1 none']]) out.push(para(`${criterion}: ${levels}`))
+  } else if (file.id === 'quiz') {
+    out.push(para('Quiz', { bold: true, size: 26 }))
+    ;['What type of volcano is Mayon?', 'Name the three main parts of a volcano.', 'What does Alert Level 3 mean for residents?', 'Why is Bulusan’s eruption style different from Mayon’s?', 'Give one safety step before an eruption.'].forEach((q, i) => out.push(para(`${i + 1}. ${q}`), para('______________________________________________')))
+    out.push(para('Answer key', { bold: true, size: 26 }), para('1. Stratovolcano. 2. Magma chamber, vent, crater. 3. Magmatic unrest; prepare to evacuate. 4. Different magma and vent activity. 5. Know your evacuation route.'))
+  } else if (file.id === 'slides') {
+    out.push(para('Slide notes', { bold: true, size: 26 }))
+    lesson.sections.find((s) => s.heading === 'Procedure')?.items.forEach((item, i) => out.push(para(`Slide ${i + 1}: ${item}`)))
   } else {
     out.push(para('Name: ______________________    Date: ____________'), para(''), para(lesson.objective, { bold: true }))
     const assessment = lesson.sections.find((s) => s.heading === 'Assessment')

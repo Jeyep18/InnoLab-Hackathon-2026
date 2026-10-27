@@ -3,6 +3,7 @@ import type { Resource } from '@/domain/types'
 import { downloadCount, resourceRating } from '@/domain/logic'
 import { useStore } from '@/store'
 import { fileKinds, subjectTone } from '@/lib/pack'
+import { PriceTag } from '@/components/site/PriceTag'
 
 export function DiscoveryCard({ pack, rank }: { pack: Resource; rank?: number }) {
   const { reviews, state, personaById } = useStore()
@@ -15,7 +16,7 @@ export function DiscoveryCard({ pack, rank }: { pack: Resource; rank?: number })
       <span className="discovery-cover-files">{fileKinds(pack).join(' · ') || 'Lesson resource'}</span>
     </a>
     <div className="discovery-card-info">
-      <p className="discovery-author">{personaById(pack.contributorId)?.alias ?? 'Contributor'}</p>
+      <div className="flex items-center justify-between gap-2"><p className="discovery-author min-w-0 truncate">{personaById(pack.contributorId)?.alias ?? 'Contributor'}</p><PriceTag resource={pack} className="shrink-0" /></div>
       <div className="discovery-stats">
         {rating.mean === null ? <span className="discovery-unrated">No reviews yet</span> : <span className="discovery-rating" aria-label={`Rated ${rating.mean.toFixed(1)} out of 5 from ${rating.count} reviews`}><Star aria-hidden="true" className="size-4 fill-star text-star" /><strong>{rating.mean.toFixed(1)}</strong><span className="text-muted-foreground">({rating.count})</span></span>}
         <span className="discovery-downloads" aria-label={`${downloads} downloads`} title={`${downloads} downloads`}><Download aria-hidden="true" className="size-4" /><strong>{downloads}</strong></span>

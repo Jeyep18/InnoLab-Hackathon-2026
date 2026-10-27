@@ -3,6 +3,7 @@ import { replaceRoute, useRoute, withParams } from '@/router'
 import { competencyKey, currentCurriculumReview, downloadCount, resourceRating } from '@/domain/logic'
 import type { Resource } from '@/domain/types'
 import { useStore } from '@/store'
+import { hasPaidFiles } from '@/lib/pack'
 import { useState } from 'react'
 
 export const HOME_FILTER_KEYS = ['level', 'grade', 'subject', 'competency', 'quarter', 'week', 'needs', 'format', 'editable', 'review', 'supplement'] as const
@@ -25,9 +26,6 @@ export function schoolLevel(grade: string): string {
   return value >= 1 && value <= 6 ? 'Elementary' : value <= 10 && value >= 7 ? 'High school' : value <= 12 && value >= 11 ? 'Senior high school' : ''
 }
 
-function hasPaidSupplement(resource: Resource): boolean {
-  return (resource.supplementBundle?.pricePhp ?? 0) > 0 || resource.files.some(file => (file.samplePricePhp ?? 0) > 0)
-}
 
 function internetNeed(resource: Resource): string {
   const requirements = resource.requirements.join(' ').toLowerCase()
@@ -82,12 +80,15 @@ export function useHomeFilters(published: Resource[], inMemory = false) {
     format: optionsFor(inventory.flatMap(fileFormats)).map(option => ({ ...option, label: option.label.toUpperCase() })),
     editable: inventory.some(resource => resource.files.some(file => file.editable)) ? [{ value: 'yes', label: 'Includes editable files' }] : [],
     review: [
-      ...(inventory.some(resource => currentCurriculumReview(resource)) ? [{ value: 'reviewed', label: 'Curriculum-reviewed, simulated' }] : []),
+      ...(inventory.some(resource => currentCurriculumReview(resource)) ? [{ value: 'reviewed', label: 'Curriculum-reviewed' }] : []),
       ...(inventory.some(resource => !currentCurriculumReview(resource)) ? [{ value: 'unreviewed', label: 'Not yet curriculum-reviewed' }] : []),
       ...(inventory.some(resource => resourceRating(resource, reviews).count > 0) ? [{ value: 'has-reviews', label: 'Has current-version reviews' }] : []),
       ...(inventory.some(resource => resourceRating(resource, reviews).count === 0) ? [{ value: 'no-reviews', label: 'No current-version reviews' }] : []),
     ],
-    supplement: inventory.some(hasPaidSupplement) ? [{ value: 'yes', label: 'Optional paid supplement, simulated' }] : [],
+    supplement: [
+      ...(inventory.some(resource => !hasPaidFiles(resource)) ? [{ value: 'free', label: 'Completely free' }] : []),
+      ...(inventory.some(hasPaidFiles) ? [{ value: 'paid', label: 'Has paid files' }] : []),
+    ],
   }
   const update = (key: HomeFilterKey, value: string) => setFilters(previous => {
     const next = { ...previous, [key]: value }
@@ -111,7 +112,9 @@ export function useHomeFilters(published: Resource[], inMemory = false) {
     if (filters.needs && !selected(filters.needs).some(need => need === 'low-print' ? resource.tags.includes('low-print') : internetNeed(resource) === need)) return false
     if (filters.format && !selected(filters.format).some(format => fileFormats(resource).includes(format))) return false
     if (filters.editable && !resource.files.some(file => file.editable)) return false
-    if (filters.supplement && !hasPaidSupplement(resource)) return false
+    // 'yes' is the old URL value for "has paid files".
+    if (filters.supplement === 'free' && hasPaidFiles(resource)) return false
+    if ((filters.supplement === 'paid' || filters.supplement === 'yes') && !hasPaidFiles(resource)) return false
     const rating = resourceRating(resource, reviews)
     if (filters.review === 'reviewed' && !currentCurriculumReview(resource)) return false
     if (filters.review === 'unreviewed' && currentCurriculumReview(resource)) return false

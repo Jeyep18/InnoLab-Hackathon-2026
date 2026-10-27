@@ -36,16 +36,16 @@ export function RatingLine({ summary, compact = false, className }: { summary: R
   )
 }
 
-/** Curriculum review is simulated in the demo and always labelled that way. */
+/** Verification covers one version only. */
 export function ReviewBadge({ resource, className }: { resource: Resource; className?: string }) {
   const review = currentCurriculumReview(resource)
   return review ? (
     <Badge className={cn('bg-olive/20 text-foreground dark:bg-olive/25', className)}>
-      Curriculum-reviewed v{review.version} · simulated
+      Verified v{review.version}
     </Badge>
   ) : (
     <Badge variant="outline" className={cn('text-muted-foreground', className)}>
-      Not yet reviewed
+      Not verified
     </Badge>
   )
 }

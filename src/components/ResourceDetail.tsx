@@ -13,7 +13,7 @@ export function ResourceDetail({ id }: { id: string }) {
     return (
       <Container className="pt-16">
         <EmptyState title="This lesson pack isn’t here" actions={<BrowseButton />}>
-          <p>It may have been removed by a demo reset.</p>
+          <p>It may have been removed.</p>
         </EmptyState>
       </Container>
     )
@@ -23,8 +23,8 @@ export function ResourceDetail({ id }: { id: string }) {
   if (!canSee) {
     return (
       <Container className="pt-16">
-        <EmptyState title="This lesson pack isn’t published" actions={<BrowseButton />}>
-          <p>It’s waiting for review or on hold. Switch to the demo moderator persona to see it.</p>
+        <EmptyState title="This lesson pack is hidden" actions={<BrowseButton />}>
+          <p>It was hidden after a report. Only the author and the verifier can see it until it’s restored.</p>
         </EmptyState>
       </Container>
     )

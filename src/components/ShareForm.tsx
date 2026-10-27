@@ -1,4 +1,4 @@
-import { ArrowLeft, ArrowRight, GitFork, Loader2, PackageX, Plus, Send, ShieldCheck, UserRoundCog, X } from 'lucide-react'
+import { ArrowLeft, ArrowRight, BadgeCheck, GitFork, Loader2, PackageX, Plus, Send, ShieldCheck, Sparkles, UserRoundCog, X } from 'lucide-react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { useCallback, useEffect, useId, useRef, useState, type FormEvent, type ReactNode } from 'react'
 import { Button } from '@/components/ui/button'
@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { Textarea } from '@/components/ui/textarea'
 import { Container, EmptyState } from '@/components/site/layout'
 import { PackCover } from '@/components/site/PackCover'
-import { formatBytes } from '@/domain/logic'
+import { DemoRuleError, formatBytes } from '@/domain/logic'
 import type { Resource, ResourceFile } from '@/domain/types'
 import { extension } from '@/files'
 import { curriculumBasis, SCHOOL_LEVELS, schoolLevelForGrade, type SchoolLevel } from '@/lib/curriculum'
@@ -20,6 +20,8 @@ import { FilePicker, fileProblem, isVideo, type PickedFile } from './share/FileP
 import { describedBy, FieldError, FormField } from './share/FormField'
 import { Stepper } from './share/Stepper'
 import { ErrorCard } from './share/ErrorCard'
+import { StorageMeter } from './share/StorageMeter'
+import { ProPlanDialog } from './site/ProPlanDialog'
 import { LicenseTerms } from './LicenseTerms'
 import { LICENSES, licenseById, PAID_SUPPLEMENT_TERMS, type LicenseId } from '@/lib/licenses'
 
@@ -55,6 +57,8 @@ export function ShareForm({ parentId }: { parentId?: string }) {
   const [bundlePrice, setBundlePrice] = useState('')
   const [license, setLicense] = useState<LicenseId | ''>('')
   const [permission, setPermission] = useState(false)
+  const [askVerification, setAskVerification] = useState(false)
+  const [proOpen, setProOpen] = useState(false)
   const [errors, setErrors] = useState<Errors>({})
   const [saving, setSaving] = useState(false)
   const [step, setStep] = useState(0)
@@ -88,14 +92,14 @@ export function ShareForm({ parentId }: { parentId?: string }) {
             <Button
               onClick={() => {
                 dispatch({ type: 'select-persona', personaId: 'p-joy' })
-                notify("Now sharing as Ma'am Joy (demo account).")
+                notify("Now signed in as Ma'am Joy Villanueva.")
               }}
             >
               Continue as Ma&apos;am Joy
             </Button>
           }
         >
-          <p>The demo moderator reviews submissions but doesn’t share packs.</p>
+          <p>The verifier account checks packs but doesn’t share them.</p>
           <p className="mt-2 text-sm">You can choose another teacher from the account menu at the top right.</p>
         </EmptyState>
       </Container>
@@ -112,7 +116,7 @@ export function ShareForm({ parentId }: { parentId?: string }) {
             <Button render={<a href="#/share" />} nativeButton={false}>Share a new lesson instead</Button>
           }
         >
-          Only published packs can be adapted. It may be on hold or removed by a reset.
+          Only published packs can be adapted. It may be hidden after a report or removed by a reset.
         </EmptyState>
       </Container>
     )
@@ -235,11 +239,11 @@ export function ShareForm({ parentId }: { parentId?: string }) {
         references: [{ label: parent ? `Adapted from “${parent.title}” version ${parent.version.label}.` : 'Contributor’s own work, as declared.' }],
         version: { label: '1.0', date: today, note: parent ? 'First version of this adaptation.' : 'First shared version.' },
         history: [],
-        status: 'pending',
+        status: 'published',
         license: license || undefined,
         permission: {
           kind: 'local-upload',
-          notice: `${persona.alias} declared they made this pack or have permission to share it, and chose the license shown. Stored only in this browser for the demonstration.`,
+          notice: `${persona.alias} declared they made this pack or have permission to share it, and chose the license shown.`,
         },
         parent: parent && { resourceId: parent.id, version: parent.version.label, title: parent.title, contributorId: parent.contributorId },
         changeNote: parent ? changeNote.trim() : undefined,
@@ -247,11 +251,20 @@ export function ShareForm({ parentId }: { parentId?: string }) {
         createdAt: today,
       }
       dispatch({ type: 'add-contribution', resource })
-      notify('Submitted. It’s waiting for the demo moderator.')
+      let message = 'Your pack is live.'
+      if (askVerification) {
+        try {
+          dispatch({ type: 'request-verification', resource, at: new Date().toISOString() })
+          message = 'Your pack is live. Verification requested in the free queue.'
+        } catch (e) {
+          message = `Your pack is live. ${e instanceof DemoRuleError ? e.message : 'The verification request couldn’t be saved.'}`
+        }
+      }
+      notify(message)
       navigate(`/resource/${resourceId}`)
     } catch {
       await deleteFiles(stored).catch(() => undefined)
-      setErrors({ submit: 'The files couldn’t be stored in this browser. Storage may be full or blocked. Nothing was submitted.' })
+      setErrors({ submit: 'The files couldn’t be stored in this browser. Storage may be full or blocked. Nothing was shared.' })
       setSaving(false)
     }
   }
@@ -563,12 +576,13 @@ export function ShareForm({ parentId }: { parentId?: string }) {
                   </div>
                   {errors.price && <FieldError id={`${f('price')}-error`}><span className="-mt-2 mb-3 block">{errors.price}</span></FieldError>}
                   <FilePicker id={f('supplements')} picked={supplements} setPicked={setSupplements} kind="supplement" paid={supplementAccess === 'paid'} error={errors.supplements} onAdded={() => setErrors((e) => ({ ...e, supplements: undefined }))} />
-                  {supplementAccess === 'paid' && <p className="mt-3 text-xs text-muted-foreground">Simulated checkout · PDFs and images use your page preview · Other files are listed by name and open after download</p>}
+                  {supplementAccess === 'paid' && <p className="mt-3 text-xs text-muted-foreground">PDFs and images use your page preview · Other files are listed by name and open after download</p>}
                 </section>
                 <div className="mt-4 flex items-center gap-2 text-xs text-muted-foreground">
                   <ShieldCheck aria-hidden="true" className="size-4 shrink-0 text-mauve-ink" />
                   <p>Stored in this browser · No learner data</p>
                 </div>
+                <StorageMeter pickedBytes={[...picked, ...supplements].reduce((sum, p) => sum + p.file.size, 0)} />
               </div>
             )}
 
@@ -596,7 +610,7 @@ export function ShareForm({ parentId }: { parentId?: string }) {
                         <ul className="flex flex-col gap-1">
                           {[...picked, ...supplements].map((p, i) => (
                             <li key={i}>
-                              {p.label.trim()} <span className="text-muted-foreground">· {i < picked.length ? 'Free lesson plan' : supplementAccess === 'paid' ? 'Paid bundle' : 'Free supplement'} · {formatBytes(p.file.size)}</span>
+                              <span className="break-all">{p.label.trim()}</span> <span className="text-muted-foreground">· {i < picked.length ? 'Free lesson plan' : supplementAccess === 'paid' ? 'Paid bundle' : 'Free supplement'} · {formatBytes(p.file.size)}</span>
                             </li>
                           ))}
                         </ul>
@@ -604,7 +618,7 @@ export function ShareForm({ parentId }: { parentId?: string }) {
                     },
                   ]}
                 />
-                {supplementAccess === 'paid' && supplements.length > 0 && <p className="text-sm font-medium">Supplement bundle · ₱{Number(bundlePrice).toFixed(2)} · {supplements.length} files · Simulated checkout</p>}
+                {supplementAccess === 'paid' && supplements.length > 0 && <p className="text-sm font-medium">Supplement bundle · ₱{Number(bundlePrice).toFixed(2)} · {supplements.length} files</p>}
 
                 <LicensePicker
                   id={f('license')}
@@ -639,10 +653,25 @@ export function ShareForm({ parentId }: { parentId?: string }) {
                   </FieldError>
                 </div>
 
-                <div className="flex items-center gap-2 rounded-xl bg-muted/60 px-4 py-3 text-sm text-muted-foreground">
-                  <ShieldCheck aria-hidden="true" className="size-4 shrink-0 text-mauve-ink" />
-                  <p>Moderator review · Curriculum badge is simulated</p>
-                </div>
+                <section aria-labelledby={f('verify-heading')} className="rounded-xl border p-4">
+                  <h3 id={f('verify-heading')} className="flex items-center gap-1.5 font-semibold">
+                    <BadgeCheck aria-hidden="true" className="size-4 text-mauve-ink" /> Verification <span className="font-normal text-muted-foreground">(optional)</span>
+                  </h3>
+                  <p className="mt-1 text-sm text-muted-foreground">Your pack goes public right away. A verifier can check this version against the curriculum, for free.</p>
+                  <div className="mt-3 flex items-start gap-3">
+                    <Checkbox id={f('verify')} checked={askVerification} onCheckedChange={(v) => setAskVerification(v === true)} className="mt-0.5 size-5" />
+                    <label htmlFor={f('verify')} className="cursor-pointer text-[15px] leading-snug font-medium">
+                      Ask a verifier to check this version <span className="font-normal text-muted-foreground">(free)</span>
+                    </label>
+                  </div>
+                  <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 border-t pt-3 text-sm text-muted-foreground">
+                    <span>Want it checked sooner?</span>
+                    <Button type="button" variant="outline" size="sm" className="after:inset-x-0 after:-inset-y-1" onClick={() => setProOpen(true)}>
+                      <Sparkles aria-hidden="true" /> Priority verification · Pro
+                    </Button>
+                  </div>
+                  <ProPlanDialog feature="priority-verification" open={proOpen} onOpenChange={setProOpen} />
+                </section>
 
                 {errors.submit && (
                   <p role="alert" className="rounded-xl border border-destructive/30 bg-destructive/10 p-4 text-sm font-medium text-destructive">
@@ -671,11 +700,11 @@ export function ShareForm({ parentId }: { parentId?: string }) {
             {isLast ? (
               saving ? (
                 <>
-                  <Loader2 aria-hidden="true" className="animate-spin" /> Submitting…
+                  <Loader2 aria-hidden="true" className="animate-spin" /> Publishing…
                 </>
               ) : (
                 <>
-                  <Send aria-hidden="true" /> Submit for review
+                  <Send aria-hidden="true" /> Publish pack
                 </>
               )
             ) : (
@@ -716,7 +745,7 @@ function ReviewSummary({ rows, onEdit }: { rows: { step: number; label: string; 
     <section aria-labelledby="share-summary-title" className="rounded-xl border">
       <div className="flex items-center justify-between gap-3 border-b px-4 py-3">
         <h3 id="share-summary-title" className="font-semibold">
-          What you’re submitting
+          What you’re sharing
         </h3>
       </div>
       <dl className="divide-y">

@@ -18,12 +18,12 @@ Partner bootstrap: teacher assets do not arrive through Git pull. Missing assets
 | P0 | Detail view: preview, actual downloads, references, requirements, rights/scope notice, version/review information and required/optional attachments |
 | P0 | Bookmark toggles/saved items; review submission/editing; correct resource and contributor aggregates; sample-data disclosure |
 | P0 | Alias contributor profile with resources, community rating and review count |
-| P0 | Local contribution -> pending -> demo review -> published/held; actual local file bytes when upload persistence is claimed |
+| P0 | Local contribution -> public immediately -> optional free verification request -> verifier marks the version verified; reports hold a pack until a verifier restores it; actual local file bytes when upload persistence is claimed |
 | P0 | Separate credited adaptation with parent resource/version and change note; original preserved |
 | P0 | Labelled demo personas and sample paid-acquisition UI; no credential/financial collection |
 | P0 | Reset/repeatability, file failures, local persistence, keyboard access, contrast and mobile layout |
 | P1 | Expanded contextual feedback and extra visual polish after core acceptance |
-| Future | Secure accounts, protected paid files, payments/payouts, public uploads, backend moderation, private revision proposals/merging, institution integrations, ads/subscriptions, offline website/editor, cross-device sync, nationwide expansion |
+| Future | Secure accounts, protected paid files, payments/payouts, public uploads, backend moderation, institution integrations, ads/subscriptions, offline website/editor, cross-device sync, nationwide expansion |
 
 The lightweight simulated acquisition UI is part of the prototype; showing it in the timed live walkthrough is optional. It must not consume time needed for the real catalogue/download journey.
 
@@ -32,6 +32,8 @@ The lightweight simulated acquisition UI is part of the prototype; showing it in
 ## Execution checkpoints
 
 2026-10-27 approved buyer-flow refinement, implemented: attached lesson-plan download, reviews-only sidebar, prominent supplementary product card, and a modal with file previews, demo billing, simulated verification and ZIP download. Existing legacy file categories are inferred from lesson-plan names so worksheets/slides stay in supplements. No real billing service is configured.
+
+2026-10-27 (JP): local revision proposals implemented (moved from Future); all sample/demo labels removed from the UI with verbal disclosure in the pitch; profile, settings and contributor earnings added. See PROJECT_MEMORY.md.
 
 2026-10-27: paid non-PDF documents no longer need a PDF preview copy; they are listed as download-to-open.
 
@@ -60,7 +62,7 @@ Follows the product framing and build decisions in PROJECT_MEMORY.md. All three 
 | --- | --- | --- |
 | P0 | Pack page order: author with rating and review count, downloads/saves; then review status, current version and BOW target; then preview; then download/adapt | Trust signals visible without scrolling on a laptop; same order on phone |
 | P0 | Contributor track record on the pack page | Contributor mean and review count shown beside an unrated pack |
-| P0 | Vocabulary: "reviewed", never "verified"; review status shows "Not yet reviewed" or "Reviewed by demo moderator (simulated)" | No "verified" wording in the UI |
+| P0 | Vocabulary (changed by JP 2026-10-27): "Verified v{version}" / "Not verified"; verification is a demo verifier action, not expert validation | No claim of expert or institutional validation |
 | P0 | Copy-link button for sharing a pack in Facebook groups | Link copies; confirmation announced; failure message if the clipboard is blocked |
 | P0 | Browser verification of the DEMO.md journey, run twice from reset; swap in teacher files under `demo-assets/` when they arrive | Recorded in DEMO.md evidence |
 | Half-build | Review queue (about 20 seconds in the demo), a prepared credited adaptation instead of a live upload, simulated checkout mentioned but not clicked | Works if clicked; not on the critical path |

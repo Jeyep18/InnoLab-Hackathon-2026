@@ -5,6 +5,7 @@ import type { Resource } from '@/domain/types'
 import { cn } from '@/lib/utils'
 import { useStore } from '@/store'
 import { PackCover } from './PackCover'
+import { PriceTag } from './PriceTag'
 import { RatingLine, ReviewBadge } from './Rating'
 import { useSavePack } from './useSavePack'
 
@@ -36,13 +37,16 @@ export function PackCard({ resource, className }: { resource: Resource; classNam
       </h3>
       <SaveButton resource={resource} className="absolute top-2 right-2 z-10" />
       <div className="flex flex-1 flex-col gap-3 p-5">
-        <p className="text-sm">{contributor?.alias ?? 'Unknown contributor'}</p>
+        <div className="flex items-center justify-between gap-2">
+          <p className="min-w-0 truncate text-sm">{contributor?.alias ?? 'Unknown contributor'}</p>
+          <PriceTag resource={resource} className="shrink-0" />
+        </div>
         <div className="flex flex-col items-start gap-2">
           <RatingLine summary={resourceRating(resource, reviews)} compact />
           <ReviewBadge resource={resource} className="rounded-sm" />
         </div>
         {resource.parent && <p className="line-clamp-2 text-sm text-muted-foreground">Adapted from “{resource.parent.title}”</p>}
-        <p className="mt-auto pt-2 text-xs text-muted-foreground">
+        <p className="mt-auto pt-2 text-xs text-muted-foreground tabular-nums">
           {plural(downloadCount(resource, state), 'download')} · {plural(bookmarkCount(resource, state), 'save')}
         </p>
       </div>

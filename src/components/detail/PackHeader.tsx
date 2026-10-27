@@ -29,7 +29,7 @@ export function PackHeader({ resource }: { resource: Resource }) {
           Adapted from{' '}
           {parent ? <a className={detailLinkClass} href={`#/resource/${parent.id}`}>{parentInfo.title}</a> : parentInfo.title}{' '}
           version {parentInfo.version} by {personaById(parentInfo.contributorId)?.alias ?? 'the original contributor'}
-          {parentReview && parentReview.version === parentInfo.version ? ', which is curriculum-reviewed (simulated)' : ''}.
+          {parentReview && parentReview.version === parentInfo.version ? ', which is verified' : ''}.
         </p>
       )}
     </header>
@@ -40,9 +40,8 @@ export function StatusNotice({ resource }: { resource: Resource }) {
   const held = resource.status === 'held'
   const Icon = held ? CircleAlert : Clock
   const text = {
-    published: 'Published after demo moderation',
-    pending: 'Waiting for demo moderation. Only you and the moderator can see it.',
-    held: 'On hold and hidden from search',
+    published: 'Public',
+    held: 'Hidden after a report until a verifier checks it.',
   }
   return (
     <div className={cn('mt-3 flex items-start gap-3 border-l-2 px-4 py-3', held ? 'border-destructive bg-destructive/10 text-destructive' : 'border-primary bg-secondary')}>

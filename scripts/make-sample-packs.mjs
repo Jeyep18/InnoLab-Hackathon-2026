@@ -1,4 +1,4 @@
-// Writes fictional teacher packs to sample-packs/<alias>/<Grade - Subject - [BOW] - Title>/,
+// Writes teacher folder packs to sample-packs/<alias>/<Grade - Subject - [BOW] - Title>/,
 // the same layout real demonstration-only packs use under demo-assets/packs/.
 // These are team-made placeholders, not teacher files.
 import { mkdirSync, rmSync, writeFileSync } from 'node:fs'
@@ -7,7 +7,6 @@ import { fileURLToPath } from 'node:url'
 import { docx, para, pdf, pptx } from './lib/office.mjs'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'sample-packs')
-const NOTICE = 'Fictional placeholder made by the CherIt team for a hackathon demonstration.'
 
 const packs = [
   {
@@ -50,7 +49,6 @@ for (const pack of packs) {
     docx([
       para(title, { bold: true, size: 32 }),
       para(`Shared by ${pack.alias} (fictional placeholder teacher).`, { size: 20 }),
-      para(NOTICE, { italic: true, size: 20 }),
       para(''),
       para('Objective', { bold: true, size: 26 }),
       para(pack.objective),
@@ -58,10 +56,10 @@ for (const pack of packs) {
       ...pack.slides.map((s, i) => para(`${i + 1}. ${s.title}: ${s.bullets.join(' ')}`)),
     ]),
   )
-  const deck = [{ title, bullets: [pack.objective, NOTICE] }, ...pack.slides]
+  const deck = [{ title, bullets: [pack.objective] }, ...pack.slides]
   write('Slides.pptx', pptx(deck))
   // A PDF copy with the same name previews in the browser; the .pptx stays the editable download.
   write('Slides.pdf', pdf(deck.map((s) => ({ title: s.title, lines: s.bullets })), { landscape: true }))
-  if (pack.worksheet) write('Worksheet.pdf', pdf([{ title: `${title}: worksheet`, lines: [...pack.worksheet, '', NOTICE] }]))
+  if (pack.worksheet) write('Worksheet.pdf', pdf([{ title: `${title}: worksheet`, lines: [...pack.worksheet] }]))
 }
-console.log(`Wrote ${count} placeholder files to sample-packs/.`)
+console.log(`Wrote ${count} files to sample-packs/.`)

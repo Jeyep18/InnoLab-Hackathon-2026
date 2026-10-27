@@ -41,7 +41,7 @@ describe('folder packs', () => {
           { name: 'Slides.pptx', sizeBytes: 10, url: '/pack-files/teacher/a/b/Slides.pptx' },
         ],
       },
-      { source: 'sample' as const, alias: "Ma'am Lira", folder: 'Grade 4 - Science - Extra', files: [{ name: 'Notes.pdf', sizeBytes: 5, url: '/x' }] },
+      { source: 'sample' as const, alias: "Ma'am Lira Bañares", folder: 'Grade 4 - Science - Extra', files: [{ name: 'Notes.pdf', sizeBytes: 5, url: '/x' }] },
     ],
   }
   const { personas, resources, reviews } = packsFromManifest(manifest, seedCatalogue.personas)
@@ -68,7 +68,7 @@ describe('folder packs', () => {
       [4, true],
       [5, true],
     ])
-    const catalogue = { personas, resources, seedReviews: reviews }
+    const catalogue = { personas, resources, seedReviews: reviews, seedSales: [] }
     const state = emptyState('p-joy')
     expect(resourceRating(resources[0], allReviews(catalogue, state))).toEqual({ mean: 4.5, count: 2 })
     expect(contributorRating(personas[0].id, allResources(catalogue, state), allReviews(catalogue, state)).count).toBe(2)

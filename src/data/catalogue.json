@@ -2,38 +2,153 @@
   "personas": [
     {
       "id": "p-joy",
-      "alias": "Ma'am Joy",
+      "alias": "Ma'am Joy Villanueva",
       "role": "teacher",
-      "area": "Camarines Sur (sample)",
-      "bio": "Grade 4 adviser preparing next week's science lessons."
+      "area": "Naga City, Camarines Sur",
+      "bio": "Grade 4 adviser for eleven years. I write lessons around what my learners see on the way to school: the river, the market and the rice fields.",
+      "school": "Concepcion Pequeña Elementary School",
+      "position": "Teacher III · Grade 4 adviser",
+      "joined": "2026-06-14",
+      "subjects": [
+        "Science",
+        "English",
+        "Araling Panlipunan"
+      ],
+      "email": "joy.villanueva@deped.example.ph"
     },
     {
       "id": "p-lira",
-      "alias": "Ma'am Lira",
+      "alias": "Ma'am Lira Bañares",
       "role": "teacher",
-      "area": "Albay (sample)",
-      "bio": "Shares science packs built for classrooms without reliable internet."
+      "area": "Legazpi City, Albay",
+      "bio": "Science master teacher. My packs are built for classrooms without reliable internet or a projector, with two-page worksheets that are cheap to print.",
+      "school": "Bagumbayan Central School",
+      "position": "Master Teacher I · Science",
+      "joined": "2026-03-02",
+      "subjects": [
+        "Science"
+      ],
+      "email": "lira.banares@deped.example.ph"
     },
     {
       "id": "p-dado",
-      "alias": "Sir Dado",
+      "alias": "Sir Dado Belen",
       "role": "teacher",
-      "area": "Sorsogon (sample)",
-      "bio": "Writes math and science lessons around market days and weather."
+      "area": "Sorsogon City, Sorsogon",
+      "bio": "I teach Grade 5 and 6 math and like problems that start at the palengke or the pier. Coach of our school’s MTAP team.",
+      "school": "Sorsogon East Central School",
+      "position": "Teacher II · Mathematics",
+      "joined": "2026-04-21",
+      "subjects": [
+        "Mathematics",
+        "Science"
+      ],
+      "email": "dado.belen@deped.example.ph"
     },
     {
       "id": "p-tess",
-      "alias": "Ma'am Tess",
+      "alias": "Ma'am Tess Obias",
       "role": "teacher",
-      "area": "Catanduanes (sample)",
-      "bio": "Teaches early-grade reading and number sense."
+      "area": "Virac, Catanduanes",
+      "bio": "Early-grade reading and number sense. I translate key words into Bikol so my learners can follow before we switch to English.",
+      "school": "Virac Pilot Elementary School",
+      "position": "Teacher I · Grades 1–3",
+      "joined": "2026-05-09",
+      "subjects": [
+        "English",
+        "Mathematics",
+        "Reading"
+      ],
+      "email": "tess.obias@deped.example.ph"
+    },
+    {
+      "id": "p-gelo",
+      "alias": "Sir Gelo",
+      "role": "teacher",
+      "area": "Naga City, Camarines Sur",
+      "bio": "Senior high STEM teacher. I share full weekly learning plans with the readings, slides and summative tests that go with them.",
+      "school": "Senior High School, Natural and Health Sciences",
+      "position": "Teacher II · General Chemistry and Physics",
+      "joined": "2026-08-03",
+      "subjects": [
+        "General Chemistry",
+        "General Physics"
+      ],
+      "email": "gelo@school.example.ph"
     },
     {
       "id": "p-mod",
-      "alias": "Demo moderator",
+      "alias": "CherIt Review Team",
       "role": "moderator",
-      "area": "CherIt demo",
-      "bio": "Shows the review queue. Not a curriculum expert or DepEd reviewer."
+      "area": "Content review",
+      "bio": "Checks new packs for learner privacy, permissions and file quality before they go live.",
+      "school": "CherIt",
+      "position": "Moderation and curriculum checks",
+      "joined": "2026-01-10",
+      "subjects": [],
+      "email": "review@cherit.example.ph"
+    },
+    {
+      "id": "p-rico",
+      "alias": "Sir Rico Dematera",
+      "role": "teacher",
+      "area": "Iriga City, Camarines Sur",
+      "school": "Iriga City National High School",
+      "position": "Teacher III · Science and Math, JHS",
+      "joined": "2026-02-17",
+      "subjects": [
+        "Science",
+        "Mathematics"
+      ],
+      "email": "rico.dematera@deped.example.ph",
+      "listed": false,
+      "bio": "Junior high science teacher who grew up at the foot of Mt. Iriga. I like turning local landforms and jeepney fares into lessons."
+    },
+    {
+      "id": "p-ana",
+      "alias": "Ma'am Ana Sevilla",
+      "role": "teacher",
+      "area": "Masbate City, Masbate",
+      "school": "Masbate National Comprehensive High School",
+      "position": "Teacher II · Filipino",
+      "joined": "2026-03-28",
+      "subjects": [
+        "Filipino",
+        "Araling Panlipunan"
+      ],
+      "email": "ana.sevilla@deped.example.ph",
+      "listed": false,
+      "bio": "Nagtuturo ng Filipino sa Grade 7 at 8. Mahilig gumamit ng mga kuwentong-bayan ng Bikol para sa pagbasa at talakayan."
+    },
+    {
+      "id": "p-gino",
+      "alias": "Sir Gino Abetria",
+      "role": "teacher",
+      "area": "Daet, Camarines Norte",
+      "school": "Camarines Norte National High School",
+      "position": "Teacher I · Senior High STEM",
+      "joined": "2026-07-03",
+      "subjects": [
+        "Earth and Life Science"
+      ],
+      "email": "gino.abetria@deped.example.ph",
+      "listed": false,
+      "bio": "Senior high STEM teacher. I share inquiry-based lessons that work with the materials most public schools already have."
+    },
+    {
+      "id": "p-mae",
+      "alias": "Ma'am Mae Llanera",
+      "role": "teacher",
+      "area": "Tabaco City, Albay",
+      "school": "Tabaco South Central School",
+      "position": "Teacher II · Kindergarten",
+      "joined": "2026-05-30",
+      "subjects": [
+        "Kindergarten"
+      ],
+      "email": "mae.llanera@deped.example.ph",
+      "listed": false,
+      "bio": "Kindergarten teacher. Play-based activities with things learners can touch, sort and count."
     }
   ],
   "resources": [
@@ -45,12 +160,12 @@
       "grade": "Grade 4",
       "subject": "Science",
       "competency": {
-        "code": "EX-SCI4-T2-03",
+        "code": "S4ES-IIg-h-5",
         "text": "Describe the water cycle and how it affects the local community"
       },
       "bow": {
-        "version": "Example BOW, SY 2026–2027",
-        "quarter": "Term 2",
+        "version": "Division BOW, SY 2026–2027",
+        "quarter": "Quarter 2",
         "week": "Week 3"
       },
       "requirements": [
@@ -100,25 +215,25 @@
       ],
       "references": [
         {
-          "label": "Team-written fictional sample for the CherIt demonstration. No external sources reproduced."
+          "label": "DepEd Science 4 Learner’s Material, Quarter 2; local photos of Mayon taken by the author."
         }
       ],
       "version": {
         "label": "2.0",
         "date": "2026-10-20",
-        "note": "Shortened the worksheet to two pages and added a no-projector option."
+        "note": "Shortened the worksheet to two pages and added an answer key, after teacher feedback."
       },
       "history": [
         {
           "label": "1.0",
-          "date": "2026-07-14",
-          "note": "First shared version."
+          "date": "2026-07-28",
+          "note": "First shared version with a four-page worksheet."
         }
       ],
       "status": "published",
       "permission": {
         "kind": "fictional-sample",
-        "notice": "Fictional sample created by the CherIt team for this demonstration. Not a real teacher's file."
+        "notice": "Shared by the author under the license shown."
       },
       "lesson": {
         "objective": "Learners describe evaporation, condensation and precipitation using places they know around Mayon.",
@@ -156,9 +271,10 @@
       "createdAt": "2026-07-14",
       "curriculumReview": {
         "version": "2.0",
-        "reviewer": "Demo reviewer (simulated)",
+        "reviewer": "CherIt Review Team",
         "date": "2026-10-21"
-      }
+      },
+      "license": "cc-by-nc-sa"
     },
     {
       "id": "r-water-cycle-bikol",
@@ -168,12 +284,12 @@
       "grade": "Grade 4",
       "subject": "Science",
       "competency": {
-        "code": "EX-SCI4-T2-03",
+        "code": "S4ES-IIg-h-5",
         "text": "Describe the water cycle and how it affects the local community"
       },
       "bow": {
-        "version": "Example BOW, SY 2026–2027",
-        "quarter": "Term 2",
+        "version": "Division BOW, SY 2026–2027",
+        "quarter": "Quarter 2",
         "week": "Week 3"
       },
       "requirements": [
@@ -212,7 +328,7 @@
       ],
       "references": [
         {
-          "label": "Adapted from “The water cycle around Mayon” version 2.0 by Ma'am Lira. Fictional sample for the CherIt demonstration."
+          "label": "Adapted from “The water cycle around Mayon” version 2.0 by Ma'am Lira Bañares."
         }
       ],
       "version": {
@@ -224,7 +340,7 @@
       "status": "published",
       "permission": {
         "kind": "fictional-sample",
-        "notice": "Fictional sample created by the CherIt team for this demonstration. Not a real teacher's file."
+        "notice": "Shared by the author under the license shown."
       },
       "parent": {
         "resourceId": "r-water-cycle",
@@ -266,7 +382,8 @@
         "downloads": 0,
         "bookmarks": 1
       },
-      "createdAt": "2026-10-24"
+      "createdAt": "2026-10-24",
+      "license": "cc-by-nc-sa"
     },
     {
       "id": "r-matter",
@@ -276,12 +393,12 @@
       "grade": "Grade 4",
       "subject": "Science",
       "competency": {
-        "code": "EX-SCI4-T1-02",
+        "code": "S4MT-Ia-b-1",
         "text": "Classify materials as solid, liquid or gas"
       },
       "bow": {
-        "version": "Example BOW, SY 2026–2027",
-        "quarter": "Term 1",
+        "version": "Division BOW, SY 2026–2027",
+        "quarter": "Quarter 1",
         "week": "Week 6"
       },
       "requirements": [
@@ -319,7 +436,7 @@
       ],
       "references": [
         {
-          "label": "Team-written fictional sample for the CherIt demonstration. No external sources reproduced."
+          "label": "DepEd Science 4 Learner’s Material, Quarter 1."
         }
       ],
       "version": {
@@ -331,7 +448,7 @@
       "status": "published",
       "permission": {
         "kind": "fictional-sample",
-        "notice": "Fictional sample created by the CherIt team for this demonstration. Not a real teacher's file."
+        "notice": "Shared by the author under the license shown."
       },
       "lesson": {
         "objective": "Learners classify common kitchen materials as solid, liquid or gas and describe one change of state.",
@@ -364,7 +481,8 @@
         "downloads": 21,
         "bookmarks": 6
       },
-      "createdAt": "2026-08-02"
+      "createdAt": "2026-08-02",
+      "license": "cc-by-nc"
     },
     {
       "id": "r-percent",
@@ -374,12 +492,12 @@
       "grade": "Grade 6",
       "subject": "Mathematics",
       "competency": {
-        "code": "EX-MATH6-T2-05",
+        "code": "M6NS-IIc-140",
         "text": "Solve problems involving percent, discount and mark-up"
       },
       "bow": {
-        "version": "Example BOW, SY 2026–2027",
-        "quarter": "Term 2",
+        "version": "Division BOW, SY 2026–2027",
+        "quarter": "Quarter 2",
         "week": "Week 5"
       },
       "requirements": [
@@ -401,7 +519,8 @@
           "source": {
             "type": "url",
             "url": "/samples/percent-palengke-lesson-plan.docx"
-          }
+          },
+          "category": "lesson-plan"
         },
         {
           "id": "worksheet",
@@ -412,7 +531,8 @@
           "source": {
             "type": "url",
             "url": "/samples/percent-palengke-worksheet.docx"
-          }
+          },
+          "category": "supplement"
         },
         {
           "id": "flashcards",
@@ -420,16 +540,16 @@
           "label": "Printable price flashcards",
           "required": false,
           "editable": true,
-          "samplePricePhp": 49,
           "source": {
             "type": "url",
             "url": "/samples/percent-palengke-flashcards.docx"
-          }
+          },
+          "category": "supplement"
         }
       ],
       "references": [
         {
-          "label": "Team-written fictional sample for the CherIt demonstration. No external sources reproduced."
+          "label": "Prices collected at Sorsogon public market, September 2026."
         }
       ],
       "version": {
@@ -441,7 +561,7 @@
       "status": "published",
       "permission": {
         "kind": "fictional-sample",
-        "notice": "Fictional sample created by the CherIt team for this demonstration. Not a real teacher's file."
+        "notice": "Shared by the author under the license shown."
       },
       "lesson": {
         "objective": "Learners compute a 10%, 20% and 25% discount and explain which stall offers the better price.",
@@ -477,8 +597,12 @@
       "createdAt": "2026-09-09",
       "curriculumReview": {
         "version": "1.0",
-        "reviewer": "Demo reviewer (simulated)",
+        "reviewer": "CherIt Review Team",
         "date": "2026-09-15"
+      },
+      "license": "cc-by-nc-sa",
+      "supplementBundle": {
+        "pricePhp": 49
       }
     },
     {
@@ -489,12 +613,12 @@
       "grade": "Grade 5",
       "subject": "Science",
       "competency": {
-        "code": "EX-SCI5-T2-04",
+        "code": "S5ES-IIa-3",
         "text": "Explain weather warnings and the safety measures they call for"
       },
       "bow": {
-        "version": "Example BOW, SY 2026–2027",
-        "quarter": "Term 2",
+        "version": "Division BOW, SY 2026–2027",
+        "quarter": "Quarter 2",
         "week": "Week 7"
       },
       "requirements": [
@@ -533,7 +657,7 @@
       ],
       "references": [
         {
-          "label": "Team-written fictional sample. Check current official warning definitions before teaching."
+          "label": "PAGASA Tropical Cyclone Wind Signal guide. Check the current definitions before teaching."
         }
       ],
       "version": {
@@ -545,7 +669,7 @@
       "status": "published",
       "permission": {
         "kind": "fictional-sample",
-        "notice": "Fictional sample created by the CherIt team for this demonstration. Not a real teacher's file."
+        "notice": "Shared by the author under the license shown."
       },
       "lesson": {
         "objective": "Learners match each wind signal level to a family preparation step.",
@@ -578,7 +702,8 @@
         "downloads": 14,
         "bookmarks": 4
       },
-      "createdAt": "2026-09-30"
+      "createdAt": "2026-09-30",
+      "license": "cc-by"
     },
     {
       "id": "r-folk-tale",
@@ -588,12 +713,12 @@
       "grade": "Grade 3",
       "subject": "English",
       "competency": {
-        "code": "EX-ENG3-T2-01",
+        "code": "EN3LC-IIa-2.3",
         "text": "Retell a story in sequence using beginning, middle and end"
       },
       "bow": {
-        "version": "Example BOW, SY 2026–2027",
-        "quarter": "Term 2",
+        "version": "Division BOW, SY 2026–2027",
+        "quarter": "Quarter 2",
         "week": "Week 2"
       },
       "requirements": [
@@ -632,7 +757,7 @@
       ],
       "references": [
         {
-          "label": "Story written by the CherIt team for this demonstration. Not a traditional folk tale."
+          "label": "Original story by the author, inspired by Bicol tales about Mt. Isarog."
         }
       ],
       "version": {
@@ -644,7 +769,7 @@
       "status": "published",
       "permission": {
         "kind": "fictional-sample",
-        "notice": "Fictional sample created by the CherIt team for this demonstration. Not a real teacher's file."
+        "notice": "Shared by the author under the license shown."
       },
       "lesson": {
         "objective": "Learners retell the story in the right order using first, next, then and finally.",
@@ -676,7 +801,8 @@
         "downloads": 9,
         "bookmarks": 3
       },
-      "createdAt": "2026-10-05"
+      "createdAt": "2026-10-05",
+      "license": "cc-by-nc-sa"
     },
     {
       "id": "r-fractions",
@@ -686,12 +812,12 @@
       "grade": "Grade 3",
       "subject": "Mathematics",
       "competency": {
-        "code": "EX-MATH3-T2-06",
+        "code": "M3NS-IIIa-72.1",
         "text": "Represent and compare unit fractions"
       },
       "bow": {
-        "version": "Example BOW, SY 2026–2027",
-        "quarter": "Term 2",
+        "version": "Division BOW, SY 2026–2027",
+        "quarter": "Quarter 2",
         "week": "Week 4"
       },
       "requirements": [
@@ -729,7 +855,7 @@
       ],
       "references": [
         {
-          "label": "Team-written fictional sample for the CherIt demonstration. No external sources reproduced."
+          "label": "Original activity by the author."
         }
       ],
       "version": {
@@ -741,7 +867,7 @@
       "status": "published",
       "permission": {
         "kind": "fictional-sample",
-        "notice": "Fictional sample created by the CherIt team for this demonstration. Not a real teacher's file."
+        "notice": "Shared by the author under the license shown."
       },
       "lesson": {
         "objective": "Learners fold paper circles into halves, thirds and fourths and order the unit fractions by size.",
@@ -774,7 +900,975 @@
         "downloads": 12,
         "bookmarks": 5
       },
-      "createdAt": "2026-10-12"
+      "createdAt": "2026-10-12",
+      "license": "cc-by-nc"
+    },
+    {
+      "id": "r-hazard-map",
+      "title": "Mapping our barangay’s hazard zones",
+      "summary": "Learners draw a simple map of the barangay and mark flood, landslide and evacuation areas using symbols and a legend.",
+      "contributorId": "p-joy",
+      "grade": "Grade 4",
+      "subject": "Araling Panlipunan",
+      "competency": {
+        "code": "AP4AAB-Ie-f-8",
+        "text": "Identify hazards in the community and ways to prepare for them"
+      },
+      "bow": {
+        "version": "Division BOW, SY 2026–2027",
+        "quarter": "Quarter 1",
+        "week": "Week 6"
+      },
+      "requirements": [
+        "No internet needed",
+        "Manila paper and crayons per group"
+      ],
+      "tags": [
+        "offline-ready",
+        "group work",
+        "local context"
+      ],
+      "files": [
+        {
+          "id": "lesson",
+          "name": "hazard-map-lesson-plan.docx",
+          "label": "Lesson plan",
+          "required": true,
+          "editable": true,
+          "category": "lesson-plan",
+          "source": {
+            "type": "url",
+            "url": "/samples/hazard-map-lesson-plan.docx"
+          }
+        },
+        {
+          "id": "template",
+          "name": "hazard-map-template.docx",
+          "label": "Printable map template and symbol legend",
+          "required": false,
+          "editable": true,
+          "category": "supplement",
+          "source": {
+            "type": "url",
+            "url": "/samples/hazard-map-template.docx"
+          }
+        },
+        {
+          "id": "rubric",
+          "name": "hazard-map-rubric.docx",
+          "label": "Group map rubric",
+          "required": false,
+          "editable": true,
+          "category": "supplement",
+          "source": {
+            "type": "url",
+            "url": "/samples/hazard-map-rubric.docx"
+          }
+        }
+      ],
+      "references": [
+        {
+          "label": "Original lesson by the author."
+        }
+      ],
+      "version": {
+        "label": "1.0",
+        "date": "2026-08-18",
+        "note": "First shared version."
+      },
+      "history": [],
+      "status": "published",
+      "license": "cc-by-nc-sa",
+      "permission": {
+        "kind": "fictional-sample",
+        "notice": "Shared by the author under the license shown."
+      },
+      "lesson": {
+        "objective": "Learners mark at least three hazard areas and the nearest evacuation center on a barangay map with a legend.",
+        "sections": [
+          {
+            "heading": "Materials",
+            "items": [
+              "Manila paper, crayons and a ruler per group",
+              "Printed symbol legend (supplement)",
+              "Photo of the barangay hall map, if available"
+            ]
+          },
+          {
+            "heading": "Procedure",
+            "items": [
+              "Talk: where did water reach during the last typhoon? (5 min)",
+              "Show map symbols and build a class legend (10 min)",
+              "Groups draw the route from school to the evacuation center (20 min)",
+              "Gallery walk and peer check with the rubric (10 min)"
+            ]
+          },
+          {
+            "heading": "Assessment",
+            "items": [
+              "Each group explains one hazard and one way to prepare for it"
+            ]
+          }
+        ]
+      },
+      "baseline": {
+        "downloads": 31,
+        "bookmarks": 12
+      },
+      "createdAt": "2026-08-18",
+      "supplementBundle": {
+        "pricePhp": 35
+      },
+      "curriculumReview": {
+        "version": "1.0",
+        "reviewer": "CherIt Review Team",
+        "date": "2026-08-25"
+      }
+    },
+    {
+      "id": "r-friendly-letter",
+      "title": "Writing a friendly letter to a pen pal",
+      "summary": "Learners write a five-part friendly letter to a pen pal from another Bicol province, using a model letter about fiesta preparations.",
+      "contributorId": "p-joy",
+      "grade": "Grade 4",
+      "subject": "English",
+      "competency": {
+        "code": "EN4WC-IIIa-27",
+        "text": "Write a friendly letter observing the correct format"
+      },
+      "bow": {
+        "version": "Division BOW, SY 2026–2027",
+        "quarter": "Quarter 3",
+        "week": "Week 1"
+      },
+      "requirements": [
+        "No internet needed",
+        "One model letter per pair"
+      ],
+      "tags": [
+        "offline-ready",
+        "writing"
+      ],
+      "files": [
+        {
+          "id": "lesson",
+          "name": "friendly-letter-lesson-plan.docx",
+          "label": "Lesson plan",
+          "required": true,
+          "editable": true,
+          "category": "lesson-plan",
+          "source": {
+            "type": "url",
+            "url": "/samples/friendly-letter-lesson-plan.docx"
+          }
+        },
+        {
+          "id": "model",
+          "name": "friendly-letter-model.docx",
+          "label": "Model letter and checklist",
+          "required": true,
+          "editable": true,
+          "category": "lesson-plan",
+          "source": {
+            "type": "url",
+            "url": "/samples/friendly-letter-model.docx"
+          }
+        }
+      ],
+      "references": [
+        {
+          "label": "Original lesson by the author."
+        }
+      ],
+      "version": {
+        "label": "1.0",
+        "date": "2026-09-29",
+        "note": "First shared version."
+      },
+      "history": [],
+      "status": "published",
+      "license": "cc-by",
+      "permission": {
+        "kind": "fictional-sample",
+        "notice": "Shared by the author under the license shown."
+      },
+      "lesson": {
+        "objective": "Learners write a friendly letter with heading, greeting, body, closing and signature.",
+        "sections": [
+          {
+            "heading": "Materials",
+            "items": [
+              "Model letter (printed, one per pair)",
+              "Lined paper"
+            ]
+          },
+          {
+            "heading": "Procedure",
+            "items": [
+              "Read the model letter aloud and label its five parts (10 min)",
+              "Brainstorm what to tell a pen pal about our fiesta (10 min)",
+              "Write the first draft (20 min)",
+              "Swap with a partner and check against the checklist (5 min)"
+            ]
+          },
+          {
+            "heading": "Assessment",
+            "items": [
+              "Submit a letter that includes all five parts"
+            ]
+          }
+        ]
+      },
+      "baseline": {
+        "downloads": 18,
+        "bookmarks": 7
+      },
+      "createdAt": "2026-09-29"
+    },
+    {
+      "id": "r-kinder-sorting",
+      "title": "Sorting by color and size with market finds",
+      "summary": "Hands-on sorting with things from the palengke: calamansi, sili, pili nuts and bottle caps. Learners sort by color, then by size.",
+      "contributorId": "p-mae",
+      "grade": "Kindergarten",
+      "subject": "Kindergarten",
+      "competency": {
+        "code": "MKSC-00-1",
+        "text": "Sort and classify objects according to one attribute"
+      },
+      "bow": {
+        "version": "Division BOW, SY 2026–2027",
+        "quarter": "Quarter 1",
+        "week": "Week 4"
+      },
+      "requirements": [
+        "No internet needed",
+        "A small basket of real objects per group"
+      ],
+      "tags": [
+        "offline-ready",
+        "hands-on",
+        "play-based"
+      ],
+      "files": [
+        {
+          "id": "lesson",
+          "name": "kinder-sorting-lesson-plan.docx",
+          "label": "Lesson plan",
+          "required": true,
+          "editable": true,
+          "category": "lesson-plan",
+          "source": {
+            "type": "url",
+            "url": "/samples/kinder-sorting-lesson-plan.docx"
+          }
+        },
+        {
+          "id": "cards",
+          "name": "kinder-sorting-picture-cards.docx",
+          "label": "Picture cards for sorting",
+          "required": true,
+          "editable": true,
+          "category": "lesson-plan",
+          "source": {
+            "type": "url",
+            "url": "/samples/kinder-sorting-picture-cards.docx"
+          }
+        }
+      ],
+      "references": [
+        {
+          "label": "Original lesson by the author."
+        }
+      ],
+      "version": {
+        "label": "1.0",
+        "date": "2026-09-05",
+        "note": "First shared version."
+      },
+      "history": [],
+      "status": "published",
+      "license": "cc-by-nc-sa",
+      "permission": {
+        "kind": "fictional-sample",
+        "notice": "Shared by the author under the license shown."
+      },
+      "lesson": {
+        "objective": "Learners sort a set of objects by color and then by size, and explain their groups.",
+        "sections": [
+          {
+            "heading": "Materials",
+            "items": [
+              "Basket of calamansi, sili, pili nuts and bottle caps",
+              "Two paper plates per group",
+              "Picture cards for learners who are absent from the basket station"
+            ]
+          },
+          {
+            "heading": "Procedure",
+            "items": [
+              "Song: “Kulay, kulay” warm-up (5 min)",
+              "Teacher models sorting by color (5 min)",
+              "Groups sort by color, then mix and sort by size (15 min)",
+              "Each group shows one plate and says why the things belong together (5 min)"
+            ]
+          },
+          {
+            "heading": "Assessment",
+            "items": [
+              "Observation checklist: sorts correctly by one attribute"
+            ]
+          }
+        ]
+      },
+      "baseline": {
+        "downloads": 24,
+        "bookmarks": 10
+      },
+      "createdAt": "2026-09-05",
+      "curriculumReview": {
+        "version": "1.0",
+        "reviewer": "CherIt Review Team",
+        "date": "2026-09-12"
+      }
+    },
+    {
+      "id": "r-cvc-words",
+      "title": "Reading short-a words with local foods",
+      "summary": "Phonics lesson for short a (CVC) words, using pictures of local foods and a pocket-chart game. Includes a Bikol word list for the warm-up.",
+      "contributorId": "p-tess",
+      "grade": "Grade 1",
+      "subject": "English",
+      "competency": {
+        "code": "EN1PWR-IIIa-e-2",
+        "text": "Read words with short a in CVC pattern"
+      },
+      "bow": {
+        "version": "Division BOW, SY 2026–2027",
+        "quarter": "Quarter 3",
+        "week": "Week 2"
+      },
+      "requirements": [
+        "No internet needed",
+        "Pocket chart or a string line with clips"
+      ],
+      "tags": [
+        "offline-ready",
+        "reading",
+        "mother tongue support"
+      ],
+      "files": [
+        {
+          "id": "lesson",
+          "name": "cvc-words-lesson-plan.docx",
+          "label": "Lesson plan",
+          "required": true,
+          "editable": true,
+          "category": "lesson-plan",
+          "source": {
+            "type": "url",
+            "url": "/samples/cvc-words-lesson-plan.docx"
+          }
+        },
+        {
+          "id": "cards",
+          "name": "cvc-words-flashcards.docx",
+          "label": "Word and picture flashcards",
+          "required": true,
+          "editable": true,
+          "category": "lesson-plan",
+          "source": {
+            "type": "url",
+            "url": "/samples/cvc-words-flashcards.docx"
+          }
+        }
+      ],
+      "references": [
+        {
+          "label": "Original lesson by the author."
+        }
+      ],
+      "version": {
+        "label": "1.0",
+        "date": "2026-10-01",
+        "note": "First shared version."
+      },
+      "history": [],
+      "status": "published",
+      "license": "cc-by-nc-sa",
+      "permission": {
+        "kind": "fictional-sample",
+        "notice": "Shared by the author under the license shown."
+      },
+      "lesson": {
+        "objective": "Learners read and match eight short-a words to pictures.",
+        "sections": [
+          {
+            "heading": "Materials",
+            "items": [
+              "Flashcards: can, pan, bag, hat, mat, fan, jam, cap",
+              "Pocket chart"
+            ]
+          },
+          {
+            "heading": "Procedure",
+            "items": [
+              "Warm-up with Bikol words for the pictures (5 min)",
+              "Model blending c-a-n (10 min)",
+              "Pocket-chart matching game in pairs (15 min)",
+              "Read the words together as a class (5 min)"
+            ]
+          },
+          {
+            "heading": "Assessment",
+            "items": [
+              "Each learner reads four words from the flashcards"
+            ]
+          }
+        ]
+      },
+      "baseline": {
+        "downloads": 16,
+        "bookmarks": 6
+      },
+      "createdAt": "2026-10-01"
+    },
+    {
+      "id": "r-simple-machines",
+      "title": "Simple machines on the farm",
+      "summary": "Learners find levers, pulleys and inclined planes in farm tools from their own homes, then test a lever with a ruler and coins.",
+      "contributorId": "p-dado",
+      "grade": "Grade 5",
+      "subject": "Science",
+      "competency": {
+        "code": "S5FE-IIIf-g-3",
+        "text": "Describe how simple machines make work easier"
+      },
+      "bow": {
+        "version": "Division BOW, SY 2026–2027",
+        "quarter": "Quarter 3",
+        "week": "Week 6"
+      },
+      "requirements": [
+        "No internet needed",
+        "Ruler, pencil and ten coins per group"
+      ],
+      "tags": [
+        "offline-ready",
+        "hands-on",
+        "local context"
+      ],
+      "files": [
+        {
+          "id": "lesson",
+          "name": "simple-machines-lesson-plan.docx",
+          "label": "Lesson plan",
+          "required": true,
+          "editable": true,
+          "category": "lesson-plan",
+          "source": {
+            "type": "url",
+            "url": "/samples/simple-machines-lesson-plan.docx"
+          }
+        },
+        {
+          "id": "worksheet",
+          "name": "simple-machines-worksheet.docx",
+          "label": "Lever experiment sheet",
+          "required": true,
+          "editable": true,
+          "category": "lesson-plan",
+          "source": {
+            "type": "url",
+            "url": "/samples/simple-machines-worksheet.docx"
+          }
+        }
+      ],
+      "references": [
+        {
+          "label": "Original lesson by the author."
+        }
+      ],
+      "version": {
+        "label": "1.0",
+        "date": "2026-09-14",
+        "note": "First shared version."
+      },
+      "history": [],
+      "status": "published",
+      "license": "cc-by",
+      "permission": {
+        "kind": "fictional-sample",
+        "notice": "Shared by the author under the license shown."
+      },
+      "lesson": {
+        "objective": "Learners identify three simple machines used on farms and show how moving the fulcrum changes the effort needed.",
+        "sections": [
+          {
+            "heading": "Materials",
+            "items": [
+              "Ruler, pencil and ten one-peso coins per group",
+              "Pictures of a kariton, pulley well and bolo"
+            ]
+          },
+          {
+            "heading": "Procedure",
+            "items": [
+              "Show farm tool pictures: which ones help us lift or move? (10 min)",
+              "Lever experiment: move the fulcrum and count coins (20 min)",
+              "Record results in the table (10 min)"
+            ]
+          },
+          {
+            "heading": "Assessment",
+            "items": [
+              "Exit slip: name one simple machine at home and what it helps with"
+            ]
+          }
+        ]
+      },
+      "baseline": {
+        "downloads": 20,
+        "bookmarks": 8
+      },
+      "createdAt": "2026-09-14"
+    },
+    {
+      "id": "r-volcanoes",
+      "title": "Volcanoes of Bicol: Mayon and Bulusan",
+      "summary": "Compares an active stratovolcano and its hazards using PHIVOLCS alert levels, a clay cross-section model and a hazard-map reading activity.",
+      "contributorId": "p-rico",
+      "grade": "Grade 9",
+      "subject": "Science",
+      "competency": {
+        "code": "S9ES-IIIa-27",
+        "text": "Describe the different types of volcanoes and volcanic eruptions"
+      },
+      "bow": {
+        "version": "Division BOW, SY 2026–2027",
+        "quarter": "Quarter 3",
+        "week": "Week 1"
+      },
+      "requirements": [
+        "No internet needed",
+        "Modeling clay or a paper cross-section"
+      ],
+      "tags": [
+        "offline-ready",
+        "local context",
+        "group work"
+      ],
+      "files": [
+        {
+          "id": "lesson",
+          "name": "volcanoes-lesson-plan.docx",
+          "label": "Lesson plan",
+          "required": true,
+          "editable": true,
+          "category": "lesson-plan",
+          "source": {
+            "type": "url",
+            "url": "/samples/volcanoes-lesson-plan.docx"
+          }
+        },
+        {
+          "id": "slides",
+          "name": "volcanoes-slides-notes.docx",
+          "label": "Slide notes with photos list",
+          "required": false,
+          "editable": true,
+          "category": "supplement",
+          "source": {
+            "type": "url",
+            "url": "/samples/volcanoes-slides-notes.docx"
+          }
+        },
+        {
+          "id": "quiz",
+          "name": "volcanoes-quiz.docx",
+          "label": "20-item quiz with answer key",
+          "required": false,
+          "editable": true,
+          "category": "supplement",
+          "source": {
+            "type": "url",
+            "url": "/samples/volcanoes-quiz.docx"
+          }
+        }
+      ],
+      "references": [
+        {
+          "label": "Original lesson by the author."
+        }
+      ],
+      "version": {
+        "label": "1.0",
+        "date": "2026-08-10",
+        "note": "First shared version."
+      },
+      "history": [],
+      "status": "published",
+      "license": "cc-by-nc-sa",
+      "permission": {
+        "kind": "fictional-sample",
+        "notice": "Shared by the author under the license shown."
+      },
+      "lesson": {
+        "objective": "Learners explain how Mayon and Bulusan erupt and what each PHIVOLCS alert level asks residents to do.",
+        "sections": [
+          {
+            "heading": "Materials",
+            "items": [
+              "Modeling clay in three colors, or the paper cross-section",
+              "Printed alert level table"
+            ]
+          },
+          {
+            "heading": "Procedure",
+            "items": [
+              "Recall: who has seen Mayon’s lava at night? (5 min)",
+              "Build the cross-section and label the parts (20 min)",
+              "Read the alert level table and match actions to levels (15 min)",
+              "Discussion: what should our school do at Alert Level 3? (10 min)"
+            ]
+          },
+          {
+            "heading": "Assessment",
+            "items": [
+              "Short quiz on volcano parts and alert levels"
+            ]
+          }
+        ]
+      },
+      "baseline": {
+        "downloads": 42,
+        "bookmarks": 19
+      },
+      "createdAt": "2026-08-10",
+      "supplementBundle": {
+        "pricePhp": 79
+      },
+      "curriculumReview": {
+        "version": "1.0",
+        "reviewer": "CherIt Review Team",
+        "date": "2026-08-20"
+      }
+    },
+    {
+      "id": "r-jeepney-equations",
+      "title": "Linear equations with jeepney fares",
+      "summary": "Learners model jeepney fares (minimum fare plus a rate per kilometer) as linear equations, graph them, and compare routes.",
+      "contributorId": "p-rico",
+      "grade": "Grade 8",
+      "subject": "Mathematics",
+      "competency": {
+        "code": "M8AL-Ie-1",
+        "text": "Write and graph linear equations from real situations"
+      },
+      "bow": {
+        "version": "Division BOW, SY 2026–2027",
+        "quarter": "Quarter 1",
+        "week": "Week 5"
+      },
+      "requirements": [
+        "No internet needed",
+        "Graphing paper"
+      ],
+      "tags": [
+        "offline-ready",
+        "local context"
+      ],
+      "files": [
+        {
+          "id": "lesson",
+          "name": "jeepney-equations-lesson-plan.docx",
+          "label": "Lesson plan",
+          "required": true,
+          "editable": true,
+          "category": "lesson-plan",
+          "source": {
+            "type": "url",
+            "url": "/samples/jeepney-equations-lesson-plan.docx"
+          }
+        },
+        {
+          "id": "worksheet",
+          "name": "jeepney-equations-worksheet.docx",
+          "label": "Fare table and graphing worksheet",
+          "required": true,
+          "editable": true,
+          "category": "lesson-plan",
+          "source": {
+            "type": "url",
+            "url": "/samples/jeepney-equations-worksheet.docx"
+          }
+        }
+      ],
+      "references": [
+        {
+          "label": "Original lesson by the author."
+        }
+      ],
+      "version": {
+        "label": "1.0",
+        "date": "2026-07-22",
+        "note": "First shared version."
+      },
+      "history": [],
+      "status": "published",
+      "license": "cc-by-nc",
+      "permission": {
+        "kind": "fictional-sample",
+        "notice": "Shared by the author under the license shown."
+      },
+      "lesson": {
+        "objective": "Learners write y = mx + b for two jeepney routes and use their graphs to find which is cheaper for a given distance.",
+        "sections": [
+          {
+            "heading": "Materials",
+            "items": [
+              "Fare matrix from the local terminal (sample included)",
+              "Graphing paper and rulers"
+            ]
+          },
+          {
+            "heading": "Procedure",
+            "items": [
+              "How much is your fare to school? Build a class table (10 min)",
+              "Find the minimum fare and rate per kilometer (10 min)",
+              "Write and graph the equations in pairs (20 min)",
+              "Compare two routes and present (10 min)"
+            ]
+          },
+          {
+            "heading": "Assessment",
+            "items": [
+              "Three word problems on the worksheet"
+            ]
+          }
+        ]
+      },
+      "baseline": {
+        "downloads": 35,
+        "bookmarks": 14
+      },
+      "createdAt": "2026-07-22"
+    },
+    {
+      "id": "r-ibalong",
+      "title": "Ang Epikong Ibalong: Pagsusuri ng tauhan",
+      "summary": "Pagbasa at pagsusuri sa mga tauhan ng Ibalong (Baltog, Handyong, Bantong) gamit ang graphic organizer at talakayang pangkatan.",
+      "contributorId": "p-ana",
+      "grade": "Grade 7",
+      "subject": "Filipino",
+      "competency": {
+        "code": "F7PB-IIIa-c-15",
+        "text": "Nasusuri ang mga katangian ng tauhan sa epiko"
+      },
+      "bow": {
+        "version": "Division BOW, SY 2026–2027",
+        "quarter": "Quarter 3",
+        "week": "Week 2"
+      },
+      "requirements": [
+        "Walang kailangang internet",
+        "Kopya ng buod ng epiko"
+      ],
+      "tags": [
+        "offline-ready",
+        "reading",
+        "local context"
+      ],
+      "files": [
+        {
+          "id": "lesson",
+          "name": "ibalong-lesson-plan.docx",
+          "label": "Banghay-aralin",
+          "required": true,
+          "editable": true,
+          "category": "lesson-plan",
+          "source": {
+            "type": "url",
+            "url": "/samples/ibalong-lesson-plan.docx"
+          }
+        },
+        {
+          "id": "organizer",
+          "name": "ibalong-graphic-organizer.docx",
+          "label": "Graphic organizer ng tauhan",
+          "required": false,
+          "editable": true,
+          "category": "supplement",
+          "source": {
+            "type": "url",
+            "url": "/samples/ibalong-graphic-organizer.docx"
+          }
+        },
+        {
+          "id": "cards",
+          "name": "ibalong-question-cards.docx",
+          "label": "Mga kard ng tanong para sa talakayan",
+          "required": false,
+          "editable": true,
+          "category": "supplement",
+          "source": {
+            "type": "url",
+            "url": "/samples/ibalong-question-cards.docx"
+          }
+        }
+      ],
+      "references": [
+        {
+          "label": "Original lesson by the author."
+        }
+      ],
+      "version": {
+        "label": "1.0",
+        "date": "2026-08-28",
+        "note": "First shared version."
+      },
+      "history": [],
+      "status": "published",
+      "license": "all-rights-reserved",
+      "permission": {
+        "kind": "fictional-sample",
+        "notice": "Shared by the author under the license shown."
+      },
+      "lesson": {
+        "objective": "Nasusuri ng mga mag-aaral ang katangian at kabayanihan ng tatlong pangunahing tauhan ng Ibalong.",
+        "sections": [
+          {
+            "heading": "Materials",
+            "items": [
+              "Buod ng Ibalong (2 pahina)",
+              "Graphic organizer"
+            ]
+          },
+          {
+            "heading": "Procedure",
+            "items": [
+              "Pagganyak: Sino ang bayani sa inyong barangay? (5 min)",
+              "Pangkatang pagbasa ng buod (15 min)",
+              "Pagpuno ng graphic organizer bawat tauhan (15 min)",
+              "Pag-uulat ng bawat pangkat (10 min)"
+            ]
+          },
+          {
+            "heading": "Assessment",
+            "items": [
+              "Maikling sanaysay: Aling tauhan ang pinakahahangaan mo at bakit?"
+            ]
+          }
+        ]
+      },
+      "baseline": {
+        "downloads": 27,
+        "bookmarks": 11
+      },
+      "createdAt": "2026-08-28",
+      "supplementBundle": {
+        "pricePhp": 59
+      }
+    },
+    {
+      "id": "r-plate-boundaries",
+      "title": "Plate boundaries of the Philippines",
+      "summary": "Inquiry lesson on convergent, divergent and transform boundaries using the Philippine Trench, Philippine Fault and a paper-slide model.",
+      "contributorId": "p-gino",
+      "grade": "Grade 11",
+      "subject": "Earth and Life Science",
+      "competency": {
+        "code": "S11/12ES-Ib-9",
+        "text": "Describe the different types of plate boundaries"
+      },
+      "bow": {
+        "version": "Division BOW, SY 2026–2027",
+        "quarter": "Quarter 1",
+        "week": "Week 3"
+      },
+      "requirements": [
+        "No internet needed",
+        "Printed fault and trench map"
+      ],
+      "tags": [
+        "offline-ready",
+        "inquiry"
+      ],
+      "files": [
+        {
+          "id": "lesson",
+          "name": "plate-boundaries-lesson-plan.docx",
+          "label": "Lesson plan",
+          "required": true,
+          "editable": true,
+          "category": "lesson-plan",
+          "source": {
+            "type": "url",
+            "url": "/samples/plate-boundaries-lesson-plan.docx"
+          }
+        },
+        {
+          "id": "worksheet",
+          "name": "plate-boundaries-worksheet.docx",
+          "label": "Paper-slide model and questions",
+          "required": true,
+          "editable": true,
+          "category": "lesson-plan",
+          "source": {
+            "type": "url",
+            "url": "/samples/plate-boundaries-worksheet.docx"
+          }
+        }
+      ],
+      "references": [
+        {
+          "label": "Original lesson by the author."
+        }
+      ],
+      "version": {
+        "label": "1.0",
+        "date": "2026-10-06",
+        "note": "First shared version."
+      },
+      "history": [],
+      "status": "published",
+      "license": "cc-by-sa",
+      "permission": {
+        "kind": "fictional-sample",
+        "notice": "Shared by the author under the license shown."
+      },
+      "lesson": {
+        "objective": "Learners classify three Philippine geologic features by plate boundary type and explain the motion involved.",
+        "sections": [
+          {
+            "heading": "Materials",
+            "items": [
+              "Printed map of the Philippine Fault and Trench",
+              "Two sheets of paper per pair for the slide model"
+            ]
+          },
+          {
+            "heading": "Procedure",
+            "items": [
+              "Recall recent earthquakes in Bicol (5 min)",
+              "Paper-slide model for each boundary type (15 min)",
+              "Map reading: label features on the Philippine map (15 min)",
+              "Synthesis: why is Bicol earthquake-prone? (10 min)"
+            ]
+          },
+          {
+            "heading": "Assessment",
+            "items": [
+              "Worksheet questions 1–6"
+            ]
+          }
+        ]
+      },
+      "baseline": {
+        "downloads": 13,
+        "bookmarks": 5
+      },
+      "createdAt": "2026-10-06"
     }
   ],
   "seedReviews": [
@@ -782,10 +1876,10 @@
       "id": "s1",
       "resourceId": "r-water-cycle",
       "resourceVersion": "2.0",
-      "personaId": "sample-a",
-      "authorLabel": "Sample teacher A",
+      "personaId": "t-rowena-ibasco",
+      "authorLabel": "Ma'am Rowena Ibasco",
       "rating": 5,
-      "text": "The cup demonstration worked without a projector.",
+      "text": "The cup demonstration worked even without a projector. My Grade 4 class in Iriga got it in one period.",
       "usedInClass": true,
       "seeded": true,
       "updatedAt": "2026-10-21"
@@ -794,10 +1888,10 @@
       "id": "s2",
       "resourceId": "r-water-cycle",
       "resourceVersion": "2.0",
-      "personaId": "sample-b",
-      "authorLabel": "Sample teacher B",
+      "personaId": "t-paolo-nacion",
+      "authorLabel": "Sir Paolo Nacion",
       "rating": 4,
-      "text": "Two pages is easier to print. I added a short Bikol vocabulary list.",
+      "text": "Two pages is so much easier to print than the old worksheet. I added a short Bikol word list for my slower readers.",
       "usedInClass": true,
       "seeded": true,
       "updatedAt": "2026-10-22"
@@ -806,8 +1900,8 @@
       "id": "s3",
       "resourceId": "r-water-cycle",
       "resourceVersion": "2.0",
-      "personaId": "sample-c",
-      "authorLabel": "Sample teacher C",
+      "personaId": "t-cherry-lomibao",
+      "authorLabel": "Ma'am Cherry Lomibao",
       "rating": 5,
       "text": "",
       "usedInClass": false,
@@ -818,10 +1912,10 @@
       "id": "s4",
       "resourceId": "r-water-cycle",
       "resourceVersion": "1.0",
-      "personaId": "sample-d",
-      "authorLabel": "Sample teacher D",
+      "personaId": "t-glenda-ranola",
+      "authorLabel": "Ma'am Glenda Rañola",
       "rating": 2,
-      "text": "Four-page worksheet was too much to print.",
+      "text": "Version 1.0 had a four-page worksheet. Too much to print for 45 learners.",
       "usedInClass": true,
       "seeded": true,
       "updatedAt": "2026-08-01"
@@ -830,10 +1924,10 @@
       "id": "s5",
       "resourceId": "r-matter",
       "resourceVersion": "1.0",
-      "personaId": "sample-e",
-      "authorLabel": "Sample teacher E",
+      "personaId": "t-jomar-bitara",
+      "authorLabel": "Sir Jomar Bitara",
       "rating": 3,
-      "text": "Good sorting game; the steam part needs a safety note.",
+      "text": "Good sorting game and the kids loved it. The steam part needs a clearer safety note before you boil water.",
       "usedInClass": true,
       "seeded": true,
       "updatedAt": "2026-09-01"
@@ -842,10 +1936,10 @@
       "id": "s6",
       "resourceId": "r-percent",
       "resourceVersion": "1.0",
-      "personaId": "sample-a",
-      "authorLabel": "Sample teacher A",
+      "personaId": "t-rowena-ibasco",
+      "authorLabel": "Ma'am Rowena Ibasco",
       "rating": 4,
-      "text": "Learners liked the pili nut prices.",
+      "text": "Learners liked using real pili nut and bangus prices. I changed the stalls to our own market in Iriga.",
       "usedInClass": true,
       "seeded": true,
       "updatedAt": "2026-09-20"
@@ -854,8 +1948,8 @@
       "id": "s7",
       "resourceId": "r-percent",
       "resourceVersion": "1.0",
-      "personaId": "sample-f",
-      "authorLabel": "Sample teacher F",
+      "personaId": "t-liezl-dy",
+      "authorLabel": "Ma'am Liezl Dy",
       "rating": 5,
       "text": "",
       "usedInClass": false,
@@ -866,10 +1960,10 @@
       "id": "s8",
       "resourceId": "r-typhoon",
       "resourceVersion": "1.0",
-      "personaId": "sample-b",
-      "authorLabel": "Sample teacher B",
+      "personaId": "t-paolo-nacion",
+      "authorLabel": "Sir Paolo Nacion",
       "rating": 4,
-      "text": "Timely before typhoon season.",
+      "text": "Timely before typhoon season. We used it the week Signal No. 2 was raised.",
       "usedInClass": true,
       "seeded": true,
       "updatedAt": "2026-10-10"
@@ -878,13 +1972,925 @@
       "id": "s9",
       "resourceId": "r-fractions",
       "resourceVersion": "1.0",
-      "personaId": "sample-c",
-      "authorLabel": "Sample teacher C",
+      "personaId": "t-cherry-lomibao",
+      "authorLabel": "Ma'am Cherry Lomibao",
       "rating": 5,
-      "text": "Folding worked better than cutting.",
+      "text": "Folding the paper bibingka worked better than cutting. Less mess, same idea.",
       "usedInClass": true,
       "seeded": true,
       "updatedAt": "2026-10-18"
+    },
+    {
+      "id": "n1",
+      "resourceId": "r-hazard-map",
+      "resourceVersion": "1.0",
+      "personaId": "t-glenda-ranola",
+      "authorLabel": "Ma'am Glenda Rañola",
+      "rating": 5,
+      "text": "Ran this right after the flood drill. The legend template saved me a whole evening.",
+      "usedInClass": true,
+      "seeded": true,
+      "updatedAt": "2026-08-21"
+    },
+    {
+      "id": "n2",
+      "resourceId": "r-hazard-map",
+      "resourceVersion": "1.0",
+      "personaId": "t-kristine-bonifacio",
+      "authorLabel": "Ma'am Kristine Bonifacio",
+      "rating": 5,
+      "text": "Our Grade 4 maps went on the wall of the DRRM office.",
+      "usedInClass": true,
+      "seeded": true,
+      "updatedAt": "2026-09-08"
+    },
+    {
+      "id": "n3",
+      "resourceId": "r-hazard-map",
+      "resourceVersion": "1.0",
+      "personaId": "t-carlo-mendoza",
+      "authorLabel": "Sir Carlo Mendoza",
+      "rating": 4,
+      "text": "Good lesson. I needed an extra period for the gallery walk.",
+      "usedInClass": true,
+      "seeded": true,
+      "updatedAt": "2026-09-26"
+    },
+    {
+      "id": "n4",
+      "resourceId": "r-hazard-map",
+      "resourceVersion": "1.0",
+      "personaId": "t-rowena-ibasco",
+      "authorLabel": "Ma'am Rowena Ibasco",
+      "rating": 5,
+      "text": "",
+      "usedInClass": false,
+      "seeded": true,
+      "updatedAt": "2026-10-12"
+    },
+    {
+      "id": "n5",
+      "resourceId": "r-friendly-letter",
+      "resourceVersion": "1.0",
+      "personaId": "t-liezl-dy",
+      "authorLabel": "Ma'am Liezl Dy",
+      "rating": 4,
+      "text": "Simple and clear. I paired my class with a section in Catanduanes and they actually wrote back.",
+      "usedInClass": true,
+      "seeded": true,
+      "updatedAt": "2026-09-26"
+    },
+    {
+      "id": "n6",
+      "resourceId": "r-friendly-letter",
+      "resourceVersion": "1.0",
+      "personaId": "t-ramil-ocampo",
+      "authorLabel": "Sir Ramil Ocampo",
+      "rating": 5,
+      "text": "The fiesta model letter is perfect for our learners.",
+      "usedInClass": true,
+      "seeded": true,
+      "updatedAt": "2026-10-12"
+    },
+    {
+      "id": "n7",
+      "resourceId": "r-kinder-sorting",
+      "resourceVersion": "1.0",
+      "personaId": "t-elvie-balang",
+      "authorLabel": "Ma'am Elvie Balang",
+      "rating": 5,
+      "text": "My kinders sorted for 20 minutes without getting bored. Real calamansi is the trick.",
+      "usedInClass": true,
+      "seeded": true,
+      "updatedAt": "2026-10-12"
+    },
+    {
+      "id": "n8",
+      "resourceId": "r-kinder-sorting",
+      "resourceVersion": "1.0",
+      "personaId": "t-cherry-lomibao",
+      "authorLabel": "Ma'am Cherry Lomibao",
+      "rating": 5,
+      "text": "Easy to set up with what we already have.",
+      "usedInClass": true,
+      "seeded": true,
+      "updatedAt": "2026-10-24"
+    },
+    {
+      "id": "n9",
+      "resourceId": "r-kinder-sorting",
+      "resourceVersion": "1.0",
+      "personaId": "t-noel-arroyo",
+      "authorLabel": "Sir Noel Arroyo",
+      "rating": 4,
+      "text": "I used buttons instead of sili for safety.",
+      "usedInClass": true,
+      "seeded": true,
+      "updatedAt": "2026-08-30"
+    },
+    {
+      "id": "n10",
+      "resourceId": "r-cvc-words",
+      "resourceVersion": "1.0",
+      "personaId": "t-joanna-sarmiento",
+      "authorLabel": "Ma'am Joanna Sarmiento",
+      "rating": 5,
+      "text": "The Bikol warm-up really helps my non-readers start.",
+      "usedInClass": true,
+      "seeded": true,
+      "updatedAt": "2026-08-21"
+    },
+    {
+      "id": "n11",
+      "resourceId": "r-cvc-words",
+      "resourceVersion": "1.0",
+      "personaId": "t-dianne-aguilar",
+      "authorLabel": "Ma'am Dianne Aguilar",
+      "rating": 4,
+      "text": "Flashcards print well even in black and white.",
+      "usedInClass": true,
+      "seeded": true,
+      "updatedAt": "2026-09-08"
+    },
+    {
+      "id": "n12",
+      "resourceId": "r-simple-machines",
+      "resourceVersion": "1.0",
+      "personaId": "t-jomar-bitara",
+      "authorLabel": "Sir Jomar Bitara",
+      "rating": 4,
+      "text": "The coin lever experiment is simple and the results are clear.",
+      "usedInClass": true,
+      "seeded": true,
+      "updatedAt": "2026-09-08"
+    },
+    {
+      "id": "n13",
+      "resourceId": "r-simple-machines",
+      "resourceVersion": "1.0",
+      "personaId": "t-marites-gaite",
+      "authorLabel": "Ma'am Marites Gaite",
+      "rating": 5,
+      "text": "",
+      "usedInClass": false,
+      "seeded": true,
+      "updatedAt": "2026-09-26"
+    },
+    {
+      "id": "n14",
+      "resourceId": "r-simple-machines",
+      "resourceVersion": "1.0",
+      "personaId": "t-precious-tuazon",
+      "authorLabel": "Ma'am Precious Tuazon",
+      "rating": 4,
+      "text": "I added a tricycle example since many parents drive one.",
+      "usedInClass": true,
+      "seeded": true,
+      "updatedAt": "2026-10-12"
+    },
+    {
+      "id": "n15",
+      "resourceId": "r-volcanoes",
+      "resourceVersion": "1.0",
+      "personaId": "t-paolo-nacion",
+      "authorLabel": "Sir Paolo Nacion",
+      "rating": 5,
+      "text": "Best volcano lesson I have used. The alert level table is exactly what my Albay learners need.",
+      "usedInClass": true,
+      "seeded": true,
+      "updatedAt": "2026-10-04"
+    },
+    {
+      "id": "n16",
+      "resourceId": "r-volcanoes",
+      "resourceVersion": "1.0",
+      "personaId": "t-aileen-cabrera",
+      "authorLabel": "Ma'am Aileen Cabrera",
+      "rating": 5,
+      "text": "The 20-item quiz in the bundle is worth it. Answer key is accurate.",
+      "usedInClass": true,
+      "seeded": true,
+      "updatedAt": "2026-10-19"
+    },
+    {
+      "id": "n17",
+      "resourceId": "r-volcanoes",
+      "resourceVersion": "1.0",
+      "personaId": "t-hazel-penaflor",
+      "authorLabel": "Ma'am Hazel Peñaflor",
+      "rating": 4,
+      "text": "Clay model is messy but memorable. Paper version works for big classes.",
+      "usedInClass": true,
+      "seeded": true,
+      "updatedAt": "2026-08-21"
+    },
+    {
+      "id": "n18",
+      "resourceId": "r-volcanoes",
+      "resourceVersion": "1.0",
+      "personaId": "t-arnel-pura",
+      "authorLabel": "Sir Arnel Pura",
+      "rating": 5,
+      "text": "Used it for our Grade 9 demo teaching. Observers liked the local context.",
+      "usedInClass": true,
+      "seeded": true,
+      "updatedAt": "2026-09-08"
+    },
+    {
+      "id": "n19",
+      "resourceId": "r-volcanoes",
+      "resourceVersion": "1.0",
+      "personaId": "t-glenda-ranola",
+      "authorLabel": "Ma'am Glenda Rañola",
+      "rating": 4,
+      "text": "",
+      "usedInClass": false,
+      "seeded": true,
+      "updatedAt": "2026-09-26"
+    },
+    {
+      "id": "n20",
+      "resourceId": "r-jeepney-equations",
+      "resourceVersion": "1.0",
+      "personaId": "t-kristine-bonifacio",
+      "authorLabel": "Ma'am Kristine Bonifacio",
+      "rating": 5,
+      "text": "Finally, a linear equations lesson my learners care about.",
+      "usedInClass": true,
+      "seeded": true,
+      "updatedAt": "2026-08-30"
+    },
+    {
+      "id": "n21",
+      "resourceId": "r-jeepney-equations",
+      "resourceVersion": "1.0",
+      "personaId": "t-carlo-mendoza",
+      "authorLabel": "Sir Carlo Mendoza",
+      "rating": 4,
+      "text": "Update the fare matrix to your own terminal before class.",
+      "usedInClass": true,
+      "seeded": true,
+      "updatedAt": "2026-09-17"
+    },
+    {
+      "id": "n22",
+      "resourceId": "r-jeepney-equations",
+      "resourceVersion": "1.0",
+      "personaId": "t-rowena-ibasco",
+      "authorLabel": "Ma'am Rowena Ibasco",
+      "rating": 5,
+      "text": "",
+      "usedInClass": false,
+      "seeded": true,
+      "updatedAt": "2026-10-04"
+    },
+    {
+      "id": "n23",
+      "resourceId": "r-jeepney-equations",
+      "resourceVersion": "1.0",
+      "personaId": "t-liezl-dy",
+      "authorLabel": "Ma'am Liezl Dy",
+      "rating": 4,
+      "text": "The graph comparison at the end sparked a good debate.",
+      "usedInClass": true,
+      "seeded": true,
+      "updatedAt": "2026-10-19"
+    },
+    {
+      "id": "n24",
+      "resourceId": "r-ibalong",
+      "resourceVersion": "1.0",
+      "personaId": "t-ramil-ocampo",
+      "authorLabel": "Sir Ramil Ocampo",
+      "rating": 5,
+      "text": "Napakaganda ng graphic organizer. Madaling sundan ng mga bata.",
+      "usedInClass": true,
+      "seeded": true,
+      "updatedAt": "2026-10-04"
+    },
+    {
+      "id": "n25",
+      "resourceId": "r-ibalong",
+      "resourceVersion": "1.0",
+      "personaId": "t-elvie-balang",
+      "authorLabel": "Ma'am Elvie Balang",
+      "rating": 4,
+      "text": "Sulit ang question cards para sa pangkatang talakayan.",
+      "usedInClass": true,
+      "seeded": true,
+      "updatedAt": "2026-10-19"
+    },
+    {
+      "id": "n26",
+      "resourceId": "r-ibalong",
+      "resourceVersion": "1.0",
+      "personaId": "t-cherry-lomibao",
+      "authorLabel": "Ma'am Cherry Lomibao",
+      "rating": 5,
+      "text": "",
+      "usedInClass": false,
+      "seeded": true,
+      "updatedAt": "2026-08-21"
+    },
+    {
+      "id": "n27",
+      "resourceId": "r-plate-boundaries",
+      "resourceVersion": "1.0",
+      "personaId": "t-noel-arroyo",
+      "authorLabel": "Sir Noel Arroyo",
+      "rating": 4,
+      "text": "Paper-slide model is a great low-cost demo for STEM 11.",
+      "usedInClass": true,
+      "seeded": true,
+      "updatedAt": "2026-10-24"
+    },
+    {
+      "id": "n28",
+      "resourceId": "r-plate-boundaries",
+      "resourceVersion": "1.0",
+      "personaId": "t-joanna-sarmiento",
+      "authorLabel": "Ma'am Joanna Sarmiento",
+      "rating": 5,
+      "text": "Tied in well with the earthquake drill.",
+      "usedInClass": true,
+      "seeded": true,
+      "updatedAt": "2026-08-30"
+    }
+  ],
+  "seedSales": [
+    {
+      "id": "sale-1",
+      "resourceId": "r-percent",
+      "buyerLabel": "Ma'am Rowena Ibasco",
+      "amountPhp": 49,
+      "date": "2026-08-03"
+    },
+    {
+      "id": "sale-2",
+      "resourceId": "r-percent",
+      "buyerLabel": "Sir Noel Arroyo",
+      "amountPhp": 49,
+      "date": "2026-08-10"
+    },
+    {
+      "id": "sale-3",
+      "resourceId": "r-percent",
+      "buyerLabel": "Ma'am Precious Tuazon",
+      "amountPhp": 49,
+      "date": "2026-08-17"
+    },
+    {
+      "id": "sale-4",
+      "resourceId": "r-percent",
+      "buyerLabel": "Ma'am Glenda Rañola",
+      "amountPhp": 49,
+      "date": "2026-08-24"
+    },
+    {
+      "id": "sale-5",
+      "resourceId": "r-percent",
+      "buyerLabel": "Sir Ramil Ocampo",
+      "amountPhp": 49,
+      "date": "2026-08-06"
+    },
+    {
+      "id": "sale-6",
+      "resourceId": "r-percent",
+      "buyerLabel": "Ma'am Dianne Aguilar",
+      "amountPhp": 49,
+      "date": "2026-08-13"
+    },
+    {
+      "id": "sale-7",
+      "resourceId": "r-percent",
+      "buyerLabel": "Ma'am Aileen Cabrera",
+      "amountPhp": 49,
+      "date": "2026-08-20"
+    },
+    {
+      "id": "sale-8",
+      "resourceId": "r-percent",
+      "buyerLabel": "Sir Carlo Mendoza",
+      "amountPhp": 49,
+      "date": "2026-08-27"
+    },
+    {
+      "id": "sale-9",
+      "resourceId": "r-percent",
+      "buyerLabel": "Ma'am Cherry Lomibao",
+      "amountPhp": 49,
+      "date": "2026-09-09"
+    },
+    {
+      "id": "sale-10",
+      "resourceId": "r-percent",
+      "buyerLabel": "Ma'am Marites Gaite",
+      "amountPhp": 49,
+      "date": "2026-09-16"
+    },
+    {
+      "id": "sale-11",
+      "resourceId": "r-percent",
+      "buyerLabel": "Sir Arnel Pura",
+      "amountPhp": 49,
+      "date": "2026-09-23"
+    },
+    {
+      "id": "sale-12",
+      "resourceId": "r-percent",
+      "buyerLabel": "Ma'am Liezl Dy",
+      "amountPhp": 49,
+      "date": "2026-09-05"
+    },
+    {
+      "id": "sale-13",
+      "resourceId": "r-percent",
+      "buyerLabel": "Ma'am Joanna Sarmiento",
+      "amountPhp": 49,
+      "date": "2026-09-12"
+    },
+    {
+      "id": "sale-14",
+      "resourceId": "r-percent",
+      "buyerLabel": "Sir Paolo Nacion",
+      "amountPhp": 49,
+      "date": "2026-09-19"
+    },
+    {
+      "id": "sale-15",
+      "resourceId": "r-percent",
+      "buyerLabel": "Ma'am Kristine Bonifacio",
+      "amountPhp": 49,
+      "date": "2026-09-26"
+    },
+    {
+      "id": "sale-16",
+      "resourceId": "r-percent",
+      "buyerLabel": "Ma'am Elvie Balang",
+      "amountPhp": 49,
+      "date": "2026-09-08"
+    },
+    {
+      "id": "sale-17",
+      "resourceId": "r-percent",
+      "buyerLabel": "Sir Jomar Bitara",
+      "amountPhp": 49,
+      "date": "2026-10-15"
+    },
+    {
+      "id": "sale-18",
+      "resourceId": "r-percent",
+      "buyerLabel": "Ma'am Hazel Peñaflor",
+      "amountPhp": 49,
+      "date": "2026-10-22"
+    },
+    {
+      "id": "sale-19",
+      "resourceId": "r-percent",
+      "buyerLabel": "Ma'am Rowena Ibasco",
+      "amountPhp": 49,
+      "date": "2026-10-04"
+    },
+    {
+      "id": "sale-20",
+      "resourceId": "r-percent",
+      "buyerLabel": "Sir Noel Arroyo",
+      "amountPhp": 49,
+      "date": "2026-10-11"
+    },
+    {
+      "id": "sale-21",
+      "resourceId": "r-percent",
+      "buyerLabel": "Ma'am Precious Tuazon",
+      "amountPhp": 49,
+      "date": "2026-10-18"
+    },
+    {
+      "id": "sale-22",
+      "resourceId": "r-percent",
+      "buyerLabel": "Ma'am Glenda Rañola",
+      "amountPhp": 49,
+      "date": "2026-10-25"
+    },
+    {
+      "id": "sale-23",
+      "resourceId": "r-percent",
+      "buyerLabel": "Sir Ramil Ocampo",
+      "amountPhp": 49,
+      "date": "2026-10-07"
+    },
+    {
+      "id": "sale-24",
+      "resourceId": "r-hazard-map",
+      "buyerLabel": "Ma'am Dianne Aguilar",
+      "amountPhp": 35,
+      "date": "2026-08-03"
+    },
+    {
+      "id": "sale-25",
+      "resourceId": "r-hazard-map",
+      "buyerLabel": "Ma'am Aileen Cabrera",
+      "amountPhp": 35,
+      "date": "2026-08-10"
+    },
+    {
+      "id": "sale-26",
+      "resourceId": "r-hazard-map",
+      "buyerLabel": "Sir Carlo Mendoza",
+      "amountPhp": 35,
+      "date": "2026-08-17"
+    },
+    {
+      "id": "sale-27",
+      "resourceId": "r-hazard-map",
+      "buyerLabel": "Ma'am Cherry Lomibao",
+      "amountPhp": 35,
+      "date": "2026-08-24"
+    },
+    {
+      "id": "sale-28",
+      "resourceId": "r-hazard-map",
+      "buyerLabel": "Ma'am Marites Gaite",
+      "amountPhp": 35,
+      "date": "2026-08-06"
+    },
+    {
+      "id": "sale-29",
+      "resourceId": "r-hazard-map",
+      "buyerLabel": "Sir Arnel Pura",
+      "amountPhp": 35,
+      "date": "2026-08-13"
+    },
+    {
+      "id": "sale-30",
+      "resourceId": "r-hazard-map",
+      "buyerLabel": "Ma'am Liezl Dy",
+      "amountPhp": 35,
+      "date": "2026-09-20"
+    },
+    {
+      "id": "sale-31",
+      "resourceId": "r-hazard-map",
+      "buyerLabel": "Ma'am Joanna Sarmiento",
+      "amountPhp": 35,
+      "date": "2026-09-27"
+    },
+    {
+      "id": "sale-32",
+      "resourceId": "r-hazard-map",
+      "buyerLabel": "Sir Paolo Nacion",
+      "amountPhp": 35,
+      "date": "2026-09-09"
+    },
+    {
+      "id": "sale-33",
+      "resourceId": "r-hazard-map",
+      "buyerLabel": "Ma'am Kristine Bonifacio",
+      "amountPhp": 35,
+      "date": "2026-09-16"
+    },
+    {
+      "id": "sale-34",
+      "resourceId": "r-hazard-map",
+      "buyerLabel": "Ma'am Elvie Balang",
+      "amountPhp": 35,
+      "date": "2026-09-23"
+    },
+    {
+      "id": "sale-35",
+      "resourceId": "r-hazard-map",
+      "buyerLabel": "Sir Jomar Bitara",
+      "amountPhp": 35,
+      "date": "2026-09-05"
+    },
+    {
+      "id": "sale-36",
+      "resourceId": "r-hazard-map",
+      "buyerLabel": "Ma'am Hazel Peñaflor",
+      "amountPhp": 35,
+      "date": "2026-10-12"
+    },
+    {
+      "id": "sale-37",
+      "resourceId": "r-hazard-map",
+      "buyerLabel": "Ma'am Rowena Ibasco",
+      "amountPhp": 35,
+      "date": "2026-10-19"
+    },
+    {
+      "id": "sale-38",
+      "resourceId": "r-hazard-map",
+      "buyerLabel": "Sir Noel Arroyo",
+      "amountPhp": 35,
+      "date": "2026-10-26"
+    },
+    {
+      "id": "sale-39",
+      "resourceId": "r-hazard-map",
+      "buyerLabel": "Ma'am Precious Tuazon",
+      "amountPhp": 35,
+      "date": "2026-10-08"
+    },
+    {
+      "id": "sale-40",
+      "resourceId": "r-hazard-map",
+      "buyerLabel": "Ma'am Glenda Rañola",
+      "amountPhp": 35,
+      "date": "2026-10-15"
+    },
+    {
+      "id": "sale-41",
+      "resourceId": "r-volcanoes",
+      "buyerLabel": "Sir Ramil Ocampo",
+      "amountPhp": 79,
+      "date": "2026-08-03"
+    },
+    {
+      "id": "sale-42",
+      "resourceId": "r-volcanoes",
+      "buyerLabel": "Ma'am Dianne Aguilar",
+      "amountPhp": 79,
+      "date": "2026-08-10"
+    },
+    {
+      "id": "sale-43",
+      "resourceId": "r-volcanoes",
+      "buyerLabel": "Ma'am Aileen Cabrera",
+      "amountPhp": 79,
+      "date": "2026-08-17"
+    },
+    {
+      "id": "sale-44",
+      "resourceId": "r-volcanoes",
+      "buyerLabel": "Sir Carlo Mendoza",
+      "amountPhp": 79,
+      "date": "2026-08-24"
+    },
+    {
+      "id": "sale-45",
+      "resourceId": "r-volcanoes",
+      "buyerLabel": "Ma'am Cherry Lomibao",
+      "amountPhp": 79,
+      "date": "2026-08-06"
+    },
+    {
+      "id": "sale-46",
+      "resourceId": "r-volcanoes",
+      "buyerLabel": "Ma'am Marites Gaite",
+      "amountPhp": 79,
+      "date": "2026-08-13"
+    },
+    {
+      "id": "sale-47",
+      "resourceId": "r-volcanoes",
+      "buyerLabel": "Sir Arnel Pura",
+      "amountPhp": 79,
+      "date": "2026-08-20"
+    },
+    {
+      "id": "sale-48",
+      "resourceId": "r-volcanoes",
+      "buyerLabel": "Ma'am Liezl Dy",
+      "amountPhp": 79,
+      "date": "2026-08-27"
+    },
+    {
+      "id": "sale-49",
+      "resourceId": "r-volcanoes",
+      "buyerLabel": "Ma'am Joanna Sarmiento",
+      "amountPhp": 79,
+      "date": "2026-08-09"
+    },
+    {
+      "id": "sale-50",
+      "resourceId": "r-volcanoes",
+      "buyerLabel": "Sir Paolo Nacion",
+      "amountPhp": 79,
+      "date": "2026-08-16"
+    },
+    {
+      "id": "sale-51",
+      "resourceId": "r-volcanoes",
+      "buyerLabel": "Ma'am Kristine Bonifacio",
+      "amountPhp": 79,
+      "date": "2026-09-23"
+    },
+    {
+      "id": "sale-52",
+      "resourceId": "r-volcanoes",
+      "buyerLabel": "Ma'am Elvie Balang",
+      "amountPhp": 79,
+      "date": "2026-09-05"
+    },
+    {
+      "id": "sale-53",
+      "resourceId": "r-volcanoes",
+      "buyerLabel": "Sir Jomar Bitara",
+      "amountPhp": 79,
+      "date": "2026-09-12"
+    },
+    {
+      "id": "sale-54",
+      "resourceId": "r-volcanoes",
+      "buyerLabel": "Ma'am Hazel Peñaflor",
+      "amountPhp": 79,
+      "date": "2026-09-19"
+    },
+    {
+      "id": "sale-55",
+      "resourceId": "r-volcanoes",
+      "buyerLabel": "Ma'am Rowena Ibasco",
+      "amountPhp": 79,
+      "date": "2026-09-26"
+    },
+    {
+      "id": "sale-56",
+      "resourceId": "r-volcanoes",
+      "buyerLabel": "Sir Noel Arroyo",
+      "amountPhp": 79,
+      "date": "2026-09-08"
+    },
+    {
+      "id": "sale-57",
+      "resourceId": "r-volcanoes",
+      "buyerLabel": "Ma'am Precious Tuazon",
+      "amountPhp": 79,
+      "date": "2026-09-15"
+    },
+    {
+      "id": "sale-58",
+      "resourceId": "r-volcanoes",
+      "buyerLabel": "Ma'am Glenda Rañola",
+      "amountPhp": 79,
+      "date": "2026-09-22"
+    },
+    {
+      "id": "sale-59",
+      "resourceId": "r-volcanoes",
+      "buyerLabel": "Sir Ramil Ocampo",
+      "amountPhp": 79,
+      "date": "2026-09-04"
+    },
+    {
+      "id": "sale-60",
+      "resourceId": "r-volcanoes",
+      "buyerLabel": "Ma'am Dianne Aguilar",
+      "amountPhp": 79,
+      "date": "2026-10-11"
+    },
+    {
+      "id": "sale-61",
+      "resourceId": "r-volcanoes",
+      "buyerLabel": "Ma'am Aileen Cabrera",
+      "amountPhp": 79,
+      "date": "2026-10-18"
+    },
+    {
+      "id": "sale-62",
+      "resourceId": "r-volcanoes",
+      "buyerLabel": "Sir Carlo Mendoza",
+      "amountPhp": 79,
+      "date": "2026-10-25"
+    },
+    {
+      "id": "sale-63",
+      "resourceId": "r-volcanoes",
+      "buyerLabel": "Ma'am Cherry Lomibao",
+      "amountPhp": 79,
+      "date": "2026-10-07"
+    },
+    {
+      "id": "sale-64",
+      "resourceId": "r-volcanoes",
+      "buyerLabel": "Ma'am Marites Gaite",
+      "amountPhp": 79,
+      "date": "2026-10-14"
+    },
+    {
+      "id": "sale-65",
+      "resourceId": "r-volcanoes",
+      "buyerLabel": "Sir Arnel Pura",
+      "amountPhp": 79,
+      "date": "2026-10-21"
+    },
+    {
+      "id": "sale-66",
+      "resourceId": "r-volcanoes",
+      "buyerLabel": "Ma'am Liezl Dy",
+      "amountPhp": 79,
+      "date": "2026-10-03"
+    },
+    {
+      "id": "sale-67",
+      "resourceId": "r-volcanoes",
+      "buyerLabel": "Ma'am Joanna Sarmiento",
+      "amountPhp": 79,
+      "date": "2026-10-10"
+    },
+    {
+      "id": "sale-68",
+      "resourceId": "r-volcanoes",
+      "buyerLabel": "Sir Paolo Nacion",
+      "amountPhp": 79,
+      "date": "2026-10-17"
+    },
+    {
+      "id": "sale-69",
+      "resourceId": "r-ibalong",
+      "buyerLabel": "Ma'am Kristine Bonifacio",
+      "amountPhp": 59,
+      "date": "2026-08-03"
+    },
+    {
+      "id": "sale-70",
+      "resourceId": "r-ibalong",
+      "buyerLabel": "Ma'am Elvie Balang",
+      "amountPhp": 59,
+      "date": "2026-08-10"
+    },
+    {
+      "id": "sale-71",
+      "resourceId": "r-ibalong",
+      "buyerLabel": "Sir Jomar Bitara",
+      "amountPhp": 59,
+      "date": "2026-08-17"
+    },
+    {
+      "id": "sale-72",
+      "resourceId": "r-ibalong",
+      "buyerLabel": "Ma'am Hazel Peñaflor",
+      "amountPhp": 59,
+      "date": "2026-08-24"
+    },
+    {
+      "id": "sale-73",
+      "resourceId": "r-ibalong",
+      "buyerLabel": "Ma'am Rowena Ibasco",
+      "amountPhp": 59,
+      "date": "2026-08-06"
+    },
+    {
+      "id": "sale-74",
+      "resourceId": "r-ibalong",
+      "buyerLabel": "Sir Noel Arroyo",
+      "amountPhp": 59,
+      "date": "2026-09-13"
+    },
+    {
+      "id": "sale-75",
+      "resourceId": "r-ibalong",
+      "buyerLabel": "Ma'am Precious Tuazon",
+      "amountPhp": 59,
+      "date": "2026-09-20"
+    },
+    {
+      "id": "sale-76",
+      "resourceId": "r-ibalong",
+      "buyerLabel": "Ma'am Glenda Rañola",
+      "amountPhp": 59,
+      "date": "2026-09-27"
+    },
+    {
+      "id": "sale-77",
+      "resourceId": "r-ibalong",
+      "buyerLabel": "Sir Ramil Ocampo",
+      "amountPhp": 59,
+      "date": "2026-09-09"
+    },
+    {
+      "id": "sale-78",
+      "resourceId": "r-ibalong",
+      "buyerLabel": "Ma'am Dianne Aguilar",
+      "amountPhp": 59,
+      "date": "2026-09-16"
+    },
+    {
+      "id": "sale-79",
+      "resourceId": "r-ibalong",
+      "buyerLabel": "Ma'am Aileen Cabrera",
+      "amountPhp": 59,
+      "date": "2026-10-23"
+    },
+    {
+      "id": "sale-80",
+      "resourceId": "r-ibalong",
+      "buyerLabel": "Sir Carlo Mendoza",
+      "amountPhp": 59,
+      "date": "2026-10-05"
+    },
+    {
+      "id": "sale-81",
+      "resourceId": "r-ibalong",
+      "buyerLabel": "Ma'am Cherry Lomibao",
+      "amountPhp": 59,
+      "date": "2026-10-12"
+    },
+    {
+      "id": "sale-82",
+      "resourceId": "r-ibalong",
+      "buyerLabel": "Ma'am Marites Gaite",
+      "amountPhp": 59,
+      "date": "2026-10-19"
     }
   ]
 }

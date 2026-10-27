@@ -6,13 +6,16 @@ import { cn } from '@/lib/utils'
 import { useStore } from '@/store'
 
 /** Same toggle as the card SaveButton, as a labelled outline button. */
-export function SaveToggle({ resource, className }: { resource: Resource; className?: string }) {
+export function SaveToggle({ resource, className, iconOnly = false }: { resource: Resource; className?: string; iconOnly?: boolean }) {
   const { state, dispatch, notify } = useStore()
   const saved = isBookmarked(state, resource.id)
   return (
     <Button
       variant="outline"
+      size={iconOnly ? 'icon' : 'default'}
       aria-pressed={saved}
+      aria-label={iconOnly ? (saved ? 'Saved' : 'Save for later') : undefined}
+      title={iconOnly ? (saved ? 'Saved' : 'Save') : undefined}
       className={cn(saved && 'border-primary/40 bg-secondary', className)}
       onClick={() => {
         try {
@@ -24,7 +27,7 @@ export function SaveToggle({ resource, className }: { resource: Resource; classN
       }}
     >
       <Bookmark aria-hidden="true" className={cn(saved && 'fill-current')} />
-      {saved ? 'Saved' : 'Save for later'}
+      {!iconOnly && (saved ? 'Saved' : 'Save')}
     </Button>
   )
 }

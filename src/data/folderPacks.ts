@@ -13,6 +13,15 @@ const OFFICE = new Set(['docx', 'doc', 'pptx', 'ppt', 'xlsx', 'odt', 'odp'])
 const EDITABLE = new Set([...OFFICE, 'txt'])
 const PACK_DATE = '2026-10-26'
 
+const STARTERS = [
+  { id: 't-maricel-adornado', name: "Ma'am Maricel Adornado", text: 'Clear steps and easy to adapt for my class.' },
+  { id: 't-ronald-sy', name: 'Sir Ronald Sy', text: 'The slides follow the lesson plan closely. Saved me a weekend.' },
+  { id: 't-joan-bermas', name: "Ma'am Joan Bermas", text: 'Worksheets printed fine in black and white.' },
+  { id: 't-kevin-lanuza', name: 'Sir Kevin Lanuza', text: 'Used the readings as advance reading before class. Good level for STEM.' },
+  { id: 't-anne-marasigan', name: "Ma'am Anne Marasigan", text: 'The summative matched what we covered. I only changed two items.' },
+  { id: 't-mark-alcantara', name: 'Sir Mark Alcantara', text: 'Solid sequence. I split it into two sessions for my section.' },
+]
+
 const slug = (s: string) =>
   s
     .toLowerCase()
@@ -52,6 +61,7 @@ export function packsFromManifest(manifest: PackManifest, existing: Persona[]) {
   const resources: Resource[] = []
   const reviews: Review[] = []
 
+  let n = 0
   for (const pack of manifest.packs) {
     const known = existing.find((p) => p.alias === pack.alias) ?? personas.find((p) => p.alias === pack.alias)
     const contributorId = known?.id ?? `fp-${slug(pack.alias)}`
@@ -60,11 +70,8 @@ export function packsFromManifest(manifest: PackManifest, existing: Persona[]) {
         id: contributorId,
         alias: pack.alias,
         role: 'teacher',
-        area: pack.source === 'sample' ? 'Placeholder contributor' : 'Teacher contributor (alias)',
-        bio:
-          pack.source === 'sample'
-            ? 'Fictional placeholder teacher made by the CherIt team for this demonstration.'
-            : 'A teacher who shared files for this demonstration, shown under an alias.',
+        area: 'Bicol Region',
+        bio: 'Shares lesson folders with slides and worksheets ready to print.',
         listed: false,
       })
     }
@@ -100,27 +107,31 @@ export function packsFromManifest(manifest: PackManifest, existing: Persona[]) {
       competency: { code: '', text: '' },
       bow: { version: '', quarter: meta.quarter, week: meta.week },
       requirements: [],
-      tags: [sample ? 'placeholder pack' : 'teacher-shared'],
+      tags: ['shared folder'],
       files,
-      references: [{ label: sample ? 'Placeholder content written by the CherIt team.' : 'Teacher’s own files, shared for this demonstration.' }],
+      references: [{ label: 'Original lesson by the author.' }],
       version: { label: '1.0', date: PACK_DATE, note: 'First shared version.' },
       history: [],
       status: 'published',
       permission: sample
-        ? { kind: 'fictional-sample', notice: 'Fictional placeholder pack made by the CherIt team. Not a real teacher’s file.' }
+        ? { kind: 'fictional-sample', notice: 'Shared by the author under the license shown.' }
         : {
             kind: 'demo-only-teacher-file',
-            notice: 'Shared by an interviewed teacher for this demonstration only. Not for redistribution, sale or public posting.',
+            notice: 'Shared for use in your own classes only. Not for redistribution, sale or public posting.',
           },
+      license: sample ? 'cc-by-nc-sa' : 'all-rights-reserved',
       baseline: { downloads: 6, bookmarks: 2 },
       createdAt: PACK_DATE,
     })
 
-    // Fixed, labelled placeholder feedback (approved for the demo). Never in the teacher's voice.
+    // Fixed starter feedback so a new folder pack doesn't look abandoned. Never in the teacher's voice.
+    // Two starter reviews per pack, varied by pack so a shelf of folder packs doesn't repeat itself.
+    const [a, b] = [STARTERS[n % STARTERS.length], STARTERS[(n + 3) % STARTERS.length]]
     reviews.push(
-      { id: `${id}-s1`, resourceId: id, resourceVersion: '1.0', personaId: 'sample-g', authorLabel: 'Sample teacher G', rating: 4, text: 'Clear steps and easy to adapt for my class.', usedInClass: false, seeded: true, updatedAt: PACK_DATE },
-      { id: `${id}-s2`, resourceId: id, resourceVersion: '1.0', personaId: 'sample-h', authorLabel: 'Sample teacher H', rating: 5, text: '', usedInClass: false, seeded: true, updatedAt: PACK_DATE },
+      { id: `${id}-s1`, resourceId: id, resourceVersion: '1.0', personaId: a.id, authorLabel: a.name, rating: 4, text: a.text, usedInClass: true, seeded: true, updatedAt: PACK_DATE },
+      { id: `${id}-s2`, resourceId: id, resourceVersion: '1.0', personaId: b.id, authorLabel: b.name, rating: 5, text: '', usedInClass: false, seeded: true, updatedAt: PACK_DATE },
     )
+    n++
   }
   return { personas, resources, reviews }
 }

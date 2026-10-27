@@ -1,8 +1,11 @@
-import type { Catalogue, CurriculumReview, DemoState, Resource, ResourceStatus, Review } from './types'
+import type { Catalogue, CurriculumReview, DemoState, Persona, ProfileEdits, Resource, ResourceStatus, Review, RevisionProposal, Sale, VerificationRequest } from './types'
 
-export const STATE_SCHEMA = 2
+export const STATE_SCHEMA = 4
 
-export const DEMO_REVIEWER = 'Demo reviewer (simulated)'
+export const DEMO_REVIEWER = 'CherIt Review Team'
+
+/** Proposed platform fee on paid bundles. Not decided by the team yet. */
+export const PLATFORM_FEE = 0.1
 
 export function emptyState(defaultPersonaId: string): DemoState {
   return {
@@ -15,6 +18,25 @@ export function emptyState(defaultPersonaId: string): DemoState {
     contributions: [],
     statusOverrides: {},
     curriculumReviews: {},
+    revisions: [],
+    resourcePatches: {},
+    profileEdits: {},
+    verificationRequests: [],
+  }
+}
+
+/** Brings saved state from an older schema up to date without losing it. */
+export function migrateState(saved: Partial<DemoState> & { schema?: number }, defaultPersonaId: string): DemoState {
+  if (saved.schema === STATE_SCHEMA) return saved as DemoState
+  if (saved.schema !== 2 && saved.schema !== 3) return emptyState(defaultPersonaId)
+  // Schema 4 dropped moderator approval: anything still waiting for it is now live.
+  const live = <T extends { status: string }>(item: T): T => (item.status === 'pending' ? { ...item, status: 'published' } : item)
+  return {
+    ...emptyState(defaultPersonaId),
+    ...saved,
+    contributions: (saved.contributions ?? []).map(live),
+    statusOverrides: Object.fromEntries(Object.entries(saved.statusOverrides ?? {}).map(([id, o]) => [id, live(o)])),
+    schema: STATE_SCHEMA,
   }
 }
 
@@ -28,6 +50,8 @@ export function allResources(catalogue: Catalogue, state: DemoState): Resource[]
     let result = resource
     if (override) result = { ...result, status: override.status, holdReason: override.holdReason }
     if (review) result = { ...result, curriculumReview: review }
+    const patch = state.resourcePatches?.[resource.id]
+    if (patch) result = { ...result, files: patch.files, version: patch.version, history: patch.history }
     return result
   })
 }
@@ -37,18 +61,78 @@ export function currentCurriculumReview(resource: Resource): CurriculumReview | 
   return resource.curriculumReview?.version === resource.version.label ? resource.curriculumReview : undefined
 }
 
+/** The author's open request to verify the pack's current version, if any. */
+export function openVerificationRequest(state: DemoState, resource: Resource): VerificationRequest | undefined {
+  return state.verificationRequests.find((r) => r.resourceId === resource.id && r.version === resource.version.label)
+}
+
+/** A persona with any account details the teacher edited applied. */
+export function withEdits(persona: Persona, edits?: ProfileEdits): Persona {
+  if (!edits) return persona
+  const set = Object.fromEntries(Object.entries(edits).filter(([, value]) => typeof value === 'string' && value.trim()))
+  return { ...persona, ...set }
+}
+
+/** "2.0" → "2.1", "1.4" → "1.5". */
+export function nextMinorVersion(label: string): string {
+  const [major, minor = '0'] = label.split('.')
+  return `${major}.${Number(minor) + 1}`
+}
+
+export interface Earnings {
+  gross: number
+  fee: number
+  net: number
+  sales: (Sale & { title: string })[]
+  byMonth: { month: string; net: number }[]
+}
+
+/** Bundle sales of a contributor's packs: catalogue history plus purchases made in this browser. */
+export function contributorEarnings(contributorId: string, resources: Resource[], seedSales: Sale[], state: DemoState, personaLabel: (id: string) => string): Earnings {
+  const own = new Map(resources.filter((r) => r.contributorId === contributorId && r.supplementBundle).map((r) => [r.id, r]))
+  const local = new Map<string, Sale>()
+  for (const a of state.acquisitions) {
+    const resource = own.get(a.resourceId)
+    if (!a.simulatedPurchase || !resource || a.personaId === contributorId) continue
+    const key = `${a.personaId}-${a.resourceId}`
+    if (!local.has(key)) local.set(key, { id: `local-${key}`, resourceId: a.resourceId, buyerLabel: personaLabel(a.personaId), amountPhp: resource.supplementBundle!.pricePhp, date: new Date().toISOString().slice(0, 10) })
+  }
+  const sales = [...seedSales.filter((sale) => own.has(sale.resourceId)), ...local.values()]
+    .map((sale) => ({ ...sale, title: own.get(sale.resourceId)!.title }))
+    .sort((a, b) => b.date.localeCompare(a.date))
+  const gross = sales.reduce((sum, sale) => sum + sale.amountPhp, 0)
+  const fee = Math.round(gross * PLATFORM_FEE * 100) / 100
+  const months = new Map<string, number>()
+  for (const sale of sales) months.set(sale.date.slice(0, 7), (months.get(sale.date.slice(0, 7)) ?? 0) + sale.amountPhp * (1 - PLATFORM_FEE))
+  const byMonth = [...months].sort(([a], [b]) => a.localeCompare(b)).map(([month, net]) => ({ month, net: Math.round(net * 100) / 100 }))
+  return { gross, fee, net: Math.round((gross - fee) * 100) / 100, sales, byMonth }
+}
+
+/** Count of current-version ratings at each star level, 5 down to 1. */
+export function ratingDistribution(contributorId: string, resources: Resource[], reviews: Review[]): { stars: number; count: number }[] {
+  const ratings = resources
+    .filter((res) => res.contributorId === contributorId && res.status === 'published')
+    .flatMap((res) => currentReviews(res, reviews).map((r) => r.rating))
+  return [5, 4, 3, 2, 1].map((stars) => ({ stars, count: ratings.filter((r) => r === stars).length }))
+}
+
 export function allReviews(catalogue: Catalogue, state: DemoState): Review[] {
   return [...catalogue.seedReviews, ...state.reviews]
 }
 
-/** Reviews written for the resource's current published version. */
+const major = (label: string) => label.split('.')[0]
+
+/**
+ * Reviews of the current major version. A minor revision (2.0 → 2.1) keeps them;
+ * a new major version (2.x → 3.0) starts fresh.
+ */
 export function currentReviews(resource: Resource, reviews: Review[]): Review[] {
-  return reviews.filter((r) => r.resourceId === resource.id && r.resourceVersion === resource.version.label)
+  return reviews.filter((r) => r.resourceId === resource.id && major(r.resourceVersion) === major(resource.version.label))
 }
 
-/** Reviews of earlier versions. Shown with a label, excluded from means and counts. */
+/** Reviews of earlier major versions. Shown with a label, excluded from means and counts. */
 export function olderReviews(resource: Resource, reviews: Review[]): Review[] {
-  return reviews.filter((r) => r.resourceId === resource.id && r.resourceVersion !== resource.version.label)
+  return reviews.filter((r) => r.resourceId === resource.id && major(r.resourceVersion) !== major(resource.version.label))
 }
 
 export interface RatingSummary {
@@ -176,6 +260,10 @@ export type Action =
   | { type: 'add-contribution'; resource: Resource }
   | { type: 'set-status'; resourceId: string; status: ResourceStatus; holdReason?: string }
   | { type: 'mark-curriculum-reviewed'; resource: Resource; role: 'teacher' | 'moderator'; date: string }
+  | { type: 'request-verification'; resource: Resource; at: string }
+  | { type: 'propose-revision'; proposal: RevisionProposal; resource: Resource }
+  | { type: 'decide-revision'; proposalId: string; resource: Resource; approve: boolean; proposerLabel: string; at: string }
+  | { type: 'save-profile'; edits: ProfileEdits }
   | { type: 'replace'; state: DemoState }
 
 export class DemoRuleError extends Error {}
@@ -276,16 +364,59 @@ export function reduce(state: DemoState, action: Action): DemoState {
       }
 
     case 'mark-curriculum-reviewed': {
-      if (action.role !== 'moderator') throw new DemoRuleError('Only the demo reviewer can mark a pack as reviewed.')
-      if (action.resource.status !== 'published') throw new DemoRuleError('Publish the pack before marking it reviewed.')
+      if (action.role !== 'moderator') throw new DemoRuleError('Only the verifier can mark a pack verified.')
+      if (action.resource.status !== 'published') throw new DemoRuleError('Only public packs can be verified.')
       return {
         ...state,
         curriculumReviews: {
           ...state.curriculumReviews,
           [action.resource.id]: { version: action.resource.version.label, reviewer: DEMO_REVIEWER, date: action.date },
         },
+        verificationRequests: state.verificationRequests.filter((r) => r.resourceId !== action.resource.id),
       }
     }
+
+    case 'request-verification': {
+      if (action.resource.contributorId !== state.personaId) throw new DemoRuleError('Only the pack’s author can ask for verification.')
+      if (action.resource.status !== 'published') throw new DemoRuleError('Only public packs can be verified.')
+      if (currentCurriculumReview(action.resource)) throw new DemoRuleError('This version is already verified.')
+      if (openVerificationRequest(state, action.resource)) throw new DemoRuleError('Verification is already requested for this version.')
+      // Priority verification is a Pro feature that isn't implemented, so every request joins the free queue.
+      const request: VerificationRequest = { resourceId: action.resource.id, version: action.resource.version.label, tier: 'standard', requestedAt: action.at }
+      return { ...state, verificationRequests: [...state.verificationRequests, request] }
+    }
+
+    case 'propose-revision': {
+      if (action.resource.status !== 'published') throw new DemoRuleError('Only published packs can receive revisions.')
+      if (action.resource.contributorId === state.personaId) throw new DemoRuleError('You can update your own pack directly.')
+      if (!action.proposal.summary.trim()) throw new DemoRuleError('Describe what you changed.')
+      if (!action.resource.files.some((f) => f.id === action.proposal.fileId)) throw new DemoRuleError('Choose a file in this pack to revise.')
+      return { ...state, revisions: [...state.revisions, { ...action.proposal, proposerId: state.personaId, status: 'pending' }] }
+    }
+
+    case 'decide-revision': {
+      const proposal = state.revisions.find((r) => r.id === action.proposalId)
+      if (!proposal || proposal.status !== 'pending') throw new DemoRuleError('This revision was already handled.')
+      if (action.resource.id !== proposal.resourceId || action.resource.contributorId !== state.personaId) throw new DemoRuleError('Only the pack’s author can approve revisions.')
+      if (!action.approve) {
+        return { ...state, revisions: state.revisions.map((r) => (r.id === proposal.id ? { ...r, status: 'declined', decidedAt: action.at } : r)) }
+      }
+      const current = action.resource
+      const version = { label: nextMinorVersion(current.version.label), date: action.at.slice(0, 10), note: `Revision by ${action.proposerLabel}: ${proposal.summary}` }
+      const files = current.files.map((f) =>
+        f.id === proposal.fileId
+          ? { ...f, name: proposal.file.name, sizeBytes: proposal.file.sizeBytes, mimeType: proposal.file.mimeType, previewPages: undefined, source: { type: 'local' as const, key: proposal.file.key } }
+          : f,
+      )
+      return {
+        ...state,
+        resourcePatches: { ...state.resourcePatches, [current.id]: { files, version, history: [current.version, ...current.history] } },
+        revisions: state.revisions.map((r) => (r.id === proposal.id ? { ...r, status: 'approved', decidedAt: action.at, resultVersion: version.label } : r)),
+      }
+    }
+
+    case 'save-profile':
+      return { ...state, profileEdits: { ...state.profileEdits, [state.personaId]: { ...state.profileEdits[state.personaId], ...action.edits } } }
 
     case 'replace':
       return action.state
